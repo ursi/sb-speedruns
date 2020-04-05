@@ -122,6 +122,7 @@ view model =
                 [ H.divS
                     [ C.background "white"
                     , C.width "35%"
+                    , C.maxWidth "430px"
                     , C.fontSize "1rem"
                     , C.borderRadius "1em"
                     , C.padding "1em"

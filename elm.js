@@ -5736,6 +5736,7 @@ var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
 var $author$project$Design$lightGray = '#ddd';
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
+var $author$project$Css$maxWidth = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-width');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
 var $author$project$Css$cursor = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'cursor');
 var $author$project$Css$hover = $author$project$Css$mapSelector(
@@ -6479,6 +6480,7 @@ var $author$project$Main$view = function (model) {
 								[
 									$author$project$Css$background('white'),
 									$author$project$Css$width('35%'),
+									$author$project$Css$maxWidth('430px'),
 									$author$project$Css$fontSize('1rem'),
 									$author$project$Css$borderRadius('1em'),
 									$author$project$Css$padding('1em'),
