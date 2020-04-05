@@ -1,0 +1,8 @@
+{
+    "git-dependencies": {
+        "direct": {
+            "https://github.com/ursi/elm-css.git": "d947338cb000153341ed20a6f243962adb08f0be"
+        },
+        "indirect": {}
+    }
+}
