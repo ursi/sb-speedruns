@@ -94,7 +94,7 @@ subscriptions _ =
 
 view : Model -> Document Msg
 view model =
-    { title = ""
+    { title = "StarBreak Speedruns"
     , body =
         [ H.divS
             [ C.position "absolute"

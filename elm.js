@@ -6846,7 +6846,7 @@ var $author$project$Main$view = function (model) {
 								]))
 						]))
 				])),
-		title: ''
+		title: 'StarBreak Speedruns'
 	};
 };
 var $author$project$Main$main = $elm$browser$Browser$document(
