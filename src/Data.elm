@@ -167,7 +167,11 @@ getTime bossOnly zone player =
                 )
                     ++ String.fromInt (modBy 60000 ms // 1000)
                     ++ "."
-                    ++ String.fromInt (modBy 1000 ms)
+                    ++ (ms
+                            |> modBy 1000
+                            |> String.fromInt
+                            |> String.padLeft 3 '0'
+                       )
             )
         |> Maybe.withDefault ""
 

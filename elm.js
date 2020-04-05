@@ -5703,6 +5703,33 @@ var $author$project$Data$getPlayersWithRun = F2(
 	});
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$modBy = _Basics_modBy;
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $elm$core$String$padLeft = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			A2(
+				$elm$core$String$repeat,
+				n - $elm$core$String$length(string),
+				$elm$core$String$fromChar(_char)),
+			string);
+	});
 var $author$project$Data$getTime = F3(
 	function (bossOnly, zone, player) {
 		return A2(
@@ -5712,8 +5739,12 @@ var $author$project$Data$getTime = F3(
 				$elm$core$Maybe$map,
 				function (ms) {
 					return ((ms >= 60000) ? ($elm$core$String$fromInt((ms / 60000) | 0) + ':') : '') + ($elm$core$String$fromInt(
-						(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0) + ('.' + $elm$core$String$fromInt(
-						A2($elm$core$Basics$modBy, 1000, ms))));
+						(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0) + ('.' + A3(
+						$elm$core$String$padLeft,
+						3,
+						_Utils_chr('0'),
+						$elm$core$String$fromInt(
+							A2($elm$core$Basics$modBy, 1000, ms)))));
 				},
 				A3($author$project$Data$getRawTime, bossOnly, zone, player)));
 	});
@@ -5849,7 +5880,6 @@ var $Skinney$murmur3$Murmur3$HashData = F4(
 	});
 var $Skinney$murmur3$Murmur3$c1 = 3432918353;
 var $Skinney$murmur3$Murmur3$c2 = 461845907;
-var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
 var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
 var $Skinney$murmur3$Murmur3$multiplyBy = F2(
