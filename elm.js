@@ -5181,15 +5181,15 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$document = _Browser_document;
-var $author$project$Main$Model = F2(
-	function (bossOnly, zone) {
-		return {bossOnly: bossOnly, zone: zone};
+var $author$project$Main$Model = F3(
+	function (bossOnly, zone, showingRules) {
+		return {bossOnly: bossOnly, showingRules: showingRules, zone: zone};
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A2($author$project$Main$Model, true, 'FF'),
+		A3($author$project$Main$Model, true, 'FF', false),
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5199,29 +5199,46 @@ var $author$project$Main$subscriptions = function (_v0) {
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'ChangeZone') {
-			var zone = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{zone: zone}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			var bool = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{bossOnly: bool}),
-				$elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 'ChangeShowingRules':
+				var bool = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showingRules: bool}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeZone':
+				var zone = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{zone: zone}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var bool = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bossOnly: bool}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$ChangeBossOnly = function (a) {
 	return {$: 'ChangeBossOnly', a: a};
 };
+var $author$project$Main$ChangeShowingRules = function (a) {
+	return {$: 'ChangeShowingRules', a: a};
+};
 var $author$project$Css$Internal$Single = F3(
 	function (a, b, c) {
 		return {$: 'Single', a: a, b: b, c: c};
 	});
+var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
+var $author$project$Html$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 'Node', a: a, b: b, c: c};
+	});
+var $author$project$Html$Styled$b = $author$project$Html$Styled$Node('b');
 var $author$project$Css$background = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'background');
 var $author$project$Css$Global$Rule = function (a) {
 	return {$: 'Rule', a: a};
@@ -5247,6 +5264,45 @@ var $author$project$Css$borderJ = A2(
 	$elm$core$String$join(' '));
 var $author$project$Css$borderRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-radius');
 var $author$project$Css$borderSpacing = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-spacing');
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Css$append = A2(
+	$elm$core$Basics$composeL,
+	$elm$core$Basics$composeR($elm$core$Basics$append),
+	$elm$core$Basics$apR);
+var $author$project$Css$Internal$Batch = function (a) {
+	return {$: 'Batch', a: a};
+};
+var $author$project$Css$mapSelector = function (classToSelector) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map(
+			function (declaration_) {
+				if (declaration_.$ === 'Single') {
+					var currentClassToSelector = declaration_.a;
+					var property = declaration_.b;
+					var value = declaration_.c;
+					return A3(
+						$author$project$Css$Internal$Single,
+						A2($elm$core$Basics$composeL, currentClassToSelector, classToSelector),
+						property,
+						value);
+				} else {
+					var declarations = declaration_.a;
+					return A2($author$project$Css$mapSelector, classToSelector, declarations);
+				}
+			}),
+		$author$project$Css$Internal$Batch);
+};
+var $author$project$Css$child = function (tag) {
+	return $author$project$Css$mapSelector(
+		$author$project$Css$append(' > ' + tag));
+};
+var $author$project$Css$children = $author$project$Css$mapSelector(
+	$author$project$Css$append(' > *'));
 var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
 var $author$project$Html$Styled$StyledNode = F4(
 	function (a, b, c, d) {
@@ -5255,7 +5311,10 @@ var $author$project$Html$Styled$StyledNode = F4(
 var $author$project$Html$Styled$divS = $author$project$Html$Styled$StyledNode('div');
 var $author$project$Main$eliteZones = _List_fromArray(
 	['eFF', 'eFB', 'eFC', 'eVQ', 'eUB', 'eST', 'eTL', 'eGY']);
+var $author$project$Css$firstChild = $author$project$Css$mapSelector(
+	$author$project$Css$append(':first-child'));
 var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
+var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Dict$Black = {$: 'Black'};
@@ -5543,11 +5602,6 @@ var $elm$core$Dict$get = F2(
 			}
 		}
 	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $author$project$Data$getRuns = function (bossOnly) {
 	return A2(
 		$elm$core$Basics$composeR,
@@ -5664,9 +5718,6 @@ var $author$project$Data$getTime = F3(
 				A3($author$project$Data$getRawTime, bossOnly, zone, player)));
 	});
 var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
-var $author$project$Css$Internal$Batch = function (a) {
-	return {$: 'Batch', a: a};
-};
 var $author$project$Css$batch = $author$project$Css$Internal$Batch;
 var $author$project$Css$gap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'gap');
 var $author$project$Main$gridStyles = $author$project$Css$batch(
@@ -5676,35 +5727,12 @@ var $author$project$Main$gridStyles = $author$project$Css$batch(
 			$author$project$Css$gap('10px 10px')
 		]));
 var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
+var $author$project$Html$Styled$h1 = $author$project$Html$Styled$Node('h1');
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $author$project$Css$justifyItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'justify-items');
-var $author$project$Css$append = A2(
-	$elm$core$Basics$composeL,
-	$elm$core$Basics$composeR($elm$core$Basics$append),
-	$elm$core$Basics$apR);
-var $author$project$Css$mapSelector = function (classToSelector) {
-	return A2(
-		$elm$core$Basics$composeR,
-		$elm$core$List$map(
-			function (declaration_) {
-				if (declaration_.$ === 'Single') {
-					var currentClassToSelector = declaration_.a;
-					var property = declaration_.b;
-					var value = declaration_.c;
-					return A3(
-						$author$project$Css$Internal$Single,
-						A2($elm$core$Basics$composeL, currentClassToSelector, classToSelector),
-						property,
-						value);
-				} else {
-					var declarations = declaration_.a;
-					return A2($author$project$Css$mapSelector, classToSelector, declarations);
-				}
-			}),
-		$author$project$Css$Internal$Batch);
-};
 var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':last-child'));
+var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
 var $author$project$Design$lightGray = '#ddd';
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
@@ -5779,13 +5807,11 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$Css$paddingLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'padding-left');
+var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
+var $author$project$Design$radius1 = '.7em';
+var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
 var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
-var $author$project$Design$tableRadius = '.7em';
 var $author$project$Html$Styled$tableS = $author$project$Html$Styled$StyledNode('table');
-var $author$project$Html$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 'Node', a: a, b: b, c: c};
-	});
 var $author$project$Html$Styled$tbody = $author$project$Html$Styled$Node('tbody');
 var $author$project$Css$Global$td = A2(
 	$elm$core$Basics$composeL,
@@ -5798,8 +5824,10 @@ var $author$project$Html$Styled$Text = function (a) {
 var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
 var $author$project$Html$Styled$thS = $author$project$Html$Styled$StyledNode('th');
 var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
+var $author$project$Css$top = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'top');
 var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
 var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
+var $author$project$Html$Styled$ul = $author$project$Html$Styled$Node('ul');
 var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6394,9 +6422,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$author$project$Css$margin('0'),
-							$author$project$Css$display('grid'),
-							$author$project$Css$justifyItems('center'),
-							$author$project$Css$font('sans-serif 1.5rem')
+							$author$project$Css$font('1.5rem sans-serif')
 						])),
 					$author$project$Css$Global$td(
 					_List_fromArray(
@@ -6410,9 +6436,171 @@ var $author$project$Main$view = function (model) {
 					$author$project$Html$Styled$divS,
 					_List_fromArray(
 						[
+							$author$project$Css$position('absolute'),
+							$author$project$Css$top('0'),
+							$author$project$Css$right('0'),
+							$author$project$Css$margin('.5em'),
+							$author$project$Css$padding('.5em'),
+							$author$project$Css$fontSize('1.2rem'),
+							$author$project$Css$background($author$project$Design$lightGray),
+							$author$project$Css$borderRadius($author$project$Design$radius1)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$ChangeShowingRules(true))
+						]),
+					_List_fromArray(
+						[
+							$author$project$Html$Styled$text('Rules')
+						])),
+					model.showingRules ? A3(
+					$author$project$Html$Styled$divS,
+					_List_fromArray(
+						[
+							$author$project$Css$width('100%'),
+							$author$project$Css$height('100%'),
+							$author$project$Css$position('fixed'),
 							$author$project$Css$display('grid'),
-							$author$project$Css$rowGap('20px'),
-							$author$project$Css$marginTop('1em')
+							$author$project$Css$justifyItems('center'),
+							$author$project$Css$alignItems('center'),
+							$author$project$Css$background('#0008')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$ChangeShowingRules(false))
+						]),
+					_List_fromArray(
+						[
+							A3(
+							$author$project$Html$Styled$divS,
+							_List_fromArray(
+								[
+									$author$project$Css$background('white'),
+									$author$project$Css$width('35%'),
+									$author$project$Css$fontSize('1rem'),
+									$author$project$Css$borderRadius('1em'),
+									$author$project$Css$padding('1em'),
+									A2(
+									$author$project$Css$child,
+									'h1',
+									_List_fromArray(
+										[
+											$author$project$Css$textAlign('center'),
+											$author$project$Css$fontSize('1.5rem')
+										])),
+									A2(
+									$author$project$Css$child,
+									'ul',
+									_List_fromArray(
+										[
+											$author$project$Css$children(
+											_List_fromArray(
+												[
+													$author$project$Css$firstChild(
+													_List_fromArray(
+														[
+															$author$project$Css$marginTop('0')
+														])),
+													$author$project$Css$marginTop('.6rem')
+												]))
+										]))
+								]),
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Html$Styled$h1,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$Html$Styled$text('Qualifying')
+										])),
+									A2(
+									$author$project$Html$Styled$ul,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('The run must be a solo. You cannot receive help from any other players.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. '),
+													A2(
+													$author$project$Html$Styled$b,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('All other mods are not allowed.')
+														])),
+													$author$project$Html$Styled$text(' A static zoom mod is allowed so that players with bigger monitors don\'t have an advantage.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Macros and other scripts are not allowed.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Video of the whole run is required.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Only one entry is allowed per player per category.')
+												]))
+										])),
+									A2(
+									$author$project$Html$Styled$h1,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$author$project$Html$Styled$text('Timing')
+										])),
+									A2(
+									$author$project$Html$Styled$ul,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Time starts the moment the screen loads after either entering the boss room or the beginning of the zone, depending on which category you are running.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Time ends the moment the victory screen appears.')
+												]))
+										]))
+								]))
+						])) : $author$project$Html$Styled$text(''),
+					A3(
+					$author$project$Html$Styled$divS,
+					_List_fromArray(
+						[
+							$author$project$Css$display('grid'),
+							$author$project$Css$justifyItems('center')
 						]),
 					_List_Nil,
 					_List_fromArray(
@@ -6421,8 +6609,9 @@ var $author$project$Main$view = function (model) {
 							$author$project$Html$Styled$divS,
 							_List_fromArray(
 								[
-									$author$project$Main$gridStyles,
-									$author$project$Css$gridTemplateColumns('repeat(2, max-content)')
+									$author$project$Css$display('grid'),
+									$author$project$Css$rowGap('20px'),
+									$author$project$Css$marginTop('1em')
 								]),
 							_List_Nil,
 							_List_fromArray(
@@ -6431,187 +6620,198 @@ var $author$project$Main$view = function (model) {
 									$author$project$Html$Styled$divS,
 									_List_fromArray(
 										[
-											$author$project$Main$menuDivStyles(model.bossOnly)
+											$author$project$Main$gridStyles,
+											$author$project$Css$gridTemplateColumns('repeat(2, max-content)')
 										]),
+									_List_Nil,
 									_List_fromArray(
 										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$ChangeBossOnly(true))
-										]),
-									_List_fromArray(
-										[
-											$author$project$Html$Styled$text('Boss Only')
+											A3(
+											$author$project$Html$Styled$divS,
+											_List_fromArray(
+												[
+													$author$project$Main$menuDivStyles(model.bossOnly)
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$ChangeBossOnly(true))
+												]),
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Boss Only')
+												])),
+											A3(
+											$author$project$Html$Styled$divS,
+											_List_fromArray(
+												[
+													$author$project$Main$menuDivStyles(!model.bossOnly)
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$ChangeBossOnly(false))
+												]),
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Full Run')
+												]))
 										])),
 									A3(
 									$author$project$Html$Styled$divS,
 									_List_fromArray(
 										[
-											$author$project$Main$menuDivStyles(!model.bossOnly)
+											$author$project$Main$gridStyles,
+											$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)')
 										]),
+									_List_Nil,
 									_List_fromArray(
 										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$ChangeBossOnly(false))
-										]),
-									_List_fromArray(
-										[
-											$author$project$Html$Styled$text('Full Run')
+											A3($author$project$Main$zoneHtml, 1, model.zone, $author$project$Main$normalZones),
+											A3($author$project$Main$zoneHtml, 2, model.zone, $author$project$Main$eliteZones)
 										]))
 								])),
 							A3(
-							$author$project$Html$Styled$divS,
+							$author$project$Html$Styled$tableS,
 							_List_fromArray(
 								[
-									$author$project$Main$gridStyles,
-									$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)')
+									$author$project$Css$marginTop('2em'),
+									$author$project$Css$textAlign('center'),
+									$author$project$Css$borderJ(
+									_List_fromArray(
+										['1px', 'solid', $author$project$Design$lightGray])),
+									$author$project$Css$borderSpacing('0 0'),
+									$author$project$Css$borderRadius($author$project$Design$radius1),
+									A2(
+									$author$project$Css$mapSelector,
+									function (c) {
+										return c + ' tr';
+									},
+									_List_fromArray(
+										[
+											$author$project$Css$height('2em')
+										]))
 								]),
 							_List_Nil,
 							_List_fromArray(
 								[
-									A3($author$project$Main$zoneHtml, 1, model.zone, $author$project$Main$normalZones),
-									A3($author$project$Main$zoneHtml, 2, model.zone, $author$project$Main$eliteZones)
-								]))
-						])),
-					A3(
-					$author$project$Html$Styled$tableS,
-					_List_fromArray(
-						[
-							$author$project$Css$marginTop('2em'),
-							$author$project$Css$textAlign('center'),
-							$author$project$Css$borderJ(
-							_List_fromArray(
-								['1px', 'solid', $author$project$Design$lightGray])),
-							$author$project$Css$borderSpacing('0 0'),
-							$author$project$Css$borderRadius($author$project$Design$tableRadius),
-							A2(
-							$author$project$Css$mapSelector,
-							function (c) {
-								return c + ' tr';
-							},
-							_List_fromArray(
-								[
-									$author$project$Css$height('2em')
-								]))
-						]),
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$author$project$Html$Styled$thead,
-							_List_Nil,
-							_List_fromArray(
-								[
 									A2(
-									$author$project$Html$Styled$tr,
+									$author$project$Html$Styled$thead,
 									_List_Nil,
 									_List_fromArray(
 										[
-											A3(
-											$author$project$Html$Styled$thS,
-											_List_fromArray(
-												[
-													$author$project$Css$paddingLeft('1em')
-												]),
+											A2(
+											$author$project$Html$Styled$tr,
 											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Rank')
-												])),
-											A3(
-											$author$project$Html$Styled$thS,
-											_List_fromArray(
-												[
-													$author$project$Css$width('20vw')
-												]),
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Name')
-												])),
-											A3(
-											$author$project$Html$Styled$thS,
-											_List_fromArray(
-												[
-													$author$project$Css$width('7em')
-												]),
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Time')
-												]))
-										]))
-								])),
-							A2(
-							$author$project$Html$Styled$tbody,
-							_List_Nil,
-							A2(
-								$elm$core$List$indexedMap,
-								F2(
-									function (i, player) {
-										return A3(
-											$author$project$Html$Styled$trS,
 											_List_fromArray(
 												[
 													A3(
-													$author$project$Css$nthChild,
-													2,
-													1,
+													$author$project$Html$Styled$thS,
 													_List_fromArray(
 														[
-															$author$project$Css$background($author$project$Design$lightGray)
+															$author$project$Css$paddingLeft('1em')
+														]),
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Rank')
 														])),
-													$author$project$Css$lastChild(
+													A3(
+													$author$project$Html$Styled$thS,
+													_List_fromArray(
+														[
+															$author$project$Css$width('20vw')
+														]),
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Name')
+														])),
+													A3(
+													$author$project$Html$Styled$thS,
+													_List_fromArray(
+														[
+															$author$project$Css$width('7em')
+														]),
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Time')
+														]))
+												]))
+										])),
+									A2(
+									$author$project$Html$Styled$tbody,
+									_List_Nil,
+									A2(
+										$elm$core$List$indexedMap,
+										F2(
+											function (i, player) {
+												return A3(
+													$author$project$Html$Styled$trS,
+													_List_fromArray(
+														[
+															A3(
+															$author$project$Css$nthChild,
+															2,
+															1,
+															_List_fromArray(
+																[
+																	$author$project$Css$background($author$project$Design$lightGray)
+																])),
+															$author$project$Css$lastChild(
+															_List_fromArray(
+																[
+																	A2(
+																	$author$project$Css$mapSelector,
+																	function (c) {
+																		return c + ' > :first-child';
+																	},
+																	_List_fromArray(
+																		[
+																			$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
+																		])),
+																	A2(
+																	$author$project$Css$mapSelector,
+																	function (c) {
+																		return c + ' > :last-child';
+																	},
+																	_List_fromArray(
+																		[
+																			$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																		]))
+																]))
+														]),
+													_List_Nil,
 													_List_fromArray(
 														[
 															A2(
-															$author$project$Css$mapSelector,
-															function (c) {
-																return c + ' > :first-child';
-															},
+															$author$project$Html$Styled$td,
+															_List_Nil,
 															_List_fromArray(
 																[
-																	$author$project$Css$borderBottomLeftRadius($author$project$Design$tableRadius)
+																	$author$project$Html$Styled$text(
+																	$elm$core$String$fromInt(i + 1))
 																])),
 															A2(
-															$author$project$Css$mapSelector,
-															function (c) {
-																return c + ' > :last-child';
-															},
+															$author$project$Html$Styled$td,
+															_List_Nil,
 															_List_fromArray(
 																[
-																	$author$project$Css$borderBottomRightRadius($author$project$Design$tableRadius)
+																	$author$project$Html$Styled$text(player)
+																])),
+															A2(
+															$author$project$Html$Styled$td,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text(
+																	A3($author$project$Data$getTime, model.bossOnly, model.zone, player))
 																]))
-														]))
-												]),
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$Html$Styled$td,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text(
-															$elm$core$String$fromInt(i + 1))
-														])),
-													A2(
-													$author$project$Html$Styled$td,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text(player)
-														])),
-													A2(
-													$author$project$Html$Styled$td,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text(
-															A3($author$project$Data$getTime, model.bossOnly, model.zone, player))
-														]))
-												]));
-									}),
-								A2($author$project$Data$getPlayersWithRun, model.bossOnly, model.zone)))
+														]));
+											}),
+										A2($author$project$Data$getPlayersWithRun, model.bossOnly, model.zone)))
+								]))
 						]))
 				])),
 		title: ''

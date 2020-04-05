@@ -6,6 +6,6 @@ lightGray =
     "#ddd"
 
 
-tableRadius : String
-tableRadius =
+radius1 : String
+radius1 =
     ".7em"
