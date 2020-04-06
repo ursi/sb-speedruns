@@ -165,7 +165,11 @@ getTime bossOnly zone player =
                  else
                     ""
                 )
-                    ++ String.fromInt (modBy 60000 ms // 1000)
+                    ++ (modBy 60000 ms
+                            // 1000
+                            |> String.fromInt
+                            |> String.padLeft 2 '0'
+                       )
                     ++ "."
                     ++ (ms
                             |> modBy 1000

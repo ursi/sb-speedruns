@@ -5738,8 +5738,12 @@ var $author$project$Data$getTime = F3(
 			A2(
 				$elm$core$Maybe$map,
 				function (ms) {
-					return ((ms >= 60000) ? ($elm$core$String$fromInt((ms / 60000) | 0) + ':') : '') + ($elm$core$String$fromInt(
-						(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0) + ('.' + A3(
+					return ((ms >= 60000) ? ($elm$core$String$fromInt((ms / 60000) | 0) + ':') : '') + (A3(
+						$elm$core$String$padLeft,
+						2,
+						_Utils_chr('0'),
+						$elm$core$String$fromInt(
+							(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0)) + ('.' + A3(
 						$elm$core$String$padLeft,
 						3,
 						_Utils_chr('0'),
