@@ -6622,7 +6622,7 @@ var $author$project$Main$view = function (model) {
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('Time ends the moment the victory screen appears.')
+													$author$project$Html$Styled$text('Time ends the moment the callout is visible.')
 												]))
 										]))
 								]))

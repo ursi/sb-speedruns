@@ -155,7 +155,7 @@ view model =
                         [ H.li []
                             [ H.text "Time starts the moment the screen loads after either entering the boss room or the beginning of the zone, depending on which category you are running."
                             ]
-                        , H.li [] [ H.text "Time ends the moment the victory screen appears." ]
+                        , H.li [] [ H.text "Time ends the moment the callout is visible." ]
                         ]
                     ]
                 ]
