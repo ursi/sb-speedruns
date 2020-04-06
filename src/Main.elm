@@ -147,13 +147,14 @@ view model =
                             , H.text " A static zoom mod is allowed so that players with bigger monitors don't have an advantage."
                             ]
                         , H.li [] [ H.text "Macros and other scripts are not allowed." ]
+                        , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
                         , H.li [] [ H.text "Video of the whole run is required." ]
                         , H.li [] [ H.text "Only one entry is allowed per player per category." ]
                         ]
                     , H.h1 [] [ H.text "Timing" ]
                     , H.ul []
                         [ H.li []
-                            [ H.text "Time starts the moment the screen loads after either entering the boss room or the beginning of the zone, depending on which category you are running."
+                            [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running."
                             ]
                         , H.li [] [ H.text "Time ends the moment the callout is visible." ]
                         ]

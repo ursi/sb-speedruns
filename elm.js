@@ -6588,6 +6588,13 @@ var $author$project$Main$view = function (model) {
 											_List_Nil,
 											_List_fromArray(
 												[
+													$author$project$Html$Styled$text('All of the game mechanics involved in the run must be the same as the current version of the game.')
+												])),
+											A2(
+											$author$project$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
 													$author$project$Html$Styled$text('Video of the whole run is required.')
 												])),
 											A2(
@@ -6615,7 +6622,7 @@ var $author$project$Main$view = function (model) {
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('Time starts the moment the screen loads after either entering the boss room or the beginning of the zone, depending on which category you are running.')
+													$author$project$Html$Styled$text('Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.')
 												])),
 											A2(
 											$author$project$Html$Styled$li,
