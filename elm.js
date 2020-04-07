@@ -5705,15 +5705,16 @@ var $author$project$Main$ChangeCategory = function (a) {
 var $author$project$Main$ChangeShowingRules = function (a) {
 	return {$: 'ChangeShowingRules', a: a};
 };
+var $author$project$Html$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 'Node', a: a, b: b, c: c};
+	});
+var $author$project$Html$Styled$a = $author$project$Html$Styled$Node('a');
 var $author$project$Css$Internal$Single = F3(
 	function (a, b, c) {
 		return {$: 'Single', a: a, b: b, c: c};
 	});
 var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
-var $author$project$Html$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 'Node', a: a, b: b, c: c};
-	});
 var $author$project$Html$Styled$b = $author$project$Html$Styled$Node('b');
 var $author$project$Css$background = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'background');
 var $author$project$Css$Global$Rule = function (a) {
@@ -5823,6 +5824,33 @@ var $elm$core$Dict$get = F2(
 				}
 			}
 		}
+	});
+var $author$project$Data$getRunData = F4(
+	function (toData, category, zone, player) {
+		return A2(
+			$elm$core$Maybe$map,
+			toData,
+			A2(
+				$elm$core$Maybe$andThen,
+				$elm$core$Dict$get(zone),
+				A2(
+					$elm$core$Maybe$map,
+					$author$project$Data$getRuns(category),
+					A2($elm$core$Dict$get, player, $author$project$Data$data))));
+	});
+var $author$project$Data$getLink = F3(
+	function (category, zone, player) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A4(
+				$author$project$Data$getRunData,
+				function ($) {
+					return $.link;
+				},
+				category,
+				zone,
+				player));
 	});
 var $author$project$Data$getRawTime = F3(
 	function (category, zone, player) {
@@ -5946,7 +5974,14 @@ var $author$project$Data$getTime = F3(
 						$elm$core$String$fromInt(
 							A2($elm$core$Basics$modBy, 1000, ms)))));
 				},
-				A3($author$project$Data$getRawTime, category, zone, player)));
+				A4(
+					$author$project$Data$getRunData,
+					function ($) {
+						return $.time;
+					},
+					category,
+					zone,
+					player)));
 	});
 var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
 var $author$project$Css$batch = $author$project$Css$Internal$Batch;
@@ -5960,6 +5995,21 @@ var $author$project$Main$gridStyles = $author$project$Css$batch(
 var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
 var $author$project$Html$Styled$h1 = $author$project$Html$Styled$Node('h1');
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $author$project$Html$Styled$imgS = $author$project$Html$Styled$StyledNode('img');
 var $author$project$Css$justifyItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'justify-items');
 var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':last-child'));
@@ -5967,6 +6017,7 @@ var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
 var $author$project$Design$lightGray = '#ddd';
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
 var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
+var $author$project$Css$marginLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-left');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
 var $author$project$Css$maxWidth = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-width');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
@@ -6041,6 +6092,12 @@ var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$
 var $author$project$Design$radius1 = '.7em';
 var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
 var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $author$project$Html$Styled$tableS = $author$project$Html$Styled$StyledNode('table');
 var $author$project$Html$Styled$tbody = $author$project$Html$Styled$Node('tbody');
 var $author$project$Css$Global$td = A2(
@@ -6057,16 +6114,9 @@ var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead'
 var $author$project$Css$top = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'top');
 var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
 var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
+var $author$project$Css$transform = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'transform');
 var $author$project$Html$Styled$ul = $author$project$Html$Styled$Node('ul');
 var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $author$project$Html$Styled$addClass = A2(
 	$elm$core$Basics$composeL,
@@ -7056,7 +7106,30 @@ var $author$project$Main$view = function (model) {
 															_List_fromArray(
 																[
 																	$author$project$Html$Styled$text(
-																	A3($author$project$Data$getTime, model.category, model.zone, player))
+																	A3($author$project$Data$getTime, model.category, model.zone, player)),
+																	A2(
+																	$author$project$Html$Styled$a,
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$Attributes$href(
+																			A3($author$project$Data$getLink, model.category, model.zone, player))
+																		]),
+																	_List_fromArray(
+																		[
+																			A3(
+																			$author$project$Html$Styled$imgS,
+																			_List_fromArray(
+																				[
+																					$author$project$Css$height('1em'),
+																					$author$project$Css$transform('translateY(.14em)'),
+																					$author$project$Css$marginLeft('.3em')
+																				]),
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$src('film.svg')
+																				]),
+																			_List_Nil)
+																		]))
 																]))
 														]));
 											}),

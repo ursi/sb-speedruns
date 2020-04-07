@@ -1,6 +1,7 @@
 module Data exposing
     ( Category(..)
     , PlayerData
+    , getLink
     , getMostPopular
     , getPlayerData
     , getPlayersWithRun
@@ -139,7 +140,7 @@ getRawTime category zone player =
 
 getTime : Category -> String -> String -> String
 getTime category zone player =
-    getRawTime category zone player
+    getRunData .time category zone player
         |> Maybe.map
             (\ms ->
                 (if ms >= 60000 then
@@ -161,6 +162,21 @@ getTime category zone player =
                        )
             )
         |> Maybe.withDefault ""
+
+
+getLink : Category -> String -> String -> String
+getLink category zone player =
+    getRunData .link category zone player
+        |> Maybe.withDefault ""
+
+
+getRunData : (Run -> a) -> Category -> String -> String -> Maybe a
+getRunData toData category zone player =
+    data
+        |> Dict.get player
+        |> Maybe.map (getRuns category)
+        |> Maybe.andThen (Dict.get zone)
+        |> Maybe.map toData
 
 
 getRuns : Category -> PlayerData -> Dict String Run

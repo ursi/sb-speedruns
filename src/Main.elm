@@ -6,6 +6,7 @@ import Css.Global as G
 import Data exposing (Category(..))
 import Design as Ds
 import Dict exposing (Dict)
+import Html.Attributes as A
 import Html.Events as E
 import Html.Styled as H exposing (Html)
 
@@ -230,7 +231,19 @@ view model =
                                     []
                                     [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
                                     , H.td [] [ H.text player ]
-                                    , H.td [] [ H.text <| Data.getTime model.category model.zone player ]
+                                    , H.td []
+                                        [ H.text <|
+                                            Data.getTime model.category model.zone player
+                                        , H.a [ A.href <| Data.getLink model.category model.zone player ]
+                                            [ H.imgS
+                                                [ C.height "1em"
+                                                , C.transform "translateY(.14em)"
+                                                , C.marginLeft ".3em"
+                                                ]
+                                                [ A.src "film.svg" ]
+                                                []
+                                            ]
+                                        ]
                                     ]
                             )
                     )
