@@ -246,7 +246,7 @@ view model =
                                                     , H.a [ A.href <| run.link ]
                                                         [ H.imgS
                                                             [ rightOfText ]
-                                                            [ A.src "film.svg" ]
+                                                            [ A.src "images/film.svg" ]
                                                             []
                                                         ]
                                                     ]

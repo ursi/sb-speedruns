@@ -7140,7 +7140,7 @@ var $author$project$Main$view = function (model) {
 																						[$author$project$Main$rightOfText]),
 																					_List_fromArray(
 																						[
-																							$elm$html$Html$Attributes$src('film.svg')
+																							$elm$html$Html$Attributes$src('images/film.svg')
 																						]),
 																					_List_Nil)
 																				]))
