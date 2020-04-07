@@ -5733,6 +5733,9 @@ var $author$project$Css$Global$body = A2(
 	$elm$core$Basics$composeL,
 	$author$project$Css$Global$Rule,
 	$author$project$Css$Global$Rule_('body'));
+var $author$project$FoldIdentity$bool = function (b) {
+	return b ? $elm$core$Maybe$Just(b) : $elm$core$Maybe$Nothing;
+};
 var $author$project$Css$borderBottomLeftRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-left-radius');
 var $author$project$Css$borderBottomRightRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-right-radius');
 var $author$project$Css$borderJ = A2(
@@ -5785,6 +5788,48 @@ var $author$project$Css$firstChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':first-child'));
 var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
 var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $elm$core$String$padLeft = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			A2(
+				$elm$core$String$repeat,
+				n - $elm$core$String$length(string),
+				$elm$core$String$fromChar(_char)),
+			string);
+	});
+var $author$project$Data$formatTime = function (ms) {
+	return ((ms >= 60000) ? ($elm$core$String$fromInt((ms / 60000) | 0) + ':') : '') + (A3(
+		$elm$core$String$padLeft,
+		2,
+		_Utils_chr('0'),
+		$elm$core$String$fromInt(
+			(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0)) + ('.' + A3(
+		$elm$core$String$padLeft,
+		3,
+		_Utils_chr('0'),
+		$elm$core$String$fromInt(
+			A2($elm$core$Basics$modBy, 1000, ms)))));
+};
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -5824,33 +5869,6 @@ var $elm$core$Dict$get = F2(
 				}
 			}
 		}
-	});
-var $author$project$Data$getRunData = F4(
-	function (toData, category, zone, player) {
-		return A2(
-			$elm$core$Maybe$map,
-			toData,
-			A2(
-				$elm$core$Maybe$andThen,
-				$elm$core$Dict$get(zone),
-				A2(
-					$elm$core$Maybe$map,
-					$author$project$Data$getRuns(category),
-					A2($elm$core$Dict$get, player, $author$project$Data$data))));
-	});
-var $author$project$Data$getLink = F3(
-	function (category, zone, player) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			'',
-			A4(
-				$author$project$Data$getRunData,
-				function ($) {
-					return $.link;
-				},
-				category,
-				zone,
-				player));
 	});
 var $author$project$Data$getRawTime = F3(
 	function (category, zone, player) {
@@ -5925,63 +5943,15 @@ var $author$project$Data$getPlayersWithRun = F2(
 				_List_Nil,
 				$author$project$Data$data));
 	});
-var $elm$core$Basics$ge = _Utils_ge;
-var $elm$core$Basics$modBy = _Basics_modBy;
-var $elm$core$String$cons = _String_cons;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
-};
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
-var $elm$core$String$repeatHelp = F3(
-	function (n, chunk, result) {
-		return (n <= 0) ? result : A3(
-			$elm$core$String$repeatHelp,
-			n >> 1,
-			_Utils_ap(chunk, chunk),
-			(!(n & 1)) ? result : _Utils_ap(result, chunk));
-	});
-var $elm$core$String$repeat = F2(
-	function (n, chunk) {
-		return A3($elm$core$String$repeatHelp, n, chunk, '');
-	});
-var $elm$core$String$padLeft = F3(
-	function (n, _char, string) {
-		return _Utils_ap(
-			A2(
-				$elm$core$String$repeat,
-				n - $elm$core$String$length(string),
-				$elm$core$String$fromChar(_char)),
-			string);
-	});
-var $author$project$Data$getTime = F3(
+var $author$project$Data$getRun = F3(
 	function (category, zone, player) {
 		return A2(
-			$elm$core$Maybe$withDefault,
-			'',
+			$elm$core$Maybe$andThen,
+			$elm$core$Dict$get(zone),
 			A2(
 				$elm$core$Maybe$map,
-				function (ms) {
-					return ((ms >= 60000) ? ($elm$core$String$fromInt((ms / 60000) | 0) + ':') : '') + (A3(
-						$elm$core$String$padLeft,
-						2,
-						_Utils_chr('0'),
-						$elm$core$String$fromInt(
-							(A2($elm$core$Basics$modBy, 60000, ms) / 1000) | 0)) + ('.' + A3(
-						$elm$core$String$padLeft,
-						3,
-						_Utils_chr('0'),
-						$elm$core$String$fromInt(
-							A2($elm$core$Basics$modBy, 1000, ms)))));
-				},
-				A4(
-					$author$project$Data$getRunData,
-					function ($) {
-						return $.time;
-					},
-					category,
-					zone,
-					player)));
+				$author$project$Data$getRuns(category),
+				A2($elm$core$Dict$get, player, $author$project$Data$data)));
 	});
 var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
 var $author$project$Css$batch = $author$project$Css$Internal$Batch;
@@ -6009,15 +5979,26 @@ var $elm$html$Html$Attributes$href = function (url) {
 		'href',
 		_VirtualDom_noJavaScriptUri(url));
 };
+var $author$project$Html$Styled$Text = function (a) {
+	return {$: 'Text', a: a};
+};
+var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
+var $author$project$Main$idH = $author$project$Html$Styled$text('');
 var $author$project$Html$Styled$imgS = $author$project$Html$Styled$StyledNode('img');
 var $author$project$Css$justifyItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'justify-items');
 var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':last-child'));
 var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
 var $author$project$Design$lightGray = '#ddd';
+var $author$project$FoldIdentity$map = A2(
+	$elm$core$Basics$composeL,
+	A2(
+		$elm$core$Basics$composeL,
+		$elm$core$Basics$composeR($elm$core$Maybe$map),
+		$elm$core$Basics$composeL),
+	$elm$core$Maybe$withDefault);
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
 var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
-var $author$project$Css$marginLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-left');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
 var $author$project$Css$maxWidth = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-width');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
@@ -6091,7 +6072,30 @@ var $author$project$Css$paddingLeft = A2($author$project$Css$Internal$Single, $e
 var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
 var $author$project$Design$radius1 = '.7em';
 var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
+var $author$project$Css$marginLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-left');
+var $author$project$Css$transform = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'transform');
+var $author$project$Main$rightOfText = $author$project$Css$batch(
+	_List_fromArray(
+		[
+			$author$project$Css$height('1em'),
+			$author$project$Css$transform('translateY(.14em)'),
+			$author$project$Css$marginLeft('.3em')
+		]));
 var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
+var $author$project$Data$shellToPicture = function (shell) {
+	return 'images/' + function () {
+		switch (shell.$) {
+			case 'Wildfire':
+				return 'wildfire.png';
+			case 'Duskwing':
+				return 'duskwing.png';
+			case 'Ironclad':
+				return 'ironclad.png';
+			default:
+				return 'fabricator.png';
+		}
+	}();
+};
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -6105,16 +6109,11 @@ var $author$project$Css$Global$td = A2(
 	$author$project$Css$Global$Rule,
 	$author$project$Css$Global$Rule_('td'));
 var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
-var $author$project$Html$Styled$Text = function (a) {
-	return {$: 'Text', a: a};
-};
-var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
 var $author$project$Html$Styled$thS = $author$project$Html$Styled$StyledNode('th');
 var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
 var $author$project$Css$top = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'top');
 var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
 var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
-var $author$project$Css$transform = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'transform');
 var $author$project$Html$Styled$ul = $author$project$Html$Styled$Node('ul');
 var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
@@ -6728,155 +6727,161 @@ var $author$project$Main$view = function (model) {
 						[
 							$author$project$Html$Styled$text('Rules')
 						])),
-					model.showingRules ? A3(
-					$author$project$Html$Styled$divS,
-					_List_fromArray(
-						[
-							$author$project$Css$width('100%'),
-							$author$project$Css$height('100%'),
-							$author$project$Css$position('fixed'),
-							$author$project$Css$display('grid'),
-							$author$project$Css$justifyItems('center'),
-							$author$project$Css$alignItems('center'),
-							$author$project$Css$background('#0008')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Main$ChangeShowingRules(false))
-						]),
-					_List_fromArray(
-						[
-							A3(
+					A3(
+					$author$project$FoldIdentity$map,
+					$author$project$Main$idH,
+					function (_v0) {
+						return A3(
 							$author$project$Html$Styled$divS,
 							_List_fromArray(
 								[
-									$author$project$Css$background('white'),
-									$author$project$Css$width('35%'),
-									$author$project$Css$maxWidth('430px'),
-									$author$project$Css$fontSize('1rem'),
-									$author$project$Css$borderRadius('1em'),
-									$author$project$Css$padding('1em'),
-									A2(
-									$author$project$Css$child,
-									'h1',
-									_List_fromArray(
-										[
-											$author$project$Css$textAlign('center'),
-											$author$project$Css$fontSize('1.5rem')
-										])),
-									A2(
-									$author$project$Css$child,
-									'ul',
-									_List_fromArray(
-										[
-											$author$project$Css$children(
-											_List_fromArray(
-												[
-													$author$project$Css$firstChild(
-													_List_fromArray(
-														[
-															$author$project$Css$marginTop('0')
-														])),
-													$author$project$Css$marginTop('.6rem')
-												]))
-										]))
+									$author$project$Css$width('100%'),
+									$author$project$Css$height('100%'),
+									$author$project$Css$position('fixed'),
+									$author$project$Css$display('grid'),
+									$author$project$Css$justifyItems('center'),
+									$author$project$Css$alignItems('center'),
+									$author$project$Css$background('#0008')
 								]),
-							_List_Nil,
 							_List_fromArray(
 								[
-									A2(
-									$author$project$Html$Styled$h1,
-									_List_Nil,
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$ChangeShowingRules(false))
+								]),
+							_List_fromArray(
+								[
+									A3(
+									$author$project$Html$Styled$divS,
 									_List_fromArray(
 										[
-											$author$project$Html$Styled$text('Qualifying')
-										])),
-									A2(
-									$author$project$Html$Styled$ul,
-									_List_Nil,
-									_List_fromArray(
-										[
+											$author$project$Css$background('white'),
+											$author$project$Css$width('35%'),
+											$author$project$Css$maxWidth('430px'),
+											$author$project$Css$fontSize('1rem'),
+											$author$project$Css$borderRadius('1em'),
+											$author$project$Css$padding('1em'),
 											A2(
-											$author$project$Html$Styled$li,
-											_List_Nil,
+											$author$project$Css$child,
+											'h1',
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('The run must be a solo. You cannot receive help from any other players.')
+													$author$project$Css$textAlign('center'),
+													$author$project$Css$fontSize('1.5rem')
 												])),
 											A2(
-											$author$project$Html$Styled$li,
+											$author$project$Css$child,
+											'ul',
+											_List_fromArray(
+												[
+													$author$project$Css$children(
+													_List_fromArray(
+														[
+															$author$project$Css$firstChild(
+															_List_fromArray(
+																[
+																	$author$project$Css$marginTop('0')
+																])),
+															$author$project$Css$marginTop('.6rem')
+														]))
+												]))
+										]),
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$author$project$Html$Styled$h1,
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. '),
+													$author$project$Html$Styled$text('Qualifying')
+												])),
+											A2(
+											$author$project$Html$Styled$ul,
+											_List_Nil,
+											_List_fromArray(
+												[
 													A2(
-													$author$project$Html$Styled$b,
+													$author$project$Html$Styled$li,
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('All other mods are not allowed.')
+															$author$project$Html$Styled$text('The run must be a solo. You cannot receive help from any other players.')
 														])),
-													$author$project$Html$Styled$text(' A static zoom mod is allowed so that players with bigger monitors don\'t have an advantage.')
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. '),
+															A2(
+															$author$project$Html$Styled$b,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text('All other mods are not allowed.')
+																])),
+															$author$project$Html$Styled$text(' A static zoom mod is allowed so that players with bigger monitors don\'t have an advantage.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Macros and other scripts are not allowed.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('All of the game mechanics involved in the run must be the same as the current version of the game.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Video of the whole run is required.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Only one entry is allowed per player per category.')
+														]))
 												])),
 											A2(
-											$author$project$Html$Styled$li,
+											$author$project$Html$Styled$h1,
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('Macros and other scripts are not allowed.')
+													$author$project$Html$Styled$text('Timing')
 												])),
 											A2(
-											$author$project$Html$Styled$li,
+											$author$project$Html$Styled$ul,
 											_List_Nil,
 											_List_fromArray(
 												[
-													$author$project$Html$Styled$text('All of the game mechanics involved in the run must be the same as the current version of the game.')
-												])),
-											A2(
-											$author$project$Html$Styled$li,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Video of the whole run is required.')
-												])),
-											A2(
-											$author$project$Html$Styled$li,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Only one entry is allowed per player per category.')
-												]))
-										])),
-									A2(
-									$author$project$Html$Styled$h1,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$author$project$Html$Styled$text('Timing')
-										])),
-									A2(
-									$author$project$Html$Styled$ul,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$author$project$Html$Styled$li,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.')
-												])),
-											A2(
-											$author$project$Html$Styled$li,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Time ends the moment the callout is visible.')
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Time ends the moment the callout is visible.')
+														]))
 												]))
 										]))
-								]))
-						])) : $author$project$Html$Styled$text(''),
+								]));
+					},
+					$author$project$FoldIdentity$bool(model.showingRules)),
 					A3(
 					$author$project$Html$Styled$divS,
 					_List_fromArray(
@@ -7048,90 +7053,101 @@ var $author$project$Main$view = function (model) {
 										F2(
 											function (i, player) {
 												return A3(
-													$author$project$Html$Styled$trS,
-													_List_fromArray(
-														[
-															A3(
-															$author$project$Css$nthChild,
-															2,
-															1,
+													$author$project$FoldIdentity$map,
+													$author$project$Main$idH,
+													function (run) {
+														return A3(
+															$author$project$Html$Styled$trS,
 															_List_fromArray(
 																[
-																	$author$project$Css$children(
+																	A3(
+																	$author$project$Css$nthChild,
+																	2,
+																	1,
 																	_List_fromArray(
 																		[
-																			$author$project$Css$background($author$project$Design$lightGray)
-																		]))
-																])),
-															$author$project$Css$lastChild(
-															_List_fromArray(
-																[
-																	$author$project$Css$children(
+																			$author$project$Css$children(
+																			_List_fromArray(
+																				[
+																					$author$project$Css$background($author$project$Design$lightGray)
+																				]))
+																		])),
+																	$author$project$Css$lastChild(
 																	_List_fromArray(
 																		[
-																			$author$project$Css$firstChild(
+																			$author$project$Css$children(
 																			_List_fromArray(
 																				[
-																					$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
-																				])),
-																			$author$project$Css$lastChild(
-																			_List_fromArray(
-																				[
-																					$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																					$author$project$Css$firstChild(
+																					_List_fromArray(
+																						[
+																							$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
+																						])),
+																					$author$project$Css$lastChild(
+																					_List_fromArray(
+																						[
+																							$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																						]))
 																				]))
 																		]))
-																]))
-														]),
-													_List_Nil,
-													_List_fromArray(
-														[
-															A2(
-															$author$project$Html$Styled$td,
+																]),
 															_List_Nil,
 															_List_fromArray(
 																[
-																	$author$project$Html$Styled$text(
-																	$elm$core$String$fromInt(i + 1))
-																])),
-															A2(
-															$author$project$Html$Styled$td,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text(player)
-																])),
-															A2(
-															$author$project$Html$Styled$td,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text(
-																	A3($author$project$Data$getTime, model.category, model.zone, player)),
 																	A2(
-																	$author$project$Html$Styled$a,
+																	$author$project$Html$Styled$td,
+																	_List_Nil,
 																	_List_fromArray(
 																		[
-																			$elm$html$Html$Attributes$href(
-																			A3($author$project$Data$getLink, model.category, model.zone, player))
-																		]),
+																			$author$project$Html$Styled$text(
+																			$elm$core$String$fromInt(i + 1))
+																		])),
+																	A2(
+																	$author$project$Html$Styled$td,
+																	_List_Nil,
 																	_List_fromArray(
 																		[
+																			$author$project$Html$Styled$text(player),
 																			A3(
 																			$author$project$Html$Styled$imgS,
 																			_List_fromArray(
+																				[$author$project$Main$rightOfText]),
+																			_List_fromArray(
 																				[
-																					$author$project$Css$height('1em'),
-																					$author$project$Css$transform('translateY(.14em)'),
-																					$author$project$Css$marginLeft('.3em')
+																					$elm$html$Html$Attributes$src(
+																					$author$project$Data$shellToPicture(run.shell))
+																				]),
+																			_List_Nil)
+																		])),
+																	A2(
+																	$author$project$Html$Styled$td,
+																	_List_Nil,
+																	_List_fromArray(
+																		[
+																			$author$project$Html$Styled$text(
+																			$author$project$Data$formatTime(run.time)),
+																			A2(
+																			$author$project$Html$Styled$a,
+																			_List_fromArray(
+																				[
+																					$elm$html$Html$Attributes$href(run.link)
 																				]),
 																			_List_fromArray(
 																				[
-																					$elm$html$Html$Attributes$src('film.svg')
-																				]),
-																			_List_Nil)
+																					A3(
+																					$author$project$Html$Styled$imgS,
+																					_List_fromArray(
+																						[$author$project$Main$rightOfText]),
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$Attributes$src('film.svg')
+																						]),
+																					_List_Nil)
+																				]))
 																		]))
-																]))
-														]));
+																]));
+													},
+													A3($author$project$Data$getRun, model.category, model.zone, player));
 											}),
 										A2($author$project$Data$getPlayersWithRun, model.category, model.zone)))
 								]))

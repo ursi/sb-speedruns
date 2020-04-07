@@ -6,6 +6,7 @@ import Css.Global as G
 import Data exposing (Category(..))
 import Design as Ds
 import Dict exposing (Dict)
+import FoldIdentity as F
 import Html.Attributes as A
 import Html.Events as E
 import Html.Styled as H exposing (Html)
@@ -109,61 +110,61 @@ view model =
             ]
             [ E.onClick <| ChangeShowingRules True ]
             [ H.text "Rules" ]
-        , if model.showingRules then
-            H.divS
-                [ C.width "100%"
-                , C.height "100%"
-                , C.position "fixed"
-                , C.display "grid"
-                , C.justifyItems "center"
-                , C.alignItems "center"
-                , C.background "#0008"
-                ]
-                [ E.onClick <| ChangeShowingRules False ]
-                [ H.divS
-                    [ C.background "white"
-                    , C.width "35%"
-                    , C.maxWidth "430px"
-                    , C.fontSize "1rem"
-                    , C.borderRadius "1em"
-                    , C.padding "1em"
-                    , C.child "h1"
-                        [ C.textAlign "center"
-                        , C.fontSize "1.5rem"
+        , F.bool model.showingRules
+            |> F.map idH
+                (\_ ->
+                    H.divS
+                        [ C.width "100%"
+                        , C.height "100%"
+                        , C.position "fixed"
+                        , C.display "grid"
+                        , C.justifyItems "center"
+                        , C.alignItems "center"
+                        , C.background "#0008"
                         ]
-                    , C.child "ul"
-                        [ C.children
-                            [ C.firstChild [ C.marginTop "0" ]
-                            , C.marginTop ".6rem"
+                        [ E.onClick <| ChangeShowingRules False ]
+                        [ H.divS
+                            [ C.background "white"
+                            , C.width "35%"
+                            , C.maxWidth "430px"
+                            , C.fontSize "1rem"
+                            , C.borderRadius "1em"
+                            , C.padding "1em"
+                            , C.child "h1"
+                                [ C.textAlign "center"
+                                , C.fontSize "1.5rem"
+                                ]
+                            , C.child "ul"
+                                [ C.children
+                                    [ C.firstChild [ C.marginTop "0" ]
+                                    , C.marginTop ".6rem"
+                                    ]
+                                ]
+                            ]
+                            []
+                            [ H.h1 [] [ H.text "Qualifying" ]
+                            , H.ul []
+                                [ H.li [] [ H.text "The run must be a solo. You cannot receive help from any other players." ]
+                                , H.li []
+                                    [ H.text "The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. "
+                                    , H.b [] [ H.text "All other mods are not allowed." ]
+                                    , H.text " A static zoom mod is allowed so that players with bigger monitors don't have an advantage."
+                                    ]
+                                , H.li [] [ H.text "Macros and other scripts are not allowed." ]
+                                , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
+                                , H.li [] [ H.text "Video of the whole run is required." ]
+                                , H.li [] [ H.text "Only one entry is allowed per player per category." ]
+                                ]
+                            , H.h1 [] [ H.text "Timing" ]
+                            , H.ul []
+                                [ H.li []
+                                    [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running."
+                                    ]
+                                , H.li [] [ H.text "Time ends the moment the callout is visible." ]
+                                ]
                             ]
                         ]
-                    ]
-                    []
-                    [ H.h1 [] [ H.text "Qualifying" ]
-                    , H.ul []
-                        [ H.li [] [ H.text "The run must be a solo. You cannot receive help from any other players." ]
-                        , H.li []
-                            [ H.text "The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. "
-                            , H.b [] [ H.text "All other mods are not allowed." ]
-                            , H.text " A static zoom mod is allowed so that players with bigger monitors don't have an advantage."
-                            ]
-                        , H.li [] [ H.text "Macros and other scripts are not allowed." ]
-                        , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
-                        , H.li [] [ H.text "Video of the whole run is required." ]
-                        , H.li [] [ H.text "Only one entry is allowed per player per category." ]
-                        ]
-                    , H.h1 [] [ H.text "Timing" ]
-                    , H.ul []
-                        [ H.li []
-                            [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running."
-                            ]
-                        , H.li [] [ H.text "Time ends the moment the callout is visible." ]
-                        ]
-                    ]
-                ]
-
-          else
-            H.text ""
+                )
         , H.divS
             [ C.display "grid"
             , C.justifyItems "center"
@@ -219,32 +220,38 @@ view model =
                     (Data.getPlayersWithRun model.category model.zone
                         |> List.indexedMap
                             (\i player ->
-                                H.trS
-                                    [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
-                                    , C.lastChild
-                                        [ C.children
-                                            [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
-                                            , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
-                                            ]
-                                        ]
-                                    ]
-                                    []
-                                    [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
-                                    , H.td [] [ H.text player ]
-                                    , H.td []
-                                        [ H.text <|
-                                            Data.getTime model.category model.zone player
-                                        , H.a [ A.href <| Data.getLink model.category model.zone player ]
-                                            [ H.imgS
-                                                [ C.height "1em"
-                                                , C.transform "translateY(.14em)"
-                                                , C.marginLeft ".3em"
+                                Data.getRun model.category model.zone player
+                                    |> F.map idH
+                                        (\run ->
+                                            H.trS
+                                                [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
+                                                , C.lastChild
+                                                    [ C.children
+                                                        [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
+                                                        , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
+                                                        ]
+                                                    ]
                                                 ]
-                                                [ A.src "film.svg" ]
                                                 []
-                                            ]
-                                        ]
-                                    ]
+                                                [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
+                                                , H.td []
+                                                    [ H.text player
+                                                    , H.imgS
+                                                        [ rightOfText ]
+                                                        [ A.src <| Data.shellToPicture run.shell ]
+                                                        []
+                                                    ]
+                                                , H.td []
+                                                    [ H.text <| Data.formatTime run.time
+                                                    , H.a [ A.href <| run.link ]
+                                                        [ H.imgS
+                                                            [ rightOfText ]
+                                                            [ A.src "film.svg" ]
+                                                            []
+                                                        ]
+                                                    ]
+                                                ]
+                                        )
                             )
                     )
                 ]
@@ -258,6 +265,20 @@ view model =
                 , G.td [ C.padding "0" ]
                 ]
     }
+
+
+rightOfText : Declaration
+rightOfText =
+    C.batch
+        [ C.height "1em"
+        , C.transform "translateY(.14em)"
+        , C.marginLeft ".3em"
+        ]
+
+
+idH : Html Msg
+idH =
+    H.text ""
 
 
 zoneHtml : Int -> String -> List String -> Html Msg

@@ -1,11 +1,13 @@
 module Data exposing
     ( Category(..)
     , PlayerData
-    , getLink
+    , Run
+    , formatTime
     , getMostPopular
     , getPlayerData
     , getPlayersWithRun
-    , getTime
+    , getRun
+    , shellToPicture
     )
 
 import AssocList as A exposing (Dict)
@@ -138,45 +140,33 @@ getRawTime category zone player =
         |> Maybe.map .time
 
 
-getTime : Category -> String -> String -> String
-getTime category zone player =
-    getRunData .time category zone player
-        |> Maybe.map
-            (\ms ->
-                (if ms >= 60000 then
-                    String.fromInt (ms // 60000) ++ ":"
+formatTime : Int -> String
+formatTime ms =
+    (if ms >= 60000 then
+        String.fromInt (ms // 60000) ++ ":"
 
-                 else
-                    ""
-                )
-                    ++ (modBy 60000 ms
-                            // 1000
-                            |> String.fromInt
-                            |> String.padLeft 2 '0'
-                       )
-                    ++ "."
-                    ++ (ms
-                            |> modBy 1000
-                            |> String.fromInt
-                            |> String.padLeft 3 '0'
-                       )
-            )
-        |> Maybe.withDefault ""
+     else
+        ""
+    )
+        ++ (modBy 60000 ms
+                // 1000
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
+        ++ "."
+        ++ (ms
+                |> modBy 1000
+                |> String.fromInt
+                |> String.padLeft 3 '0'
+           )
 
 
-getLink : Category -> String -> String -> String
-getLink category zone player =
-    getRunData .link category zone player
-        |> Maybe.withDefault ""
-
-
-getRunData : (Run -> a) -> Category -> String -> String -> Maybe a
-getRunData toData category zone player =
+getRun : Category -> String -> String -> Maybe Run
+getRun category zone player =
     data
         |> Dict.get player
         |> Maybe.map (getRuns category)
         |> Maybe.andThen (Dict.get zone)
-        |> Maybe.map toData
 
 
 getRuns : Category -> PlayerData -> Dict String Run
@@ -245,3 +235,21 @@ gmpGet category =
 
 type alias RunAccumulator =
     A.Dict ( Category, String ) Int
+
+
+shellToPicture : Shell -> String
+shellToPicture shell =
+    "images/"
+        ++ (case shell of
+                Wildfire ->
+                    "wildfire.png"
+
+                Duskwing ->
+                    "duskwing.png"
+
+                Ironclad ->
+                    "ironclad.png"
+
+                Fabricator ->
+                    "fabricator.png"
+           )
