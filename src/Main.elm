@@ -134,12 +134,7 @@ view model =
                                 [ C.textAlign "center"
                                 , C.fontSize "1.5rem"
                                 ]
-                            , C.child "ul"
-                                [ C.children
-                                    [ C.firstChild [ C.marginTop "0" ]
-                                    , C.marginTop ".6rem"
-                                    ]
-                                ]
+                            , C.child "ul" [ C.descendants [ C.marginTop ".6rem" ] ]
                             ]
                             []
                             [ H.h1 [] [ H.text "Qualifying" ]
@@ -157,10 +152,27 @@ view model =
                                 ]
                             , H.h1 [] [ H.text "Timing" ]
                             , H.ul []
-                                [ H.li []
-                                    [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running."
+                                [ H.li [] [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running." ]
+                                , H.li []
+                                    [ H.text "Time ends the moment the"
+                                    , H.ul []
+                                        [ H.li []
+                                            [ H.b [] [ H.text "FF/FB:" ]
+                                            , H.text " \"Mission Complete\" text is visible."
+                                            ]
+                                        , H.li []
+                                            [ H.b [] [ H.text "Everything Else:" ]
+                                            , H.text " the callout is visible."
+                                            ]
+                                        ]
                                     ]
-                                , H.li [] [ H.text "Time ends the moment the callout is visible." ]
+                                ]
+                            , H.h1 [] [ H.text "Stock Category" ]
+                            , H.ul []
+                                [ H.li [] [ H.text "You must start the run with no gear in your inventory or equipped other than the stock gear." ]
+                                , H.li [] [ H.text "You must start the run with no boosts acquired." ]
+                                , H.li [] [ H.text "You are allowed to pick up any loot that drops during your run." ]
+                                , H.li [] [ H.text "Stock runs are the full level, not just the boss." ]
                                 ]
                             ]
                         ]

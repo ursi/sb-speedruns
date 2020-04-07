@@ -5792,6 +5792,8 @@ var $author$project$Css$child = function (tag) {
 };
 var $author$project$Css$children = $author$project$Css$mapSelector(
 	$author$project$Css$append(' > *'));
+var $author$project$Css$descendants = $author$project$Css$mapSelector(
+	$author$project$Css$append(' *'));
 var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
 var $author$project$Html$Styled$StyledNode = F4(
 	function (a, b, c, d) {
@@ -6787,14 +6789,9 @@ var $author$project$Main$view = function (model) {
 											'ul',
 											_List_fromArray(
 												[
-													$author$project$Css$children(
+													$author$project$Css$descendants(
 													_List_fromArray(
 														[
-															$author$project$Css$firstChild(
-															_List_fromArray(
-																[
-																	$author$project$Css$marginTop('0')
-																])),
 															$author$project$Css$marginTop('.6rem')
 														]))
 												]))
@@ -6889,7 +6886,82 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Time ends the moment the callout is visible.')
+															$author$project$Html$Styled$text('Time ends the moment the'),
+															A2(
+															$author$project$Html$Styled$ul,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	A2(
+																	$author$project$Html$Styled$li,
+																	_List_Nil,
+																	_List_fromArray(
+																		[
+																			A2(
+																			$author$project$Html$Styled$b,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$author$project$Html$Styled$text('FF/FB:')
+																				])),
+																			$author$project$Html$Styled$text(' \"Mission Complete\" text is visible.')
+																		])),
+																	A2(
+																	$author$project$Html$Styled$li,
+																	_List_Nil,
+																	_List_fromArray(
+																		[
+																			A2(
+																			$author$project$Html$Styled$b,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$author$project$Html$Styled$text('Everything Else:')
+																				])),
+																			$author$project$Html$Styled$text(' the callout is visible.')
+																		]))
+																]))
+														]))
+												])),
+											A2(
+											$author$project$Html$Styled$h1,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Stock Category')
+												])),
+											A2(
+											$author$project$Html$Styled$ul,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('You must start the run with no gear in your inventory or equipped other than the stock gear.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('You must start the run with no boosts acquired.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('You are allowed to pick up any loot that drops during your run.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Stock runs are the full level, not just the boss.')
 														]))
 												]))
 										]))
