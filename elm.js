@@ -6801,7 +6801,11 @@ var $author$project$Main$view = function (model) {
 															1,
 															_List_fromArray(
 																[
-																	$author$project$Css$background($author$project$Design$lightGray)
+																	$author$project$Css$children(
+																	_List_fromArray(
+																		[
+																			$author$project$Css$background($author$project$Design$lightGray)
+																		]))
 																])),
 															$author$project$Css$lastChild(
 															_List_fromArray(

@@ -216,7 +216,7 @@ view model =
                         |> List.indexedMap
                             (\i player ->
                                 H.trS
-                                    [ C.nthChild 2 1 [ C.background Ds.lightGray ]
+                                    [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
                                     , C.lastChild
                                         [ C.children
                                             [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
