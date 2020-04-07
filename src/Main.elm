@@ -189,6 +189,7 @@ view model =
                 , H.divS
                     [ gridStyles
                     , C.grid "repeat(2, max-content) / repeat(9, max-content)"
+                    , C.marginBottom "2em"
                     ]
                     []
                     [ zoneHtml 1 model.zone normalZones
@@ -196,8 +197,7 @@ view model =
                     ]
                 ]
             , H.tableS
-                [ C.marginTop "2em"
-                , C.textAlign "center"
+                [ C.textAlign "center"
                 , C.borderJ [ "1px", "solid", Ds.lightGray ]
                 , C.borderSpacing "0 0"
                 , C.borderRadius Ds.radius1

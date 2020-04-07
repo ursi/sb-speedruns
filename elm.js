@@ -5770,6 +5770,7 @@ var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
 var $author$project$Design$lightGray = '#ddd';
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
+var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
 var $author$project$Css$maxWidth = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-width');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
@@ -6705,7 +6706,8 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$Main$gridStyles,
-											$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)')
+											$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
+											$author$project$Css$marginBottom('2em')
 										]),
 									_List_Nil,
 									_List_fromArray(
@@ -6718,7 +6720,6 @@ var $author$project$Main$view = function (model) {
 							$author$project$Html$Styled$tableS,
 							_List_fromArray(
 								[
-									$author$project$Css$marginTop('2em'),
 									$author$project$Css$textAlign('center'),
 									$author$project$Css$borderJ(
 									_List_fromArray(
