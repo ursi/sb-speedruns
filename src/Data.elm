@@ -1,10 +1,13 @@
 module Data exposing
-    ( PlayerData
+    ( Category(..)
+    , PlayerData
+    , getMostPopular
     , getPlayerData
     , getPlayersWithRun
     , getTime
     )
 
+import AssocList as A exposing (Dict)
 import Dict exposing (Dict)
 
 
@@ -14,75 +17,53 @@ type alias Data =
 
 type alias PlayerData =
     { runs :
-        { bossOnly : Dict String Int
-        , fullRun : Dict String Int
+        { bossOnly : Dict String Run
+        , fullRun : Dict String Run
+        , stock : Dict String Run
         }
     }
 
 
+type alias Run =
+    { shell : Shell
+    , time : Int
+    , link : String
+    }
+
+
+type Shell
+    = Wildfire
+    | Duskwing
+    | Fabricator
+    | Ironclad
+
+
+type Category
+    = BossOnly
+    | FullRun
+    | Stock
+
+
 rawData =
-    [ ( "test1"
+    [ ( "Shade"
       , { runs =
             { bossOnly =
-                [ ( "FF", 75572 )
-                , ( "FB", 149906 )
+                [ ( "UB"
+                  , { shell = Wildfire
+                    , time = 264800
+                    , link = "https://www.youtube.com/watch?v=AcMofYmKzwU"
+                    }
+                  )
                 ]
             , fullRun =
-                [ ( "FF", 52555 )
-                , ( "FB", 2531 )
+                [ ( "UB"
+                  , { shell = Wildfire
+                    , time = 448834
+                    , link = "https://www.youtube.com/watch?v=AcMofYmKzwU"
+                    }
+                  )
                 ]
-            }
-        }
-      )
-    , ( "test2"
-      , { runs =
-            { bossOnly =
-                [ ( "FF", 35269 )
-                , ( "FB", 26060 )
-                ]
-            , fullRun =
-                [ ( "FF", 153438 )
-                , ( "FB", 106035 )
-                ]
-            }
-        }
-      )
-    , ( "test3"
-      , { runs =
-            { bossOnly =
-                [ ( "FF", 49416 )
-                , ( "FB", 176925 )
-                ]
-            , fullRun =
-                [ ( "FF", 108910 )
-                , ( "FB", 93904 )
-                ]
-            }
-        }
-      )
-    , ( "test4"
-      , { runs =
-            { bossOnly =
-                [ ( "FF", 90003 )
-                , ( "FB", 131548 )
-                ]
-            , fullRun =
-                [ ( "FF", 123525 )
-                , ( "FB", 140485 )
-                ]
-            }
-        }
-      )
-    , ( "test5"
-      , { runs =
-            { bossOnly =
-                [ ( "FF", 154710 )
-                , ( "FB", 51313 )
-                ]
-            , fullRun =
-                [ ( "FF", 104847 )
-                , ( "FB", 23973 )
-                ]
+            , stock = []
             }
         }
       )
@@ -98,6 +79,7 @@ data =
                 , { runs =
                         { bossOnly = Dict.fromList runs.bossOnly
                         , fullRun = Dict.fromList runs.fullRun
+                        , stock = Dict.fromList runs.stock
                         }
                   }
                 )
@@ -110,13 +92,13 @@ getPlayerData player =
     Dict.get player data
 
 
-getPlayersWithRun : Bool -> String -> List String
-getPlayersWithRun bossOnly zone =
+getPlayersWithRun : Category -> String -> List String
+getPlayersWithRun category zone =
     data
         |> Dict.foldl
             (\player playerData runList ->
                 playerData
-                    |> getRuns bossOnly
+                    |> getRuns category
                     |> Dict.member zone
                     |> (\bool ->
                             if bool then
@@ -140,23 +122,24 @@ getPlayersWithRun bossOnly zone =
                         else
                             EQ
                     )
-                    (getRawTime bossOnly zone p1)
-                    (getRawTime bossOnly zone p2)
+                    (getRawTime category zone p1)
+                    (getRawTime category zone p2)
                     |> Maybe.withDefault EQ
             )
 
 
-getRawTime : Bool -> String -> String -> Maybe Int
-getRawTime bossOnly zone player =
+getRawTime : Category -> String -> String -> Maybe Int
+getRawTime category zone player =
     data
         |> Dict.get player
-        |> Maybe.map (getRuns bossOnly)
+        |> Maybe.map (getRuns category)
         |> Maybe.andThen (Dict.get zone)
+        |> Maybe.map .time
 
 
-getTime : Bool -> String -> String -> String
-getTime bossOnly zone player =
-    getRawTime bossOnly zone player
+getTime : Category -> String -> String -> String
+getTime category zone player =
+    getRawTime category zone player
         |> Maybe.map
             (\ms ->
                 (if ms >= 60000 then
@@ -180,12 +163,69 @@ getTime bossOnly zone player =
         |> Maybe.withDefault ""
 
 
-getRuns : Bool -> PlayerData -> Dict String Int
-getRuns bossOnly =
+getRuns : Category -> PlayerData -> Dict String Run
+getRuns category =
     .runs
-        >> (if bossOnly then
-                .bossOnly
+        >> (case category of
+                BossOnly ->
+                    .bossOnly
 
-            else
-                .fullRun
+                FullRun ->
+                    .fullRun
+
+                Stock ->
+                    .stock
            )
+
+
+getMostPopular : List String -> ( Category, String )
+getMostPopular zones =
+    data
+        |> Dict.foldl
+            (\_ playerData accum ->
+                let
+                    bossOnly =
+                        gmpGet BossOnly playerData
+
+                    fullRun =
+                        gmpGet FullRun playerData
+
+                    stock =
+                        gmpGet Stock playerData
+                in
+                gmpMerge bossOnly accum
+                    |> gmpMerge fullRun
+                    |> gmpMerge stock
+            )
+            A.empty
+        |> A.toList
+        |> List.sortBy Tuple.second
+        |> List.head
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault ( FullRun, "FF" )
+
+
+gmpMerge : RunAccumulator -> RunAccumulator -> RunAccumulator
+gmpMerge ra1 ra2 =
+    A.merge
+        (\k a result -> A.insert k a result)
+        (\k a b result -> A.insert k (a + b) result)
+        (\k b result -> A.insert k b result)
+        ra1
+        ra2
+        A.empty
+
+
+gmpGet : Category -> PlayerData -> RunAccumulator
+gmpGet category =
+    getRuns category
+        >> Dict.toList
+        >> List.map
+            (\( zone, _ ) ->
+                ( ( category, zone ), 1 )
+            )
+        >> A.fromList
+
+
+type alias RunAccumulator =
+    A.Dict ( Category, String ) Int

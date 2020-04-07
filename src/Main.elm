@@ -3,7 +3,7 @@ module Main exposing (..)
 import Browser exposing (Document)
 import Css as C exposing (Declaration)
 import Css.Global as G
-import Data
+import Data exposing (Category(..))
 import Design as Ds
 import Dict exposing (Dict)
 import Html.Events as E
@@ -29,7 +29,7 @@ main =
 
 
 type alias Model =
-    { bossOnly : Bool
+    { category : Category
     , zone : String
     , showingRules : Bool
     }
@@ -37,13 +37,13 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model True "FF" False
+    let
+        ( category, zone ) =
+            Data.getMostPopular <| normalZones ++ eliteZones
+    in
+    ( Model category zone False
     , Cmd.none
     )
-
-
-type MenuOption
-    = BossOnly Bool
 
 
 normalZones : List String
@@ -61,7 +61,7 @@ eliteZones =
 
 
 type Msg
-    = ChangeBossOnly Bool
+    = ChangeCategory Category
     | ChangeZone String
     | ChangeShowingRules Bool
 
@@ -75,8 +75,8 @@ update msg model =
         ChangeZone zone ->
             ( { model | zone = zone }, Cmd.none )
 
-        ChangeBossOnly bool ->
-            ( { model | bossOnly = bool }, Cmd.none )
+        ChangeCategory category ->
+            ( { model | category = category }, Cmd.none )
 
 
 
@@ -179,11 +179,11 @@ view model =
                     , C.gridTemplateColumns "repeat(2, max-content)"
                     ]
                     []
-                    [ H.divS [ menuDivStyles model.bossOnly ]
-                        [ E.onClick <| ChangeBossOnly True ]
+                    [ H.divS [ menuDivStyles (model.category == BossOnly) ]
+                        [ E.onClick <| ChangeCategory BossOnly ]
                         [ H.text "Boss Only" ]
-                    , H.divS [ menuDivStyles (not model.bossOnly) ]
-                        [ E.onClick <| ChangeBossOnly False ]
+                    , H.divS [ menuDivStyles (model.category == FullRun) ]
+                        [ E.onClick <| ChangeCategory FullRun ]
                         [ H.text "Full Run" ]
                     ]
                 , H.divS
@@ -212,7 +212,7 @@ view model =
                         ]
                     ]
                 , H.tbody []
-                    (Data.getPlayersWithRun model.bossOnly model.zone
+                    (Data.getPlayersWithRun model.category model.zone
                         |> List.indexedMap
                             (\i player ->
                                 H.trS
@@ -227,7 +227,7 @@ view model =
                                     []
                                     [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
                                     , H.td [] [ H.text player ]
-                                    , H.td [] [ H.text <| Data.getTime model.bossOnly model.zone player ]
+                                    , H.td [] [ H.text <| Data.getTime model.category model.zone player ]
                                     ]
                             )
                     )

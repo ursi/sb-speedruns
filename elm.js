@@ -5182,139 +5182,14 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$document = _Browser_document;
 var $author$project$Main$Model = F3(
-	function (bossOnly, zone, showingRules) {
-		return {bossOnly: bossOnly, showingRules: showingRules, zone: zone};
+	function (category, zone, showingRules) {
+		return {category: category, showingRules: showingRules, zone: zone};
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(
-		A3($author$project$Main$Model, true, 'FF', false),
-		$elm$core$Platform$Cmd$none);
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$Main$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'ChangeShowingRules':
-				var bool = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{showingRules: bool}),
-					$elm$core$Platform$Cmd$none);
-			case 'ChangeZone':
-				var zone = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{zone: zone}),
-					$elm$core$Platform$Cmd$none);
-			default:
-				var bool = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bossOnly: bool}),
-					$elm$core$Platform$Cmd$none);
-		}
-	});
-var $author$project$Main$ChangeBossOnly = function (a) {
-	return {$: 'ChangeBossOnly', a: a};
-};
-var $author$project$Main$ChangeShowingRules = function (a) {
-	return {$: 'ChangeShowingRules', a: a};
-};
-var $author$project$Css$Internal$Single = F3(
-	function (a, b, c) {
-		return {$: 'Single', a: a, b: b, c: c};
-	});
-var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
-var $author$project$Html$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 'Node', a: a, b: b, c: c};
-	});
-var $author$project$Html$Styled$b = $author$project$Html$Styled$Node('b');
-var $author$project$Css$background = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'background');
-var $author$project$Css$Global$Rule = function (a) {
-	return {$: 'Rule', a: a};
-};
-var $author$project$Css$Global$Rule_ = F2(
-	function (selector, declarations) {
-		return {declarations: declarations, selector: selector};
-	});
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var $author$project$Css$Global$body = A2(
-	$elm$core$Basics$composeL,
-	$author$project$Css$Global$Rule,
-	$author$project$Css$Global$Rule_('body'));
-var $author$project$Css$borderBottomLeftRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-left-radius');
-var $author$project$Css$borderBottomRightRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-right-radius');
-var $author$project$Css$borderJ = A2(
-	$elm$core$Basics$composeL,
-	A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border'),
-	$elm$core$String$join(' '));
-var $author$project$Css$borderRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-radius');
-var $author$project$Css$borderSpacing = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-spacing');
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $author$project$Css$append = A2(
-	$elm$core$Basics$composeL,
-	$elm$core$Basics$composeR($elm$core$Basics$append),
-	$elm$core$Basics$apR);
-var $author$project$Css$Internal$Batch = function (a) {
-	return {$: 'Batch', a: a};
-};
-var $author$project$Css$mapSelector = function (classToSelector) {
-	return A2(
-		$elm$core$Basics$composeR,
-		$elm$core$List$map(
-			function (declaration_) {
-				if (declaration_.$ === 'Single') {
-					var currentClassToSelector = declaration_.a;
-					var property = declaration_.b;
-					var value = declaration_.c;
-					return A3(
-						$author$project$Css$Internal$Single,
-						A2($elm$core$Basics$composeL, currentClassToSelector, classToSelector),
-						property,
-						value);
-				} else {
-					var declarations = declaration_.a;
-					return A2($author$project$Css$mapSelector, classToSelector, declarations);
-				}
-			}),
-		$author$project$Css$Internal$Batch);
-};
-var $author$project$Css$child = function (tag) {
-	return $author$project$Css$mapSelector(
-		$author$project$Css$append(' > ' + tag));
-};
-var $author$project$Css$children = $author$project$Css$mapSelector(
-	$author$project$Css$append(' > *'));
-var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
-var $author$project$Html$Styled$StyledNode = F4(
-	function (a, b, c, d) {
-		return {$: 'StyledNode', a: a, b: b, c: c, d: d};
-	});
-var $author$project$Html$Styled$divS = $author$project$Html$Styled$StyledNode('div');
 var $author$project$Main$eliteZones = _List_fromArray(
 	['eFF', 'eFB', 'eFC', 'eVQ', 'eUB', 'eST', 'eTL', 'eGY']);
-var $author$project$Css$firstChild = $author$project$Css$mapSelector(
-	$author$project$Css$append(':first-child'));
-var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
-var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
+var $author$project$Data$BossOnly = {$: 'BossOnly'};
+var $author$project$Data$FullRun = {$: 'FullRun'};
+var $author$project$Data$Stock = {$: 'Stock'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Dict$Black = {$: 'Black'};
@@ -5438,86 +5313,26 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
+var $author$project$Data$Wildfire = {$: 'Wildfire'};
 var $author$project$Data$rawData = _List_fromArray(
 	[
 		_Utils_Tuple2(
-		'test1',
+		'Shade',
 		{
 			runs: {
 				bossOnly: _List_fromArray(
 					[
-						_Utils_Tuple2('FF', 75572),
-						_Utils_Tuple2('FB', 149906)
+						_Utils_Tuple2(
+						'UB',
+						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 264800})
 					]),
 				fullRun: _List_fromArray(
 					[
-						_Utils_Tuple2('FF', 52555),
-						_Utils_Tuple2('FB', 2531)
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'test2',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 35269),
-						_Utils_Tuple2('FB', 26060)
+						_Utils_Tuple2(
+						'UB',
+						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 448834})
 					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 153438),
-						_Utils_Tuple2('FB', 106035)
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'test3',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 49416),
-						_Utils_Tuple2('FB', 176925)
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 108910),
-						_Utils_Tuple2('FB', 93904)
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'test4',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 90003),
-						_Utils_Tuple2('FB', 131548)
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 123525),
-						_Utils_Tuple2('FB', 140485)
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'test5',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 154710),
-						_Utils_Tuple2('FB', 51313)
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2('FF', 104847),
-						_Utils_Tuple2('FB', 23973)
-					])
+				stock: _List_Nil
 			}
 		})
 	]);
@@ -5532,11 +5347,16 @@ var $author$project$Data$data = $elm$core$Dict$fromList(
 				{
 					runs: {
 						bossOnly: $elm$core$Dict$fromList(runs.bossOnly),
-						fullRun: $elm$core$Dict$fromList(runs.fullRun)
+						fullRun: $elm$core$Dict$fromList(runs.fullRun),
+						stock: $elm$core$Dict$fromList(runs.stock)
 					}
 				});
 		},
 		$author$project$Data$rawData));
+var $pzp1997$assoc_list$AssocList$D = function (a) {
+	return {$: 'D', a: a};
+};
+var $pzp1997$assoc_list$AssocList$empty = $pzp1997$assoc_list$AssocList$D(_List_Nil);
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -5562,6 +5382,408 @@ var $elm$core$Dict$foldl = F3(
 			}
 		}
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $pzp1997$assoc_list$AssocList$remove = F2(
+	function (targetKey, _v0) {
+		var alist = _v0.a;
+		return $pzp1997$assoc_list$AssocList$D(
+			A2(
+				$elm$core$List$filter,
+				function (_v1) {
+					var key = _v1.a;
+					return !_Utils_eq(key, targetKey);
+				},
+				alist));
+	});
+var $pzp1997$assoc_list$AssocList$insert = F3(
+	function (key, value, dict) {
+		var _v0 = A2($pzp1997$assoc_list$AssocList$remove, key, dict);
+		var alteredAlist = _v0.a;
+		return $pzp1997$assoc_list$AssocList$D(
+			A2(
+				$elm$core$List$cons,
+				_Utils_Tuple2(key, value),
+				alteredAlist));
+	});
+var $pzp1997$assoc_list$AssocList$fromList = function (alist) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, result) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($pzp1997$assoc_list$AssocList$insert, key, value, result);
+			}),
+		$pzp1997$assoc_list$AssocList$D(_List_Nil),
+		alist);
+};
+var $author$project$Data$getRuns = function (category) {
+	return A2(
+		$elm$core$Basics$composeR,
+		function ($) {
+			return $.runs;
+		},
+		function () {
+			switch (category.$) {
+				case 'BossOnly':
+					return function ($) {
+						return $.bossOnly;
+					};
+				case 'FullRun':
+					return function ($) {
+						return $.fullRun;
+					};
+				default:
+					return function ($) {
+						return $.stock;
+					};
+			}
+		}());
+};
+var $author$project$Data$gmpGet = function (category) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$author$project$Data$getRuns(category),
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$Dict$toList,
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$List$map(
+					function (_v0) {
+						var zone = _v0.a;
+						return _Utils_Tuple2(
+							_Utils_Tuple2(category, zone),
+							1);
+					}),
+				$pzp1997$assoc_list$AssocList$fromList)));
+};
+var $pzp1997$assoc_list$AssocList$get = F2(
+	function (targetKey, _v0) {
+		get:
+		while (true) {
+			var alist = _v0.a;
+			if (!alist.b) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var _v2 = alist.a;
+				var key = _v2.a;
+				var value = _v2.b;
+				var rest = alist.b;
+				if (_Utils_eq(key, targetKey)) {
+					return $elm$core$Maybe$Just(value);
+				} else {
+					var $temp$targetKey = targetKey,
+						$temp$_v0 = $pzp1997$assoc_list$AssocList$D(rest);
+					targetKey = $temp$targetKey;
+					_v0 = $temp$_v0;
+					continue get;
+				}
+			}
+		}
+	});
+var $pzp1997$assoc_list$AssocList$member = F2(
+	function (targetKey, dict) {
+		var _v0 = A2($pzp1997$assoc_list$AssocList$get, targetKey, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $elm$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _v0) {
+				var trues = _v0.a;
+				var falses = _v0.b;
+				return pred(x) ? _Utils_Tuple2(
+					A2($elm$core$List$cons, x, trues),
+					falses) : _Utils_Tuple2(
+					trues,
+					A2($elm$core$List$cons, x, falses));
+			});
+		return A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(_List_Nil, _List_Nil),
+			list);
+	});
+var $pzp1997$assoc_list$AssocList$merge = F6(
+	function (leftStep, bothStep, rightStep, leftDict, _v0, initialResult) {
+		var leftAlist = leftDict.a;
+		var rightAlist = _v0.a;
+		var _v1 = A2(
+			$elm$core$List$partition,
+			function (_v2) {
+				var key = _v2.a;
+				return A2($pzp1997$assoc_list$AssocList$member, key, leftDict);
+			},
+			rightAlist);
+		var inBothAlist = _v1.a;
+		var inRightOnlyAlist = _v1.b;
+		var intermediateResult = A3(
+			$elm$core$List$foldr,
+			F2(
+				function (_v5, result) {
+					var rKey = _v5.a;
+					var rValue = _v5.b;
+					return A3(rightStep, rKey, rValue, result);
+				}),
+			initialResult,
+			inRightOnlyAlist);
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (_v3, result) {
+					var lKey = _v3.a;
+					var lValue = _v3.b;
+					var _v4 = A2(
+						$pzp1997$assoc_list$AssocList$get,
+						lKey,
+						$pzp1997$assoc_list$AssocList$D(inBothAlist));
+					if (_v4.$ === 'Just') {
+						var rValue = _v4.a;
+						return A4(bothStep, lKey, lValue, rValue, result);
+					} else {
+						return A3(leftStep, lKey, lValue, result);
+					}
+				}),
+			intermediateResult,
+			leftAlist);
+	});
+var $author$project$Data$gmpMerge = F2(
+	function (ra1, ra2) {
+		return A6(
+			$pzp1997$assoc_list$AssocList$merge,
+			F3(
+				function (k, a, result) {
+					return A3($pzp1997$assoc_list$AssocList$insert, k, a, result);
+				}),
+			F4(
+				function (k, a, b, result) {
+					return A3($pzp1997$assoc_list$AssocList$insert, k, a + b, result);
+				}),
+			F3(
+				function (k, b, result) {
+					return A3($pzp1997$assoc_list$AssocList$insert, k, b, result);
+				}),
+			ra1,
+			ra2,
+			$pzp1997$assoc_list$AssocList$empty);
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$core$List$sortBy = _List_sortBy;
+var $pzp1997$assoc_list$AssocList$toList = function (_v0) {
+	var alist = _v0.a;
+	return alist;
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Data$getMostPopular = function (zones) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		_Utils_Tuple2($author$project$Data$FullRun, 'FF'),
+		A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$first,
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$sortBy,
+					$elm$core$Tuple$second,
+					$pzp1997$assoc_list$AssocList$toList(
+						A3(
+							$elm$core$Dict$foldl,
+							F3(
+								function (_v0, playerData, accum) {
+									var stock = A2($author$project$Data$gmpGet, $author$project$Data$Stock, playerData);
+									var fullRun = A2($author$project$Data$gmpGet, $author$project$Data$FullRun, playerData);
+									var bossOnly = A2($author$project$Data$gmpGet, $author$project$Data$BossOnly, playerData);
+									return A2(
+										$author$project$Data$gmpMerge,
+										stock,
+										A2(
+											$author$project$Data$gmpMerge,
+											fullRun,
+											A2($author$project$Data$gmpMerge, bossOnly, accum)));
+								}),
+							$pzp1997$assoc_list$AssocList$empty,
+							$author$project$Data$data))))));
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$normalZones = _List_fromArray(
+	['FF', 'FB', 'FC', 'VQ', 'UB', 'ST', 'TL', 'GY', 'SC']);
+var $author$project$Main$init = function (_v0) {
+	var _v1 = $author$project$Data$getMostPopular(
+		_Utils_ap($author$project$Main$normalZones, $author$project$Main$eliteZones));
+	var category = _v1.a;
+	var zone = _v1.b;
+	return _Utils_Tuple2(
+		A3($author$project$Main$Model, category, zone, false),
+		$elm$core$Platform$Cmd$none);
+};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'ChangeShowingRules':
+				var bool = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showingRules: bool}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeZone':
+				var zone = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{zone: zone}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var category = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{category: category}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Main$ChangeCategory = function (a) {
+	return {$: 'ChangeCategory', a: a};
+};
+var $author$project$Main$ChangeShowingRules = function (a) {
+	return {$: 'ChangeShowingRules', a: a};
+};
+var $author$project$Css$Internal$Single = F3(
+	function (a, b, c) {
+		return {$: 'Single', a: a, b: b, c: c};
+	});
+var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
+var $author$project$Html$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 'Node', a: a, b: b, c: c};
+	});
+var $author$project$Html$Styled$b = $author$project$Html$Styled$Node('b');
+var $author$project$Css$background = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'background');
+var $author$project$Css$Global$Rule = function (a) {
+	return {$: 'Rule', a: a};
+};
+var $author$project$Css$Global$Rule_ = F2(
+	function (selector, declarations) {
+		return {declarations: declarations, selector: selector};
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Css$Global$body = A2(
+	$elm$core$Basics$composeL,
+	$author$project$Css$Global$Rule,
+	$author$project$Css$Global$Rule_('body'));
+var $author$project$Css$borderBottomLeftRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-left-radius');
+var $author$project$Css$borderBottomRightRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-right-radius');
+var $author$project$Css$borderJ = A2(
+	$elm$core$Basics$composeL,
+	A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border'),
+	$elm$core$String$join(' '));
+var $author$project$Css$borderRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-radius');
+var $author$project$Css$borderSpacing = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-spacing');
+var $author$project$Css$append = A2(
+	$elm$core$Basics$composeL,
+	$elm$core$Basics$composeR($elm$core$Basics$append),
+	$elm$core$Basics$apR);
+var $author$project$Css$Internal$Batch = function (a) {
+	return {$: 'Batch', a: a};
+};
+var $author$project$Css$mapSelector = function (classToSelector) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map(
+			function (declaration_) {
+				if (declaration_.$ === 'Single') {
+					var currentClassToSelector = declaration_.a;
+					var property = declaration_.b;
+					var value = declaration_.c;
+					return A3(
+						$author$project$Css$Internal$Single,
+						A2($elm$core$Basics$composeL, currentClassToSelector, classToSelector),
+						property,
+						value);
+				} else {
+					var declarations = declaration_.a;
+					return A2($author$project$Css$mapSelector, classToSelector, declarations);
+				}
+			}),
+		$author$project$Css$Internal$Batch);
+};
+var $author$project$Css$child = function (tag) {
+	return $author$project$Css$mapSelector(
+		$author$project$Css$append(' > ' + tag));
+};
+var $author$project$Css$children = $author$project$Css$mapSelector(
+	$author$project$Css$append(' > *'));
+var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
+var $author$project$Html$Styled$StyledNode = F4(
+	function (a, b, c, d) {
+		return {$: 'StyledNode', a: a, b: b, c: c, d: d};
+	});
+var $author$project$Html$Styled$divS = $author$project$Html$Styled$StyledNode('div');
+var $author$project$Css$firstChild = $author$project$Css$mapSelector(
+	$author$project$Css$append(':first-child'));
+var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
+var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -5602,37 +5824,20 @@ var $elm$core$Dict$get = F2(
 			}
 		}
 	});
-var $author$project$Data$getRuns = function (bossOnly) {
-	return A2(
-		$elm$core$Basics$composeR,
-		function ($) {
-			return $.runs;
-		},
-		bossOnly ? function ($) {
-			return $.bossOnly;
-		} : function ($) {
-			return $.fullRun;
-		});
-};
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $author$project$Data$getRawTime = F3(
-	function (bossOnly, zone, player) {
+	function (category, zone, player) {
 		return A2(
-			$elm$core$Maybe$andThen,
-			$elm$core$Dict$get(zone),
+			$elm$core$Maybe$map,
+			function ($) {
+				return $.time;
+			},
 			A2(
-				$elm$core$Maybe$map,
-				$author$project$Data$getRuns(bossOnly),
-				A2($elm$core$Dict$get, player, $author$project$Data$data)));
+				$elm$core$Maybe$andThen,
+				$elm$core$Dict$get(zone),
+				A2(
+					$elm$core$Maybe$map,
+					$author$project$Data$getRuns(category),
+					A2($elm$core$Dict$get, player, $author$project$Data$data))));
 	});
 var $elm$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
@@ -5659,17 +5864,8 @@ var $elm$core$Dict$member = F2(
 		}
 	});
 var $elm$core$List$sortWith = _List_sortWith;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Data$getPlayersWithRun = F2(
-	function (bossOnly, zone) {
+	function (category, zone) {
 		return A2(
 			$elm$core$List$sortWith,
 			F2(
@@ -5683,8 +5879,8 @@ var $author$project$Data$getPlayersWithRun = F2(
 								function (t1, t2) {
 									return (_Utils_cmp(t1, t2) > 0) ? $elm$core$Basics$GT : ((_Utils_cmp(t1, t2) < 0) ? $elm$core$Basics$LT : $elm$core$Basics$EQ);
 								}),
-							A3($author$project$Data$getRawTime, bossOnly, zone, p1),
-							A3($author$project$Data$getRawTime, bossOnly, zone, p2)));
+							A3($author$project$Data$getRawTime, category, zone, p1),
+							A3($author$project$Data$getRawTime, category, zone, p2)));
 				}),
 			A3(
 				$elm$core$Dict$foldl,
@@ -5696,7 +5892,7 @@ var $author$project$Data$getPlayersWithRun = F2(
 							A2(
 								$elm$core$Dict$member,
 								zone,
-								A2($author$project$Data$getRuns, bossOnly, playerData)));
+								A2($author$project$Data$getRuns, category, playerData)));
 					}),
 				_List_Nil,
 				$author$project$Data$data));
@@ -5731,7 +5927,7 @@ var $elm$core$String$padLeft = F3(
 			string);
 	});
 var $author$project$Data$getTime = F3(
-	function (bossOnly, zone, player) {
+	function (category, zone, player) {
 		return A2(
 			$elm$core$Maybe$withDefault,
 			'',
@@ -5750,7 +5946,7 @@ var $author$project$Data$getTime = F3(
 						$elm$core$String$fromInt(
 							A2($elm$core$Basics$modBy, 1000, ms)))));
 				},
-				A3($author$project$Data$getRawTime, bossOnly, zone, player)));
+				A3($author$project$Data$getRawTime, category, zone, player)));
 	});
 var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
 var $author$project$Css$batch = $author$project$Css$Internal$Batch;
@@ -5806,9 +6002,6 @@ var $author$project$Main$menuDivStyles = function (selected) {
 				$author$project$Css$userSelect('none')
 			]));
 };
-var $author$project$Main$normalZones = _List_fromArray(
-	['FF', 'FB', 'FC', 'VQ', 'UB', 'ST', 'TL', 'GY', 'SC']);
-var $elm$core$Basics$not = _Basics_not;
 var $author$project$Css$anpb = F2(
 	function (a, b) {
 		return $elm$core$String$fromInt(a) + ('n+' + $elm$core$String$fromInt(b));
@@ -5891,7 +6084,6 @@ var $Skinney$murmur3$Murmur3$multiplyBy = F2(
 	function (b, a) {
 		return ((a & 65535) * b) + ((((a >>> 16) * b) & 65535) << 16);
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Bitwise$or = _Bitwise_or;
 var $Skinney$murmur3$Murmur3$rotlBy = F2(
 	function (b, a) {
@@ -6068,10 +6260,6 @@ var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
 };
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $author$project$Html$Styled$folder = F2(
@@ -6674,12 +6862,13 @@ var $author$project$Main$view = function (model) {
 											$author$project$Html$Styled$divS,
 											_List_fromArray(
 												[
-													$author$project$Main$menuDivStyles(model.bossOnly)
+													$author$project$Main$menuDivStyles(
+													_Utils_eq(model.category, $author$project$Data$BossOnly))
 												]),
 											_List_fromArray(
 												[
 													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeBossOnly(true))
+													$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
 												]),
 											_List_fromArray(
 												[
@@ -6689,12 +6878,13 @@ var $author$project$Main$view = function (model) {
 											$author$project$Html$Styled$divS,
 											_List_fromArray(
 												[
-													$author$project$Main$menuDivStyles(!model.bossOnly)
+													$author$project$Main$menuDivStyles(
+													_Utils_eq(model.category, $author$project$Data$FullRun))
 												]),
 											_List_fromArray(
 												[
 													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeBossOnly(false))
+													$author$project$Main$ChangeCategory($author$project$Data$FullRun))
 												]),
 											_List_fromArray(
 												[
@@ -6850,11 +7040,11 @@ var $author$project$Main$view = function (model) {
 															_List_fromArray(
 																[
 																	$author$project$Html$Styled$text(
-																	A3($author$project$Data$getTime, model.bossOnly, model.zone, player))
+																	A3($author$project$Data$getTime, model.category, model.zone, player))
 																]))
 														]));
 											}),
-										A2($author$project$Data$getPlayersWithRun, model.bossOnly, model.zone)))
+										A2($author$project$Data$getPlayersWithRun, model.category, model.zone)))
 								]))
 						]))
 				])),
