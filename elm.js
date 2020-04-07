@@ -6648,6 +6648,7 @@ var $author$project$Html$Styled$withStyles = F2(
 				$author$project$Html$Styled$toStyleNodes(styleDict)),
 			nodes_);
 	});
+var $author$project$Css$zIndex = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'z-index');
 var $author$project$Main$ChangeZone = function (a) {
 	return {$: 'ChangeZone', a: a};
 };
@@ -6741,7 +6742,8 @@ var $author$project$Main$view = function (model) {
 									$author$project$Css$display('grid'),
 									$author$project$Css$justifyItems('center'),
 									$author$project$Css$alignItems('center'),
-									$author$project$Css$background('#0008')
+									$author$project$Css$background('#0008'),
+									$author$project$Css$zIndex('1')
 								]),
 							_List_fromArray(
 								[

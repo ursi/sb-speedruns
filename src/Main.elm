@@ -121,6 +121,7 @@ view model =
                         , C.justifyItems "center"
                         , C.alignItems "center"
                         , C.background "#0008"
+                        , C.zIndex "1"
                         ]
                         [ E.onClick <| ChangeShowingRules False ]
                         [ H.divS
