@@ -6853,7 +6853,7 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$Main$gridStyles,
-											$author$project$Css$gridTemplateColumns('repeat(2, max-content)')
+											$author$project$Css$gridTemplateColumns('repeat(3, max-content)')
 										]),
 									_List_Nil,
 									_List_fromArray(
@@ -6889,6 +6889,22 @@ var $author$project$Main$view = function (model) {
 											_List_fromArray(
 												[
 													$author$project$Html$Styled$text('Full Run')
+												])),
+											A3(
+											$author$project$Html$Styled$divS,
+											_List_fromArray(
+												[
+													$author$project$Main$menuDivStyles(
+													_Utils_eq(model.category, $author$project$Data$Stock))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$ChangeCategory($author$project$Data$Stock))
+												]),
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Stock')
 												]))
 										])),
 									A3(

@@ -176,7 +176,7 @@ view model =
                 []
                 [ H.divS
                     [ gridStyles
-                    , C.gridTemplateColumns "repeat(2, max-content)"
+                    , C.gridTemplateColumns "repeat(3, max-content)"
                     ]
                     []
                     [ H.divS [ menuDivStyles (model.category == BossOnly) ]
@@ -185,6 +185,9 @@ view model =
                     , H.divS [ menuDivStyles (model.category == FullRun) ]
                         [ E.onClick <| ChangeCategory FullRun ]
                         [ H.text "Full Run" ]
+                    , H.divS [ menuDivStyles (model.category == Stock) ]
+                        [ E.onClick <| ChangeCategory Stock ]
+                        [ H.text "Stock" ]
                     ]
                 , H.divS
                     [ gridStyles
