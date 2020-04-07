@@ -218,10 +218,10 @@ view model =
                                 H.trS
                                     [ C.nthChild 2 1 [ C.background Ds.lightGray ]
                                     , C.lastChild
-                                        [ C.mapSelector (\c -> c ++ " > :first-child")
-                                            [ C.borderBottomLeftRadius Ds.radius1 ]
-                                        , C.mapSelector (\c -> c ++ " > :last-child")
-                                            [ C.borderBottomRightRadius Ds.radius1 ]
+                                        [ C.children
+                                            [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
+                                            , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
+                                            ]
                                         ]
                                     ]
                                     []

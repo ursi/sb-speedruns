@@ -6805,23 +6805,19 @@ var $author$project$Main$view = function (model) {
 															$author$project$Css$lastChild(
 															_List_fromArray(
 																[
-																	A2(
-																	$author$project$Css$mapSelector,
-																	function (c) {
-																		return c + ' > :first-child';
-																	},
+																	$author$project$Css$children(
 																	_List_fromArray(
 																		[
-																			$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
-																		])),
-																	A2(
-																	$author$project$Css$mapSelector,
-																	function (c) {
-																		return c + ' > :last-child';
-																	},
-																	_List_fromArray(
-																		[
-																			$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																			$author$project$Css$firstChild(
+																			_List_fromArray(
+																				[
+																					$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
+																				])),
+																			$author$project$Css$lastChild(
+																			_List_fromArray(
+																				[
+																					$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																				]))
 																		]))
 																]))
 														]),
