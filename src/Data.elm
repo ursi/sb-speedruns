@@ -48,7 +48,22 @@ type Category
 
 
 rawData =
-    [ ( "Shade"
+    [ ( "BrazeTH"
+      , { runs =
+            { bossOnly = []
+            , fullRun = []
+            , stock =
+                [ ( "FF"
+                  , { shell = Wildfire
+                    , time = 432099
+                    , link = "https://www.youtube.com/watch?v=dl6pvB-90O8"
+                    }
+                  )
+                ]
+            }
+        }
+      )
+    , ( "Shade"
       , { runs =
             { bossOnly =
                 [ ( "UB"
