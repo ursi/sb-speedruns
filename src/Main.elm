@@ -147,7 +147,7 @@ view model =
                                     ]
                                 , H.li [] [ H.text "Macros and other scripts are not allowed." ]
                                 , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
-                                , H.li [] [ H.text "Video of the whole run is required." ]
+                                , H.li [] [ H.text "Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat." ]
                                 , H.li [] [ H.text "Only one entry is allowed per player per category." ]
                                 ]
                             , H.h1 [] [ H.text "Timing" ]

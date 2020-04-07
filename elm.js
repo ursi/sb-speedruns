@@ -6852,7 +6852,7 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Video of the whole run is required.')
+															$author$project$Html$Styled$text('Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.')
 														])),
 													A2(
 													$author$project$Html$Styled$li,
