@@ -88,7 +88,13 @@ rawData =
             { bossOnly = []
             , fullRun = []
             , stock =
-                [ ( "FB"
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 305067
+                    , link = "https://youtu.be/nGjj7p-maU8"
+                    }
+                  )
+                , ( "FB"
                   , { shell = Duskwing
                     , time = 376233
                     , link = "https://www.youtube.com/watch?v=Nseq4diUMek"
