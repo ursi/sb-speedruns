@@ -98,6 +98,21 @@ rawData =
             }
         }
       )
+    , ( "Grand Sushi"
+      , { runs =
+            { bossOnly = []
+            , fullRun = []
+            , stock =
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 266234
+                    , link = "https://www.youtube.com/watch?v=FPqijZooOu8&"
+                    }
+                  )
+                ]
+            }
+        }
+      )
     , ( "Shade"
       , { runs =
             { bossOnly =

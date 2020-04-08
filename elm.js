@@ -5359,6 +5359,20 @@ var $author$project$Data$rawData = _List_fromArray(
 			}
 		}),
 		_Utils_Tuple2(
+		'Grand Sushi',
+		{
+			runs: {
+				bossOnly: _List_Nil,
+				fullRun: _List_Nil,
+				stock: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'FF',
+						{link: 'https://www.youtube.com/watch?v=FPqijZooOu8&', shell: $author$project$Data$Duskwing, time: 266234})
+					])
+			}
+		}),
+		_Utils_Tuple2(
 		'Shade',
 		{
 			runs: {
