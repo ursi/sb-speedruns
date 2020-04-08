@@ -5313,6 +5313,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
+var $author$project$Data$Duskwing = {$: 'Duskwing'};
 var $author$project$Data$Wildfire = {$: 'Wildfire'};
 var $author$project$Data$rawData = _List_fromArray(
 	[
@@ -5326,7 +5327,24 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=dl6pvB-90O8', shell: $author$project$Data$Wildfire, time: 432099})
+						{link: 'https://www.youtube.com/watch?v=dl6pvB-90O8', shell: $author$project$Data$Wildfire, time: 432099}),
+						_Utils_Tuple2(
+						'FB',
+						{link: 'https://youtu.be/yh_KZUJ04AQ', shell: $author$project$Data$Duskwing, time: 427494})
+					])
+			}
+		}),
+		_Utils_Tuple2(
+		'Deus',
+		{
+			runs: {
+				bossOnly: _List_Nil,
+				fullRun: _List_Nil,
+				stock: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'FB',
+						{link: 'https://www.youtube.com/watch?v=Nseq4diUMek', shell: $author$project$Data$Duskwing, time: 376233})
 					])
 			}
 		}),
@@ -5647,27 +5665,28 @@ var $author$project$Data$getMostPopular = function (zones) {
 			$elm$core$Maybe$map,
 			$elm$core$Tuple$first,
 			$elm$core$List$head(
-				A2(
-					$elm$core$List$sortBy,
-					$elm$core$Tuple$second,
-					$pzp1997$assoc_list$AssocList$toList(
-						A3(
-							$elm$core$Dict$foldl,
-							F3(
-								function (_v0, playerData, accum) {
-									var stock = A2($author$project$Data$gmpGet, $author$project$Data$Stock, playerData);
-									var fullRun = A2($author$project$Data$gmpGet, $author$project$Data$FullRun, playerData);
-									var bossOnly = A2($author$project$Data$gmpGet, $author$project$Data$BossOnly, playerData);
-									return A2(
-										$author$project$Data$gmpMerge,
-										stock,
-										A2(
+				$elm$core$List$reverse(
+					A2(
+						$elm$core$List$sortBy,
+						$elm$core$Tuple$second,
+						$pzp1997$assoc_list$AssocList$toList(
+							A3(
+								$elm$core$Dict$foldl,
+								F3(
+									function (_v0, playerData, accum) {
+										var stock = A2($author$project$Data$gmpGet, $author$project$Data$Stock, playerData);
+										var fullRun = A2($author$project$Data$gmpGet, $author$project$Data$FullRun, playerData);
+										var bossOnly = A2($author$project$Data$gmpGet, $author$project$Data$BossOnly, playerData);
+										return A2(
 											$author$project$Data$gmpMerge,
-											fullRun,
-											A2($author$project$Data$gmpMerge, bossOnly, accum)));
-								}),
-							$pzp1997$assoc_list$AssocList$empty,
-							$author$project$Data$data))))));
+											stock,
+											A2(
+												$author$project$Data$gmpMerge,
+												fullRun,
+												A2($author$project$Data$gmpMerge, bossOnly, accum)));
+									}),
+								$pzp1997$assoc_list$AssocList$empty,
+								$author$project$Data$data)))))));
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);

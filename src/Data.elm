@@ -59,6 +59,27 @@ rawData =
                     , link = "https://www.youtube.com/watch?v=dl6pvB-90O8"
                     }
                   )
+                , ( "FB"
+                  , { shell = Duskwing
+                    , time = 427494
+                    , link = "https://youtu.be/yh_KZUJ04AQ"
+                    }
+                  )
+                ]
+            }
+        }
+      )
+    , ( "Deus"
+      , { runs =
+            { bossOnly = []
+            , fullRun = []
+            , stock =
+                [ ( "FB"
+                  , { shell = Duskwing
+                    , time = 376233
+                    , link = "https://www.youtube.com/watch?v=Nseq4diUMek"
+                    }
+                  )
                 ]
             }
         }
@@ -221,6 +242,7 @@ getMostPopular zones =
             A.empty
         |> A.toList
         |> List.sortBy Tuple.second
+        |> List.reverse
         |> List.head
         |> Maybe.map Tuple.first
         |> Maybe.withDefault ( FullRun, "FF" )
