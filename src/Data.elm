@@ -98,7 +98,7 @@ rawData =
             }
         }
       )
-    , ( "Grand Sushi"
+    , ( "grand_sushi"
       , { runs =
             { bossOnly = []
             , fullRun = []
