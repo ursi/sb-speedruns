@@ -130,6 +130,8 @@ view model =
                             , C.fontSize "1rem"
                             , C.borderRadius "1em"
                             , C.padding "1em"
+                            , C.maxHeight "100%"
+                            , C.overflow "auto"
                             , C.child "h1"
                                 [ C.textAlign "center"
                                 , C.fontSize "1.5rem"
@@ -148,6 +150,10 @@ view model =
                                 , H.li [] [ H.text "Macros and other scripts are not allowed." ]
                                 , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
                                 , H.li [] [ H.text "Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat." ]
+                                , H.li []
+                                    [ H.b [] [ H.text "Do not" ]
+                                    , H.text " edit any part of the video that will be part of the run. Before and after is okay."
+                                    ]
                                 , H.li [] [ H.text "Only one entry is allowed per player per category." ]
                                 ]
                             , H.h1 [] [ H.text "Timing" ]
@@ -170,8 +176,13 @@ view model =
                             , H.h1 [] [ H.text "Stock Category" ]
                             , H.ul []
                                 [ H.li [] [ H.text "You must start the run with no gear in your inventory or equipped other than the stock gear." ]
-                                , H.li [] [ H.text "You must start the run with no boosts acquired." ]
-                                , H.li [] [ H.text "You are allowed to pick up any loot that drops during your run." ]
+                                , H.li [] [ H.text "You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created." ]
+                                , H.li [] [ H.text "You are allowed to pick up any boosts during the run." ]
+                                , H.li []
+                                    [ H.text "You are "
+                                    , H.b [] [ H.text "not" ]
+                                    , H.text " allowed to equip any gear you get in the run."
+                                    ]
                                 , H.li [] [ H.text "Stock runs are the full level, not just the boss." ]
                                 ]
                             ]

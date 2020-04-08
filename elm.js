@@ -5359,7 +5359,7 @@ var $author$project$Data$rawData = _List_fromArray(
 			}
 		}),
 		_Utils_Tuple2(
-		'Grand Sushi',
+		'grand_sushi',
 		{
 			runs: {
 				bossOnly: _List_Nil,
@@ -6059,6 +6059,7 @@ var $author$project$FoldIdentity$map = A2(
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
 var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
 var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
+var $author$project$Css$maxHeight = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-height');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
 var $author$project$Css$cursor = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'cursor');
 var $author$project$Css$hover = $author$project$Css$mapSelector(
@@ -6126,6 +6127,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
 var $author$project$Css$paddingLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'padding-left');
 var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
 var $author$project$Design$radius1 = '.7em';
@@ -6819,6 +6821,8 @@ var $author$project$Main$view = function (model) {
 											$author$project$Css$fontSize('1rem'),
 											$author$project$Css$borderRadius('1em'),
 											$author$project$Css$padding('1em'),
+											$author$project$Css$maxHeight('100%'),
+											$author$project$Css$overflow('auto'),
 											A2(
 											$author$project$Css$child,
 											'h1',
@@ -6896,6 +6900,20 @@ var $author$project$Main$view = function (model) {
 													_List_fromArray(
 														[
 															$author$project$Html$Styled$text('Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															A2(
+															$author$project$Html$Styled$b,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text('Do not')
+																])),
+															$author$project$Html$Styled$text(' edit any part of the video that will be part of the run. Before and after is okay.')
 														])),
 													A2(
 													$author$project$Html$Styled$li,
@@ -6990,14 +7008,29 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('You must start the run with no boosts acquired.')
+															$author$project$Html$Styled$text('You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created.')
 														])),
 													A2(
 													$author$project$Html$Styled$li,
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('You are allowed to pick up any loot that drops during your run.')
+															$author$project$Html$Styled$text('You are allowed to pick up any boosts during the run.')
+														])),
+													A2(
+													$author$project$Html$Styled$li,
+													_List_Nil,
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('You are '),
+															A2(
+															$author$project$Html$Styled$b,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text('not')
+																])),
+															$author$project$Html$Styled$text(' allowed to equip any gear you get in the run.')
 														])),
 													A2(
 													$author$project$Html$Styled$li,
