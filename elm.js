@@ -5321,8 +5321,18 @@ var $author$project$Data$rawData = _List_fromArray(
 		'BrazeTH',
 		{
 			runs: {
-				bossOnly: _List_Nil,
-				fullRun: _List_Nil,
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFB',
+						{link: 'https://youtu.be/BhhSumqQ-y0?t=255', shell: $author$project$Data$Wildfire, time: 160031})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFB',
+						{link: 'https://www.youtube.com/watch?v=BhhSumqQ-y0', shell: $author$project$Data$Wildfire, time: 389563})
+					]),
 				stock: _List_fromArray(
 					[
 						_Utils_Tuple2(
@@ -5356,7 +5366,7 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'UB',
-						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 264800})
+						{link: 'https://youtu.be/AcMofYmKzwU?t=199', shell: $author$project$Data$Wildfire, time: 264800})
 					]),
 				fullRun: _List_fromArray(
 					[

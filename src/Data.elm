@@ -50,8 +50,22 @@ type Category
 rawData =
     [ ( "BrazeTH"
       , { runs =
-            { bossOnly = []
-            , fullRun = []
+            { bossOnly =
+                [ ( "eFB"
+                  , { shell = Wildfire
+                    , time = 160031
+                    , link = "https://youtu.be/BhhSumqQ-y0?t=255"
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFB"
+                  , { shell = Wildfire
+                    , time = 389563
+                    , link = "https://www.youtube.com/watch?v=BhhSumqQ-y0"
+                    }
+                  )
+                ]
             , stock =
                 [ ( "FF"
                   , { shell = Wildfire
@@ -90,7 +104,7 @@ rawData =
                 [ ( "UB"
                   , { shell = Wildfire
                     , time = 264800
-                    , link = "https://www.youtube.com/watch?v=AcMofYmKzwU"
+                    , link = "https://youtu.be/AcMofYmKzwU?t=199"
                     }
                   )
                 ]
