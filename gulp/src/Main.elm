@@ -1,6 +1,7 @@
 module Main exposing (..)
 
-import Browser exposing (Document)
+import Browser exposing (Document, UrlRequest)
+import Browser.Navigation as Nav exposing (Key)
 import Css as C exposing (Declaration)
 import Css.Global as G
 import Data exposing (Category(..))
@@ -10,6 +11,11 @@ import FoldIdentity as F
 import Html.Attributes as A
 import Html.Events as E
 import Html.Styled as H exposing (Html)
+import Maybe.Extra as Maybe
+import Url exposing (Url)
+import Url.Builder as UB
+import Url.Parser as UP exposing ((</>), (<?>))
+import Url.Parser.Query as Q
 
 
 todo =
@@ -18,11 +24,13 @@ todo =
 
 main : Program () Model Msg
 main =
-    Browser.document
+    Browser.application
         { init = init
         , update = update
         , subscriptions = subscriptions
         , view = view
+        , onUrlRequest = UrlRequested
+        , onUrlChange = \_ -> NoOp
         }
 
 
@@ -34,18 +42,47 @@ type alias Model =
     { category : Category
     , zone : String
     , showingRules : Bool
+    , key : Key
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : () -> Url -> Key -> ( Model, Cmd Msg )
+init _ url key =
     let
         ( category, zone ) =
-            Data.getMostPopular <| normalZones ++ eliteZones
+            case Debug.log "how nothing" <| urlParser url of
+                Just ( c, z ) ->
+                    ( c, z )
+
+                Nothing ->
+                    Data.getMostPopular <| normalZones ++ eliteZones
     in
-    ( Model category zone False
+    ( Model category zone False key
     , Cmd.none
     )
+
+
+urlParser : Url -> Maybe ( Category, String )
+urlParser =
+    (UP.parse <|
+        UP.query <|
+            Q.map2
+                (Maybe.andThen2 <|
+                    \categoryStr zone ->
+                        Data.categoryFromString categoryStr
+                            |> Maybe.andThen
+                                (\category ->
+                                    if List.member zone (normalZones ++ eliteZones) then
+                                        Just ( category, zone )
+
+                                    else
+                                        Nothing
+                                )
+                )
+                (Q.string "category")
+                (Q.string "zone")
+    )
+        >> Maybe.andThen identity
 
 
 normalZones : List String
@@ -66,6 +103,8 @@ type Msg
     = ChangeCategory Category
     | ChangeZone String
     | ChangeShowingRules Bool
+    | UrlRequested UrlRequest
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -75,10 +114,34 @@ update msg model =
             ( { model | showingRules = bool }, Cmd.none )
 
         ChangeZone zone ->
-            ( { model | zone = zone }, Cmd.none )
+            ( { model | zone = zone }
+            , newUrl model.key model.category zone
+            )
 
         ChangeCategory category ->
-            ( { model | category = category }, Cmd.none )
+            ( { model | category = category }
+            , newUrl model.key category model.zone
+            )
+
+        UrlRequested urlRequest ->
+            case urlRequest of
+                Browser.Internal _ ->
+                    ( model, Cmd.none )
+
+                Browser.External url ->
+                    ( model, Nav.load url )
+
+        NoOp ->
+            ( model, Cmd.none )
+
+
+newUrl : Key -> Category -> String -> Cmd Msg
+newUrl key category zone =
+    Nav.pushUrl key <|
+        UB.relative []
+            [ UB.string "category" <| Data.categoryToString category
+            , UB.string "zone" zone
+            ]
 
 
 

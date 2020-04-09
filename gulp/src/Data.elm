@@ -2,6 +2,8 @@ module Data exposing
     ( Category(..)
     , PlayerData
     , Run
+    , categoryFromString
+    , categoryToString
     , formatTime
     , getMostPopular
     , getPlayerData
@@ -12,6 +14,7 @@ module Data exposing
 
 import AssocList as A exposing (Dict)
 import Dict exposing (Dict)
+import List.Extra as List
 
 
 type alias Data =
@@ -325,3 +328,26 @@ shellToPicture shell =
                 Fabricator ->
                     "fabricator.png"
            )
+
+
+categoryStrings : Dict String Category
+categoryStrings =
+    Dict.fromList
+        [ ( "boss-only", BossOnly )
+        , ( "full-run", FullRun )
+        , ( "stock", Stock )
+        ]
+
+
+categoryFromString : String -> Maybe Category
+categoryFromString =
+    Dict.get >> (|>) categoryStrings
+
+
+categoryToString : Category -> String
+categoryToString category =
+    categoryStrings
+        |> Dict.toList
+        |> List.find (Tuple.second >> (==) category)
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault ""
