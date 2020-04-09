@@ -114,11 +114,33 @@ rawData =
             , stock =
                 [ ( "FF"
                   , { shell = Duskwing
-                    , time = 266234
-                    , link = "https://www.youtube.com/watch?v=FPqijZooOu8&"
+                    , time = 250667
+                    , link = "https://www.youtube.com/watch?v=y7a4mNKn2ZA"
                     }
                   )
                 ]
+            }
+        }
+      )
+    , ( "JonDaTurtle"
+      , { runs =
+            { bossOnly =
+                [ ( "TL"
+                  , { shell = Duskwing
+                    , time = 248582
+                    , link = "https://youtu.be/yI8T-3F0ldA?t=249"
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "TL"
+                  , { shell = Duskwing
+                    , time = 496630
+                    , link = "https://www.youtube.com/watch?v=yI8T-3F0ldA"
+                    }
+                  )
+                ]
+            , stock = []
             }
         }
       )
@@ -131,12 +153,24 @@ rawData =
                     , link = "https://youtu.be/AcMofYmKzwU?t=199"
                     }
                   )
+                , ( "TL"
+                  , { shell = Wildfire
+                    , time = 253533
+                    , link = "https://youtu.be/Lj0fTpY5f9A?t=338"
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "UB"
                   , { shell = Wildfire
                     , time = 448834
                     , link = "https://www.youtube.com/watch?v=AcMofYmKzwU"
+                    }
+                  )
+                , ( "TL"
+                  , { shell = Wildfire
+                    , time = 590733
+                    , link = "https://www.youtube.com/watch?v=Lj0fTpY5f9A"
                     }
                   )
                 ]

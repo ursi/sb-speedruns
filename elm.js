@@ -5392,8 +5392,27 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=FPqijZooOu8&', shell: $author$project$Data$Duskwing, time: 266234})
+						{link: 'https://www.youtube.com/watch?v=y7a4mNKn2ZA', shell: $author$project$Data$Duskwing, time: 250667})
 					])
+			}
+		}),
+		_Utils_Tuple2(
+		'JonDaTurtle',
+		{
+			runs: {
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'TL',
+						{link: 'https://youtu.be/yI8T-3F0ldA?t=249', shell: $author$project$Data$Duskwing, time: 248582})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'TL',
+						{link: 'https://www.youtube.com/watch?v=yI8T-3F0ldA', shell: $author$project$Data$Duskwing, time: 496630})
+					]),
+				stock: _List_Nil
 			}
 		}),
 		_Utils_Tuple2(
@@ -5404,13 +5423,19 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'UB',
-						{link: 'https://youtu.be/AcMofYmKzwU?t=199', shell: $author$project$Data$Wildfire, time: 264800})
+						{link: 'https://youtu.be/AcMofYmKzwU?t=199', shell: $author$project$Data$Wildfire, time: 264800}),
+						_Utils_Tuple2(
+						'TL',
+						{link: 'https://youtu.be/Lj0fTpY5f9A?t=338', shell: $author$project$Data$Wildfire, time: 253533})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'UB',
-						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 448834})
+						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 448834}),
+						_Utils_Tuple2(
+						'TL',
+						{link: 'https://www.youtube.com/watch?v=Lj0fTpY5f9A', shell: $author$project$Data$Wildfire, time: 590733})
 					]),
 				stock: _List_Nil
 			}
