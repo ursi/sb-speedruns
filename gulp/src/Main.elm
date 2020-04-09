@@ -63,7 +63,7 @@ init _ url key =
 
 
 urlParser : Url -> Maybe ( Category, String )
-urlParser =
+urlParser url =
     (UP.parse <|
         UP.query <|
             Q.map2
@@ -82,7 +82,8 @@ urlParser =
                 (Q.string "category")
                 (Q.string "zone")
     )
-        >> Maybe.andThen identity
+        { url | path = "" }
+        |> Maybe.andThen identity
 
 
 normalZones : List String

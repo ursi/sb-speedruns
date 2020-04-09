@@ -6392,29 +6392,34 @@ var $elm$url$Url$Parser$Query$string = function (key) {
 			}
 		});
 };
-var $author$project$Main$urlParser = A2(
-	$elm$core$Basics$composeR,
-	$elm$url$Url$Parser$parse(
-		$elm$url$Url$Parser$query(
-			A3(
-				$elm$url$Url$Parser$Query$map2,
-				$elm_community$maybe_extra$Maybe$Extra$andThen2(
-					F2(
-						function (categoryStr, zone) {
-							return A2(
-								$elm$core$Maybe$andThen,
-								function (category) {
-									return A2(
-										$elm$core$List$member,
-										zone,
-										_Utils_ap($author$project$Main$normalZones, $author$project$Main$eliteZones)) ? $elm$core$Maybe$Just(
-										_Utils_Tuple2(category, zone)) : $elm$core$Maybe$Nothing;
-								},
-								$author$project$Data$categoryFromString(categoryStr));
-						})),
-				$elm$url$Url$Parser$Query$string('category'),
-				$elm$url$Url$Parser$Query$string('zone')))),
-	$elm$core$Maybe$andThen($elm$core$Basics$identity));
+var $author$project$Main$urlParser = function (url) {
+	return A2(
+		$elm$core$Maybe$andThen,
+		$elm$core$Basics$identity,
+		$elm$url$Url$Parser$parse(
+			$elm$url$Url$Parser$query(
+				A3(
+					$elm$url$Url$Parser$Query$map2,
+					$elm_community$maybe_extra$Maybe$Extra$andThen2(
+						F2(
+							function (categoryStr, zone) {
+								return A2(
+									$elm$core$Maybe$andThen,
+									function (category) {
+										return A2(
+											$elm$core$List$member,
+											zone,
+											_Utils_ap($author$project$Main$normalZones, $author$project$Main$eliteZones)) ? $elm$core$Maybe$Just(
+											_Utils_Tuple2(category, zone)) : $elm$core$Maybe$Nothing;
+									},
+									$author$project$Data$categoryFromString(categoryStr));
+							})),
+					$elm$url$Url$Parser$Query$string('category'),
+					$elm$url$Url$Parser$Query$string('zone'))))(
+			_Utils_update(
+				url,
+				{path: ''})));
+};
 var $author$project$Main$init = F3(
 	function (_v0, url, key) {
 		var _v1 = function () {
