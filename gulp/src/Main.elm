@@ -50,7 +50,7 @@ init : () -> Url -> Key -> ( Model, Cmd Msg )
 init _ url key =
     let
         ( category, zone ) =
-            case Debug.log "how nothing" <| urlParser url of
+            case urlParser url of
                 Just ( c, z ) ->
                     ( c, z )
 

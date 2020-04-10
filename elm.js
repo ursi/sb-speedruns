@@ -5761,7 +5761,6 @@ var $author$project$Data$getMostPopular = function (zones) {
 								$pzp1997$assoc_list$AssocList$empty,
 								$author$project$Data$data)))))));
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$normalZones = _List_fromArray(
@@ -6448,10 +6447,7 @@ var $author$project$Main$urlParser = function (url) {
 var $author$project$Main$init = F3(
 	function (_v0, url, key) {
 		var _v1 = function () {
-			var _v2 = A2(
-				$elm$core$Debug$log,
-				'how nothing',
-				$author$project$Main$urlParser(url));
+			var _v2 = $author$project$Main$urlParser(url);
 			if (_v2.$ === 'Just') {
 				var _v3 = _v2.a;
 				var c = _v3.a;
