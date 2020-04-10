@@ -93,8 +93,8 @@ rawData =
             , stock =
                 [ ( "FF"
                   , { shell = Duskwing
-                    , time = 254200
-                    , link = "https://youtu.be/Ei68UonP8xc"
+                    , time = 236966
+                    , link = "https://youtu.be/k16Oam2KLtg"
                     }
                   )
                 , ( "FB"
