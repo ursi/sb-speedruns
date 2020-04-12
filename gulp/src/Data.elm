@@ -54,7 +54,13 @@ rawData =
     [ ( "BrazeTH"
       , { runs =
             { bossOnly =
-                [ ( "eFB"
+                [ ( "VQ"
+                  , { shell = Wildfire
+                    , time = 237182
+                    , link = "https://youtu.be/ipFSyujBl3Y?t=227"
+                    }
+                  )
+                , ( "eFB"
                   , { shell = Wildfire
                     , time = 160031
                     , link = "https://youtu.be/BhhSumqQ-y0?t=255"
@@ -62,7 +68,13 @@ rawData =
                   )
                 ]
             , fullRun =
-                [ ( "eFB"
+                [ ( "VQ"
+                  , { shell = Wildfire
+                    , time = 440973
+                    , link = "https://youtu.be/ipFSyujBl3Y"
+                    }
+                  )
+                , ( "eFB"
                   , { shell = Wildfire
                     , time = 389563
                     , link = "https://www.youtube.com/watch?v=BhhSumqQ-y0"

@@ -5345,11 +5345,17 @@ var $author$project$Data$rawData = _List_fromArray(
 				bossOnly: _List_fromArray(
 					[
 						_Utils_Tuple2(
+						'VQ',
+						{link: 'https://youtu.be/ipFSyujBl3Y?t=227', shell: $author$project$Data$Wildfire, time: 237182}),
+						_Utils_Tuple2(
 						'eFB',
 						{link: 'https://youtu.be/BhhSumqQ-y0?t=255', shell: $author$project$Data$Wildfire, time: 160031})
 					]),
 				fullRun: _List_fromArray(
 					[
+						_Utils_Tuple2(
+						'VQ',
+						{link: 'https://youtu.be/ipFSyujBl3Y', shell: $author$project$Data$Wildfire, time: 440973}),
 						_Utils_Tuple2(
 						'eFB',
 						{link: 'https://www.youtube.com/watch?v=BhhSumqQ-y0', shell: $author$project$Data$Wildfire, time: 389563})
