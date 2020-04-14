@@ -7802,7 +7802,7 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Time ends the moment the green text appears telling you the zone has been completed.')
+															$author$project$Html$Styled$text('Time stops the moment the green text appears telling you the zone has been completed.')
 														]))
 												])),
 											A2(

@@ -224,7 +224,7 @@ view model =
                             , H.ul []
                                 [ H.li [] [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running." ]
                                 , H.li []
-                                    [ H.text "Time ends the moment the green text appears telling you the zone has been completed." ]
+                                    [ H.text "Time stops the moment the green text appears telling you the zone has been completed." ]
                                 ]
                             , H.h1 [] [ H.text "Stock Category" ]
                             , H.ul []
