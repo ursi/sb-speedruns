@@ -146,7 +146,7 @@ rawData =
             }
         }
       )
-    , ( "Gritan"
+    , ( "Gritian"
       , { runs =
             { bossOnly =
                 [ ( "FF"
