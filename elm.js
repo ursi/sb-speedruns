@@ -7802,41 +7802,7 @@ var $author$project$Main$view = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Time ends the moment the'),
-															A2(
-															$author$project$Html$Styled$ul,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	A2(
-																	$author$project$Html$Styled$li,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			A2(
-																			$author$project$Html$Styled$b,
-																			_List_Nil,
-																			_List_fromArray(
-																				[
-																					$author$project$Html$Styled$text('FF/FB:')
-																				])),
-																			$author$project$Html$Styled$text(' \"Mission Complete\" text is visible.')
-																		])),
-																	A2(
-																	$author$project$Html$Styled$li,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			A2(
-																			$author$project$Html$Styled$b,
-																			_List_Nil,
-																			_List_fromArray(
-																				[
-																					$author$project$Html$Styled$text('Everything Else:')
-																				])),
-																			$author$project$Html$Styled$text(' the callout is visible.')
-																		]))
-																]))
+															$author$project$Html$Styled$text('Time ends the moment the green text appears telling you the zone has been completed.')
 														]))
 												])),
 											A2(
