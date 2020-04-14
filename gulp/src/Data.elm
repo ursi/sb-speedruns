@@ -60,6 +60,12 @@ rawData =
                     , link = "https://youtu.be/ipFSyujBl3Y?t=227"
                     }
                   )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 137771
+                    , link = "https://youtu.be/tUADE3i27S0?t=201"
+                    }
+                  )
                 , ( "eFB"
                   , { shell = Wildfire
                     , time = 160031
@@ -72,6 +78,12 @@ rawData =
                   , { shell = Wildfire
                     , time = 440973
                     , link = "https://youtu.be/ipFSyujBl3Y"
+                    }
+                  )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 334067
+                    , link = "https://www.youtube.com/watch?v=tUADE3i27S0"
                     }
                   )
                 , ( "eFB"
@@ -134,6 +146,29 @@ rawData =
             }
         }
       )
+    , ( "Gritan"
+      , { runs =
+            { bossOnly =
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 91500
+                    , link = "https://youtu.be/_r_nvV22tek?t=82"
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 168700
+                    , link = "https://www.youtube.com/watch?v=_r_nvV22tek"
+                    }
+                  )
+                ]
+            , stock =
+                []
+            }
+        }
+      )
     , ( "JonDaTurtle"
       , { runs =
             { bossOnly =
@@ -173,6 +208,12 @@ rawData =
                     , link = "https://youtu.be/Lj0fTpY5f9A?t=338"
                     }
                   )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 138900
+                    , link = "https://youtu.be/YbNVKPkExnA?t=114"
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "UB"
@@ -187,8 +228,37 @@ rawData =
                     , link = "https://www.youtube.com/watch?v=Lj0fTpY5f9A"
                     }
                   )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 249633
+                    , link = "https://www.youtube.com/watch?v=YbNVKPkExnA"
+                    }
+                  )
                 ]
             , stock = []
+            }
+        }
+      )
+    , ( "Zakum"
+      , { runs =
+            { bossOnly =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 132900
+                    , link = "https://youtu.be/Pim1bRK9AJg?t=129"
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 258400
+                    , link = "https://www.youtube.com/watch?v=Pim1bRK9AJg"
+                    }
+                  )
+                ]
+            , stock =
+                []
             }
         }
       )
