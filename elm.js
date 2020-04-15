@@ -5846,11 +5846,11 @@ var $author$project$Data$getMostPopular = function (zones) {
 										var bossOnly = A2($author$project$Data$gmpGet, $author$project$Data$BossOnly, playerData);
 										return A2(
 											$author$project$Data$gmpMerge,
-											stock,
+											bossOnly,
 											A2(
 												$author$project$Data$gmpMerge,
 												fullRun,
-												A2($author$project$Data$gmpMerge, bossOnly, accum)));
+												A2($author$project$Data$gmpMerge, stock, accum)));
 									}),
 								$pzp1997$assoc_list$AssocList$empty,
 								$author$project$Data$data)))))));
@@ -7938,22 +7938,6 @@ var $author$project$Main$view = function (model) {
 											_List_fromArray(
 												[
 													$author$project$Main$menuDivStyles(
-													_Utils_eq(model.category, $author$project$Data$BossOnly))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
-												]),
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Boss Only')
-												])),
-											A3(
-											$author$project$Html$Styled$divS,
-											_List_fromArray(
-												[
-													$author$project$Main$menuDivStyles(
 													_Utils_eq(model.category, $author$project$Data$FullRun))
 												]),
 											_List_fromArray(
@@ -7964,6 +7948,22 @@ var $author$project$Main$view = function (model) {
 											_List_fromArray(
 												[
 													$author$project$Html$Styled$text('Full Run')
+												])),
+											A3(
+											$author$project$Html$Styled$divS,
+											_List_fromArray(
+												[
+													$author$project$Main$menuDivStyles(
+													_Utils_eq(model.category, $author$project$Data$BossOnly))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick(
+													$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
+												]),
+											_List_fromArray(
+												[
+													$author$project$Html$Styled$text('Boss Only')
 												])),
 											A3(
 											$author$project$Html$Styled$divS,

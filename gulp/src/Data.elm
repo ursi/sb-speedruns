@@ -465,9 +465,9 @@ getMostPopular zones =
                     stock =
                         gmpGet Stock playerData
                 in
-                gmpMerge bossOnly accum
+                gmpMerge stock accum
                     |> gmpMerge fullRun
-                    |> gmpMerge stock
+                    |> gmpMerge bossOnly
             )
             A.empty
         |> A.toList
