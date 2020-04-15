@@ -142,6 +142,31 @@ rawData =
             }
         }
       )
+    , ( "Europe"
+      , { runs =
+            { bossOnly =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 119215
+                    , link = "https://youtu.be/di6WuDr_-G8?t=111"
+                    , pure = True
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 229493
+                    , link = "https://www.youtube.com/watch?v=di6WuDr_-G8"
+                    , pure = True
+                    }
+                  )
+                ]
+            , stock =
+                []
+            }
+        }
+      )
     , ( "grand_sushi"
       , { runs =
             { bossOnly = []
@@ -258,6 +283,31 @@ rawData =
                   )
                 ]
             , stock = []
+            }
+        }
+      )
+    , ( "Stormzy101"
+      , { runs =
+            { bossOnly =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 106700
+                    , link = "https://youtu.be/hCfRJaaRF7E?t=141"
+                    , pure = True
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFC"
+                  , { shell = Wildfire
+                    , time = 244300
+                    , link = "https://www.youtube.com/watch?v=hCfRJaaRF7E"
+                    , pure = True
+                    }
+                  )
+                ]
+            , stock =
+                []
             }
         }
       )

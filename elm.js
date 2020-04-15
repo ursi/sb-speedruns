@@ -5395,6 +5395,25 @@ var $author$project$Data$rawData = _List_fromArray(
 			}
 		}),
 		_Utils_Tuple2(
+		'Europe',
+		{
+			runs: {
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://youtu.be/di6WuDr_-G8?t=111', pure: true, shell: $author$project$Data$Wildfire, time: 119215})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://www.youtube.com/watch?v=di6WuDr_-G8', pure: true, shell: $author$project$Data$Wildfire, time: 229493})
+					]),
+				stock: _List_Nil
+			}
+		}),
+		_Utils_Tuple2(
 		'grand_sushi',
 		{
 			runs: {
@@ -5473,6 +5492,25 @@ var $author$project$Data$rawData = _List_fromArray(
 						_Utils_Tuple2(
 						'eFF',
 						{link: 'https://www.youtube.com/watch?v=YbNVKPkExnA', pure: true, shell: $author$project$Data$Wildfire, time: 249633})
+					]),
+				stock: _List_Nil
+			}
+		}),
+		_Utils_Tuple2(
+		'Stormzy101',
+		{
+			runs: {
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://youtu.be/hCfRJaaRF7E?t=141', pure: true, shell: $author$project$Data$Wildfire, time: 106700})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://www.youtube.com/watch?v=hCfRJaaRF7E', pure: true, shell: $author$project$Data$Wildfire, time: 244300})
 					]),
 				stock: _List_Nil
 			}
