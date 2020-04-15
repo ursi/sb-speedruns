@@ -248,88 +248,96 @@ view model =
             []
             [ H.divS
                 [ C.display "grid"
-                , C.rowGap "20px"
-                , C.marginTop "1em"
+                , C.justifyItems "center"
+                , C.gridTemplateColumns "max-content"
                 ]
                 []
                 [ H.divS
-                    [ gridStyles
-                    , C.grid "max-content / auto-flow max-content"
+                    [ C.display "grid"
+                    , C.rowGap "20px"
+                    , C.marginTop "1em"
                     ]
                     []
-                    [ H.divS [ menuDivStyles (model.category == FullRun) ]
-                        [ E.onClick <| ChangeCategory FullRun ]
-                        [ H.text "Full Run" ]
-                    , H.divS [ menuDivStyles (model.category == BossOnly) ]
-                        [ E.onClick <| ChangeCategory BossOnly ]
-                        [ H.text "Boss Only" ]
-                    , H.divS [ menuDivStyles (model.category == Stock) ]
-                        [ E.onClick <| ChangeCategory Stock ]
-                        [ H.text "Stock" ]
-                    ]
-                , H.divS
-                    [ gridStyles
-                    , C.grid "repeat(2, max-content) / repeat(9, max-content)"
-                    , C.marginBottom "2em"
-                    ]
-                    []
-                    [ zoneHtml 1 model.zone normalZones
-                    , zoneHtml 2 model.zone eliteZones
-                    ]
-                ]
-            , H.tableS
-                [ C.textAlign "center"
-                , C.borderJ [ "1px", "solid", Ds.lightGray ]
-                , C.borderSpacing "0 0"
-                , C.borderRadius Ds.radius1
-                , C.mapSelector (\c -> c ++ " tr") [ C.height "2em" ]
-                ]
-                []
-                [ H.thead []
-                    [ H.tr []
-                        [ H.thS [ C.paddingLeft "1em" ] [] [ H.text "Rank" ]
-                        , H.thS [ C.width "20vw" ] [] [ H.text "Name" ]
-                        , H.thS [ C.width "7em" ] [] [ H.text "Time" ]
+                    [ H.divS
+                        [ gridStyles
+                        , C.grid "max-content / auto-flow max-content"
+                        ]
+                        []
+                        [ H.divS [ menuDivStyles (model.category == FullRun) ]
+                            [ E.onClick <| ChangeCategory FullRun ]
+                            [ H.text "Full Run" ]
+                        , H.divS [ menuDivStyles (model.category == BossOnly) ]
+                            [ E.onClick <| ChangeCategory BossOnly ]
+                            [ H.text "Boss Only" ]
+                        , H.divS [ menuDivStyles (model.category == Stock) ]
+                            [ E.onClick <| ChangeCategory Stock ]
+                            [ H.text "Stock" ]
+                        ]
+                    , H.divS
+                        [ gridStyles
+                        , C.grid "repeat(2, max-content) / repeat(9, max-content)"
+                        , C.marginBottom "2em"
+                        ]
+                        []
+                        [ zoneHtml 1 model.zone normalZones
+                        , zoneHtml 2 model.zone eliteZones
                         ]
                     ]
-                , H.tbody []
-                    (Data.getPlayersWithRun model.category model.zone
-                        |> List.indexedMap
-                            (\i player ->
-                                Data.getRun model.category model.zone player
-                                    |> F.map idH
-                                        (\run ->
-                                            H.trS
-                                                [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
-                                                , C.lastChild
-                                                    [ C.children
-                                                        [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
-                                                        , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
+                , H.tableS
+                    [ C.width "100%"
+                    , C.textAlign "center"
+                    , C.borderJ [ "1px", "solid", Ds.lightGray ]
+                    , C.borderSpacing "0 0"
+                    , C.borderRadius Ds.radius1
+                    , C.mapSelector (\c -> c ++ " tr") [ C.height "2em" ]
+                    ]
+                    []
+                    [ H.thead []
+                        [ H.tr []
+                            [ H.th [] [ H.text "Rank" ]
+                            , H.th [] [ H.text "Name" ]
+                            , H.th [] [ H.text "Time" ]
+                            ]
+                        ]
+                    , H.tbody []
+                        (Data.getPlayersWithRun model.category model.zone
+                            |> List.indexedMap
+                                (\i player ->
+                                    Data.getRun model.category model.zone player
+                                        |> F.map idH
+                                            (\run ->
+                                                H.trS
+                                                    [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
+                                                    , C.lastChild
+                                                        [ C.children
+                                                            [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
+                                                            , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
+                                                            ]
                                                         ]
                                                     ]
-                                                ]
-                                                []
-                                                [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
-                                                , H.td []
-                                                    [ H.text player
-                                                    , H.imgS
-                                                        [ rightOfText ]
-                                                        [ A.src <| Data.shellToPicture run.shell ]
-                                                        []
-                                                    ]
-                                                , H.td []
-                                                    [ H.text <| Data.formatTime run.time
-                                                    , H.a [ A.href <| run.link ]
-                                                        [ H.imgS
+                                                    []
+                                                    [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
+                                                    , H.td []
+                                                        [ H.text player
+                                                        , H.imgS
                                                             [ rightOfText ]
-                                                            [ A.src "images/film.svg" ]
+                                                            [ A.src <| Data.shellToPicture run.shell ]
                                                             []
                                                         ]
+                                                    , H.td []
+                                                        [ H.text <| Data.formatTime run.time
+                                                        , H.a [ A.href <| run.link ]
+                                                            [ H.imgS
+                                                                [ rightOfText ]
+                                                                [ A.src "images/film.svg" ]
+                                                                []
+                                                            ]
+                                                        ]
                                                     ]
-                                                ]
-                                        )
-                            )
-                    )
+                                            )
+                                )
+                        )
+                    ]
                 ]
             ]
         ]

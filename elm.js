@@ -6940,6 +6940,7 @@ var $author$project$Main$gridStyles = $author$project$Css$batch(
 			$author$project$Css$display('grid'),
 			$author$project$Css$gap('10px 10px')
 		]));
+var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
 var $author$project$Html$Styled$h1 = $author$project$Html$Styled$Node('h1');
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -7046,7 +7047,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
-var $author$project$Css$paddingLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'padding-left');
 var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
 var $author$project$Design$radius1 = '.7em';
 var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
@@ -7087,7 +7087,7 @@ var $author$project$Css$Global$td = A2(
 	$author$project$Css$Global$Rule,
 	$author$project$Css$Global$Rule_('td'));
 var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
-var $author$project$Html$Styled$thS = $author$project$Html$Styled$StyledNode('th');
+var $author$project$Html$Styled$th = $author$project$Html$Styled$Node('th');
 var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
 var $author$project$Css$top = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'top');
 var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
@@ -7943,8 +7943,8 @@ var $author$project$Main$view = function (model) {
 							_List_fromArray(
 								[
 									$author$project$Css$display('grid'),
-									$author$project$Css$rowGap('20px'),
-									$author$project$Css$marginTop('1em')
+									$author$project$Css$justifyItems('center'),
+									$author$project$Css$gridTemplateColumns('max-content')
 								]),
 							_List_Nil,
 							_List_fromArray(
@@ -7953,8 +7953,9 @@ var $author$project$Main$view = function (model) {
 									$author$project$Html$Styled$divS,
 									_List_fromArray(
 										[
-											$author$project$Main$gridStyles,
-											$author$project$Css$grid('max-content / auto-flow max-content')
+											$author$project$Css$display('grid'),
+											$author$project$Css$rowGap('20px'),
+											$author$project$Css$marginTop('1em')
 										]),
 									_List_Nil,
 									_List_fromArray(
@@ -7963,239 +7964,239 @@ var $author$project$Main$view = function (model) {
 											$author$project$Html$Styled$divS,
 											_List_fromArray(
 												[
-													$author$project$Main$menuDivStyles(
-													_Utils_eq(model.category, $author$project$Data$FullRun))
+													$author$project$Main$gridStyles,
+													$author$project$Css$grid('max-content / auto-flow max-content')
 												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeCategory($author$project$Data$FullRun))
-												]),
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Full Run')
-												])),
-											A3(
-											$author$project$Html$Styled$divS,
-											_List_fromArray(
-												[
-													$author$project$Main$menuDivStyles(
-													_Utils_eq(model.category, $author$project$Data$BossOnly))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
-												]),
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Boss Only')
-												])),
-											A3(
-											$author$project$Html$Styled$divS,
-											_List_fromArray(
-												[
-													$author$project$Main$menuDivStyles(
-													_Utils_eq(model.category, $author$project$Data$Stock))
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$Events$onClick(
-													$author$project$Main$ChangeCategory($author$project$Data$Stock))
-												]),
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Stock')
-												]))
-										])),
-									A3(
-									$author$project$Html$Styled$divS,
-									_List_fromArray(
-										[
-											$author$project$Main$gridStyles,
-											$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
-											$author$project$Css$marginBottom('2em')
-										]),
-									_List_Nil,
-									_List_fromArray(
-										[
-											A3($author$project$Main$zoneHtml, 1, model.zone, $author$project$Main$normalZones),
-											A3($author$project$Main$zoneHtml, 2, model.zone, $author$project$Main$eliteZones)
-										]))
-								])),
-							A3(
-							$author$project$Html$Styled$tableS,
-							_List_fromArray(
-								[
-									$author$project$Css$textAlign('center'),
-									$author$project$Css$borderJ(
-									_List_fromArray(
-										['1px', 'solid', $author$project$Design$lightGray])),
-									$author$project$Css$borderSpacing('0 0'),
-									$author$project$Css$borderRadius($author$project$Design$radius1),
-									A2(
-									$author$project$Css$mapSelector,
-									function (c) {
-										return c + ' tr';
-									},
-									_List_fromArray(
-										[
-											$author$project$Css$height('2em')
-										]))
-								]),
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$author$project$Html$Styled$thead,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$author$project$Html$Styled$tr,
 											_List_Nil,
 											_List_fromArray(
 												[
 													A3(
-													$author$project$Html$Styled$thS,
+													$author$project$Html$Styled$divS,
 													_List_fromArray(
 														[
-															$author$project$Css$paddingLeft('1em')
+															$author$project$Main$menuDivStyles(
+															_Utils_eq(model.category, $author$project$Data$FullRun))
 														]),
-													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Rank')
+															$elm$html$Html$Events$onClick(
+															$author$project$Main$ChangeCategory($author$project$Data$FullRun))
+														]),
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Full Run')
 														])),
 													A3(
-													$author$project$Html$Styled$thS,
+													$author$project$Html$Styled$divS,
 													_List_fromArray(
 														[
-															$author$project$Css$width('20vw')
+															$author$project$Main$menuDivStyles(
+															_Utils_eq(model.category, $author$project$Data$BossOnly))
 														]),
-													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Name')
+															$elm$html$Html$Events$onClick(
+															$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
+														]),
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Boss Only')
 														])),
 													A3(
-													$author$project$Html$Styled$thS,
+													$author$project$Html$Styled$divS,
 													_List_fromArray(
 														[
-															$author$project$Css$width('7em')
+															$author$project$Main$menuDivStyles(
+															_Utils_eq(model.category, $author$project$Data$Stock))
 														]),
-													_List_Nil,
 													_List_fromArray(
 														[
-															$author$project$Html$Styled$text('Time')
+															$elm$html$Html$Events$onClick(
+															$author$project$Main$ChangeCategory($author$project$Data$Stock))
+														]),
+													_List_fromArray(
+														[
+															$author$project$Html$Styled$text('Stock')
 														]))
+												])),
+											A3(
+											$author$project$Html$Styled$divS,
+											_List_fromArray(
+												[
+													$author$project$Main$gridStyles,
+													$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
+													$author$project$Css$marginBottom('2em')
+												]),
+											_List_Nil,
+											_List_fromArray(
+												[
+													A3($author$project$Main$zoneHtml, 1, model.zone, $author$project$Main$normalZones),
+													A3($author$project$Main$zoneHtml, 2, model.zone, $author$project$Main$eliteZones)
 												]))
 										])),
-									A2(
-									$author$project$Html$Styled$tbody,
+									A3(
+									$author$project$Html$Styled$tableS,
+									_List_fromArray(
+										[
+											$author$project$Css$width('100%'),
+											$author$project$Css$textAlign('center'),
+											$author$project$Css$borderJ(
+											_List_fromArray(
+												['1px', 'solid', $author$project$Design$lightGray])),
+											$author$project$Css$borderSpacing('0 0'),
+											$author$project$Css$borderRadius($author$project$Design$radius1),
+											A2(
+											$author$project$Css$mapSelector,
+											function (c) {
+												return c + ' tr';
+											},
+											_List_fromArray(
+												[
+													$author$project$Css$height('2em')
+												]))
+										]),
 									_List_Nil,
-									A2(
-										$elm$core$List$indexedMap,
-										F2(
-											function (i, player) {
-												return A3(
-													$author$project$FoldIdentity$map,
-													$author$project$Main$idH,
-													function (run) {
-														return A3(
-															$author$project$Html$Styled$trS,
-															_List_fromArray(
-																[
-																	A3(
-																	$author$project$Css$nthChild,
-																	2,
-																	1,
-																	_List_fromArray(
-																		[
-																			$author$project$Css$children(
-																			_List_fromArray(
-																				[
-																					$author$project$Css$background($author$project$Design$lightGray)
-																				]))
-																		])),
-																	$author$project$Css$lastChild(
-																	_List_fromArray(
-																		[
-																			$author$project$Css$children(
-																			_List_fromArray(
-																				[
-																					$author$project$Css$firstChild(
-																					_List_fromArray(
-																						[
-																							$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
-																						])),
-																					$author$project$Css$lastChild(
-																					_List_fromArray(
-																						[
-																							$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
-																						]))
-																				]))
-																		]))
-																]),
+									_List_fromArray(
+										[
+											A2(
+											$author$project$Html$Styled$thead,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$author$project$Html$Styled$tr,
+													_List_Nil,
+													_List_fromArray(
+														[
+															A2(
+															$author$project$Html$Styled$th,
 															_List_Nil,
 															_List_fromArray(
 																[
-																	A2(
-																	$author$project$Html$Styled$td,
-																	_List_Nil,
+																	$author$project$Html$Styled$text('Rank')
+																])),
+															A2(
+															$author$project$Html$Styled$th,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text('Name')
+																])),
+															A2(
+															$author$project$Html$Styled$th,
+															_List_Nil,
+															_List_fromArray(
+																[
+																	$author$project$Html$Styled$text('Time')
+																]))
+														]))
+												])),
+											A2(
+											$author$project$Html$Styled$tbody,
+											_List_Nil,
+											A2(
+												$elm$core$List$indexedMap,
+												F2(
+													function (i, player) {
+														return A3(
+															$author$project$FoldIdentity$map,
+															$author$project$Main$idH,
+															function (run) {
+																return A3(
+																	$author$project$Html$Styled$trS,
 																	_List_fromArray(
 																		[
-																			$author$project$Html$Styled$text(
-																			$elm$core$String$fromInt(i + 1))
-																		])),
-																	A2(
-																	$author$project$Html$Styled$td,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$author$project$Html$Styled$text(player),
 																			A3(
-																			$author$project$Html$Styled$imgS,
-																			_List_fromArray(
-																				[$author$project$Main$rightOfText]),
+																			$author$project$Css$nthChild,
+																			2,
+																			1,
 																			_List_fromArray(
 																				[
-																					$elm$html$Html$Attributes$src(
-																					$author$project$Data$shellToPicture(run.shell))
-																				]),
-																			_List_Nil)
-																		])),
-																	A2(
-																	$author$project$Html$Styled$td,
+																					$author$project$Css$children(
+																					_List_fromArray(
+																						[
+																							$author$project$Css$background($author$project$Design$lightGray)
+																						]))
+																				])),
+																			$author$project$Css$lastChild(
+																			_List_fromArray(
+																				[
+																					$author$project$Css$children(
+																					_List_fromArray(
+																						[
+																							$author$project$Css$firstChild(
+																							_List_fromArray(
+																								[
+																									$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
+																								])),
+																							$author$project$Css$lastChild(
+																							_List_fromArray(
+																								[
+																									$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																								]))
+																						]))
+																				]))
+																		]),
 																	_List_Nil,
 																	_List_fromArray(
 																		[
-																			$author$project$Html$Styled$text(
-																			$author$project$Data$formatTime(run.time)),
 																			A2(
-																			$author$project$Html$Styled$a,
+																			$author$project$Html$Styled$td,
+																			_List_Nil,
 																			_List_fromArray(
 																				[
-																					$elm$html$Html$Attributes$href(run.link)
-																				]),
+																					$author$project$Html$Styled$text(
+																					$elm$core$String$fromInt(i + 1))
+																				])),
+																			A2(
+																			$author$project$Html$Styled$td,
+																			_List_Nil,
 																			_List_fromArray(
 																				[
+																					$author$project$Html$Styled$text(player),
 																					A3(
 																					$author$project$Html$Styled$imgS,
 																					_List_fromArray(
 																						[$author$project$Main$rightOfText]),
 																					_List_fromArray(
 																						[
-																							$elm$html$Html$Attributes$src('images/film.svg')
+																							$elm$html$Html$Attributes$src(
+																							$author$project$Data$shellToPicture(run.shell))
 																						]),
 																					_List_Nil)
+																				])),
+																			A2(
+																			$author$project$Html$Styled$td,
+																			_List_Nil,
+																			_List_fromArray(
+																				[
+																					$author$project$Html$Styled$text(
+																					$author$project$Data$formatTime(run.time)),
+																					A2(
+																					$author$project$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							$elm$html$Html$Attributes$href(run.link)
+																						]),
+																					_List_fromArray(
+																						[
+																							A3(
+																							$author$project$Html$Styled$imgS,
+																							_List_fromArray(
+																								[$author$project$Main$rightOfText]),
+																							_List_fromArray(
+																								[
+																									$elm$html$Html$Attributes$src('images/film.svg')
+																								]),
+																							_List_Nil)
+																						]))
 																				]))
-																		]))
-																]));
-													},
-													A3($author$project$Data$getRun, model.category, model.zone, player));
-											}),
-										A2($author$project$Data$getPlayersWithRun, model.category, model.zone)))
+																		]));
+															},
+															A3($author$project$Data$getRun, model.category, model.zone, player));
+													}),
+												A2($author$project$Data$getPlayersWithRun, model.category, model.zone)))
+										]))
 								]))
 						]))
 				])),
