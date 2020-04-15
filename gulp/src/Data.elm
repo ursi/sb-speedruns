@@ -34,6 +34,7 @@ type alias Run =
     { shell : Shell
     , time : Int
     , link : String
+    , pure : Bool
     }
 
 
@@ -58,18 +59,21 @@ rawData =
                   , { shell = Wildfire
                     , time = 237182
                     , link = "https://youtu.be/ipFSyujBl3Y?t=227"
+                    , pure = True
                     }
                   )
                 , ( "eFF"
                   , { shell = Wildfire
                     , time = 137771
                     , link = "https://youtu.be/tUADE3i27S0?t=201"
+                    , pure = True
                     }
                   )
                 , ( "eFB"
                   , { shell = Wildfire
                     , time = 160031
                     , link = "https://youtu.be/BhhSumqQ-y0?t=255"
+                    , pure = True
                     }
                   )
                 ]
@@ -78,18 +82,21 @@ rawData =
                   , { shell = Wildfire
                     , time = 440973
                     , link = "https://youtu.be/ipFSyujBl3Y"
+                    , pure = True
                     }
                   )
                 , ( "eFF"
                   , { shell = Wildfire
                     , time = 334067
                     , link = "https://www.youtube.com/watch?v=tUADE3i27S0"
+                    , pure = True
                     }
                   )
                 , ( "eFB"
                   , { shell = Wildfire
                     , time = 389563
                     , link = "https://www.youtube.com/watch?v=BhhSumqQ-y0"
+                    , pure = True
                     }
                   )
                 ]
@@ -98,12 +105,14 @@ rawData =
                   , { shell = Wildfire
                     , time = 432099
                     , link = "https://www.youtube.com/watch?v=dl6pvB-90O8"
+                    , pure = True
                     }
                   )
                 , ( "FB"
                   , { shell = Duskwing
                     , time = 427494
                     , link = "https://youtu.be/yh_KZUJ04AQ"
+                    , pure = True
                     }
                   )
                 ]
@@ -119,12 +128,14 @@ rawData =
                   , { shell = Duskwing
                     , time = 236966
                     , link = "https://youtu.be/k16Oam2KLtg"
+                    , pure = True
                     }
                   )
                 , ( "FB"
                   , { shell = Duskwing
                     , time = 376233
                     , link = "https://www.youtube.com/watch?v=Nseq4diUMek"
+                    , pure = True
                     }
                   )
                 ]
@@ -140,6 +151,7 @@ rawData =
                   , { shell = Duskwing
                     , time = 217467
                     , link = "https://www.youtube.com/watch?v=uQj-YLX-kr8"
+                    , pure = True
                     }
                   )
                 ]
@@ -153,6 +165,7 @@ rawData =
                   , { shell = Duskwing
                     , time = 91500
                     , link = "https://youtu.be/_r_nvV22tek?t=82"
+                    , pure = True
                     }
                   )
                 ]
@@ -161,6 +174,7 @@ rawData =
                   , { shell = Duskwing
                     , time = 168700
                     , link = "https://www.youtube.com/watch?v=_r_nvV22tek"
+                    , pure = True
                     }
                   )
                 ]
@@ -178,6 +192,7 @@ rawData =
 
                     --, link = "https://youtu.be/yI8T-3F0ldA?t=249"
                     , link = "https://youtu.be/EtINKR79MEY?t=306"
+                    , pure = False
                     }
                   )
                 ]
@@ -186,6 +201,7 @@ rawData =
                   , { shell = Duskwing
                     , time = 496630
                     , link = "https://www.youtube.com/watch?v=yI8T-3F0ldA"
+                    , pure = False
                     }
                   )
                 ]
@@ -200,18 +216,21 @@ rawData =
                   , { shell = Wildfire
                     , time = 264800
                     , link = "https://youtu.be/AcMofYmKzwU?t=199"
+                    , pure = True
                     }
                   )
                 , ( "TL"
                   , { shell = Wildfire
                     , time = 253533
                     , link = "https://youtu.be/Lj0fTpY5f9A?t=338"
+                    , pure = False
                     }
                   )
                 , ( "eFF"
                   , { shell = Wildfire
                     , time = 138900
                     , link = "https://youtu.be/YbNVKPkExnA?t=114"
+                    , pure = True
                     }
                   )
                 ]
@@ -220,18 +239,21 @@ rawData =
                   , { shell = Wildfire
                     , time = 448834
                     , link = "https://www.youtube.com/watch?v=AcMofYmKzwU"
+                    , pure = True
                     }
                   )
                 , ( "TL"
                   , { shell = Wildfire
                     , time = 590733
                     , link = "https://www.youtube.com/watch?v=Lj0fTpY5f9A"
+                    , pure = False
                     }
                   )
                 , ( "eFF"
                   , { shell = Wildfire
                     , time = 249633
                     , link = "https://www.youtube.com/watch?v=YbNVKPkExnA"
+                    , pure = True
                     }
                   )
                 ]
@@ -246,6 +268,7 @@ rawData =
                   , { shell = Wildfire
                     , time = 132900
                     , link = "https://youtu.be/Pim1bRK9AJg?t=129"
+                    , pure = True
                     }
                   )
                 ]
@@ -254,6 +277,7 @@ rawData =
                   , { shell = Wildfire
                     , time = 258400
                     , link = "https://www.youtube.com/watch?v=Pim1bRK9AJg"
+                    , pure = True
                     }
                   )
                 ]

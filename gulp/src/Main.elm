@@ -254,7 +254,7 @@ view model =
                 []
                 [ H.divS
                     [ gridStyles
-                    , C.gridTemplateColumns "repeat(3, max-content)"
+                    , C.grid "max-content / auto-flow max-content"
                     ]
                     []
                     [ H.divS [ menuDivStyles (model.category == BossOnly) ]

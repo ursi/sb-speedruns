@@ -5346,34 +5346,34 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'VQ',
-						{link: 'https://youtu.be/ipFSyujBl3Y?t=227', shell: $author$project$Data$Wildfire, time: 237182}),
+						{link: 'https://youtu.be/ipFSyujBl3Y?t=227', pure: true, shell: $author$project$Data$Wildfire, time: 237182}),
 						_Utils_Tuple2(
 						'eFF',
-						{link: 'https://youtu.be/tUADE3i27S0?t=201', shell: $author$project$Data$Wildfire, time: 137771}),
+						{link: 'https://youtu.be/tUADE3i27S0?t=201', pure: true, shell: $author$project$Data$Wildfire, time: 137771}),
 						_Utils_Tuple2(
 						'eFB',
-						{link: 'https://youtu.be/BhhSumqQ-y0?t=255', shell: $author$project$Data$Wildfire, time: 160031})
+						{link: 'https://youtu.be/BhhSumqQ-y0?t=255', pure: true, shell: $author$project$Data$Wildfire, time: 160031})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'VQ',
-						{link: 'https://youtu.be/ipFSyujBl3Y', shell: $author$project$Data$Wildfire, time: 440973}),
+						{link: 'https://youtu.be/ipFSyujBl3Y', pure: true, shell: $author$project$Data$Wildfire, time: 440973}),
 						_Utils_Tuple2(
 						'eFF',
-						{link: 'https://www.youtube.com/watch?v=tUADE3i27S0', shell: $author$project$Data$Wildfire, time: 334067}),
+						{link: 'https://www.youtube.com/watch?v=tUADE3i27S0', pure: true, shell: $author$project$Data$Wildfire, time: 334067}),
 						_Utils_Tuple2(
 						'eFB',
-						{link: 'https://www.youtube.com/watch?v=BhhSumqQ-y0', shell: $author$project$Data$Wildfire, time: 389563})
+						{link: 'https://www.youtube.com/watch?v=BhhSumqQ-y0', pure: true, shell: $author$project$Data$Wildfire, time: 389563})
 					]),
 				stock: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=dl6pvB-90O8', shell: $author$project$Data$Wildfire, time: 432099}),
+						{link: 'https://www.youtube.com/watch?v=dl6pvB-90O8', pure: true, shell: $author$project$Data$Wildfire, time: 432099}),
 						_Utils_Tuple2(
 						'FB',
-						{link: 'https://youtu.be/yh_KZUJ04AQ', shell: $author$project$Data$Duskwing, time: 427494})
+						{link: 'https://youtu.be/yh_KZUJ04AQ', pure: true, shell: $author$project$Data$Duskwing, time: 427494})
 					])
 			}
 		}),
@@ -5387,10 +5387,10 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://youtu.be/k16Oam2KLtg', shell: $author$project$Data$Duskwing, time: 236966}),
+						{link: 'https://youtu.be/k16Oam2KLtg', pure: true, shell: $author$project$Data$Duskwing, time: 236966}),
 						_Utils_Tuple2(
 						'FB',
-						{link: 'https://www.youtube.com/watch?v=Nseq4diUMek', shell: $author$project$Data$Duskwing, time: 376233})
+						{link: 'https://www.youtube.com/watch?v=Nseq4diUMek', pure: true, shell: $author$project$Data$Duskwing, time: 376233})
 					])
 			}
 		}),
@@ -5404,7 +5404,7 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=uQj-YLX-kr8', shell: $author$project$Data$Duskwing, time: 217467})
+						{link: 'https://www.youtube.com/watch?v=uQj-YLX-kr8', pure: true, shell: $author$project$Data$Duskwing, time: 217467})
 					])
 			}
 		}),
@@ -5416,13 +5416,13 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://youtu.be/_r_nvV22tek?t=82', shell: $author$project$Data$Duskwing, time: 91500})
+						{link: 'https://youtu.be/_r_nvV22tek?t=82', pure: true, shell: $author$project$Data$Duskwing, time: 91500})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=_r_nvV22tek', shell: $author$project$Data$Duskwing, time: 168700})
+						{link: 'https://www.youtube.com/watch?v=_r_nvV22tek', pure: true, shell: $author$project$Data$Duskwing, time: 168700})
 					]),
 				stock: _List_Nil
 			}
@@ -5435,13 +5435,13 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'TL',
-						{link: 'https://youtu.be/EtINKR79MEY?t=306', shell: $author$project$Data$Wildfire, time: 248582})
+						{link: 'https://youtu.be/EtINKR79MEY?t=306', pure: false, shell: $author$project$Data$Wildfire, time: 248582})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'TL',
-						{link: 'https://www.youtube.com/watch?v=yI8T-3F0ldA', shell: $author$project$Data$Duskwing, time: 496630})
+						{link: 'https://www.youtube.com/watch?v=yI8T-3F0ldA', pure: false, shell: $author$project$Data$Duskwing, time: 496630})
 					]),
 				stock: _List_Nil
 			}
@@ -5454,25 +5454,25 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'UB',
-						{link: 'https://youtu.be/AcMofYmKzwU?t=199', shell: $author$project$Data$Wildfire, time: 264800}),
+						{link: 'https://youtu.be/AcMofYmKzwU?t=199', pure: true, shell: $author$project$Data$Wildfire, time: 264800}),
 						_Utils_Tuple2(
 						'TL',
-						{link: 'https://youtu.be/Lj0fTpY5f9A?t=338', shell: $author$project$Data$Wildfire, time: 253533}),
+						{link: 'https://youtu.be/Lj0fTpY5f9A?t=338', pure: false, shell: $author$project$Data$Wildfire, time: 253533}),
 						_Utils_Tuple2(
 						'eFF',
-						{link: 'https://youtu.be/YbNVKPkExnA?t=114', shell: $author$project$Data$Wildfire, time: 138900})
+						{link: 'https://youtu.be/YbNVKPkExnA?t=114', pure: true, shell: $author$project$Data$Wildfire, time: 138900})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'UB',
-						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', shell: $author$project$Data$Wildfire, time: 448834}),
+						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', pure: true, shell: $author$project$Data$Wildfire, time: 448834}),
 						_Utils_Tuple2(
 						'TL',
-						{link: 'https://www.youtube.com/watch?v=Lj0fTpY5f9A', shell: $author$project$Data$Wildfire, time: 590733}),
+						{link: 'https://www.youtube.com/watch?v=Lj0fTpY5f9A', pure: false, shell: $author$project$Data$Wildfire, time: 590733}),
 						_Utils_Tuple2(
 						'eFF',
-						{link: 'https://www.youtube.com/watch?v=YbNVKPkExnA', shell: $author$project$Data$Wildfire, time: 249633})
+						{link: 'https://www.youtube.com/watch?v=YbNVKPkExnA', pure: true, shell: $author$project$Data$Wildfire, time: 249633})
 					]),
 				stock: _List_Nil
 			}
@@ -5485,13 +5485,13 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'eFC',
-						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', shell: $author$project$Data$Wildfire, time: 132900})
+						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', pure: true, shell: $author$project$Data$Wildfire, time: 132900})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'eFC',
-						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', shell: $author$project$Data$Wildfire, time: 258400})
+						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', pure: true, shell: $author$project$Data$Wildfire, time: 258400})
 					]),
 				stock: _List_Nil
 			}
@@ -6876,7 +6876,6 @@ var $author$project$Main$gridStyles = $author$project$Css$batch(
 			$author$project$Css$display('grid'),
 			$author$project$Css$gap('10px 10px')
 		]));
-var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
 var $author$project$Html$Styled$h1 = $author$project$Html$Styled$Node('h1');
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -7891,7 +7890,7 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$author$project$Main$gridStyles,
-											$author$project$Css$gridTemplateColumns('repeat(3, max-content)')
+											$author$project$Css$grid('max-content / auto-flow max-content')
 										]),
 									_List_Nil,
 									_List_fromArray(
