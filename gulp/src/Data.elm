@@ -167,6 +167,31 @@ rawData =
             }
         }
       )
+    , ( "Givsaro"
+      , { runs =
+            { bossOnly =
+                [ ( "eFC"
+                  , { shell = Ironclad
+                    , time = 137334
+                    , link = "https://youtu.be/9H4WZ136iRs?t=185"
+                    , pure = True
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFC"
+                  , { shell = Ironclad
+                    , time = 318467
+                    , link = "https://www.youtube.com/watch?v=9H4WZ136iRs"
+                    , pure = True
+                    }
+                  )
+                ]
+            , stock =
+                []
+            }
+        }
+      )
     , ( "grand_sushi"
       , { runs =
             { bossOnly = []
@@ -321,12 +346,26 @@ rawData =
                     , pure = True
                     }
                   )
+                , ( "eUB"
+                  , { shell = Wildfire
+                    , time = 331607
+                    , link = "https://youtu.be/IAbEwPzft1k?t=324"
+                    , pure = True
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "eFC"
                   , { shell = Wildfire
                     , time = 258400
                     , link = "https://www.youtube.com/watch?v=Pim1bRK9AJg"
+                    , pure = True
+                    }
+                  )
+                , ( "eUB"
+                  , { shell = Wildfire
+                    , time = 652824
+                    , link = "https://www.youtube.com/watch?v=IAbEwPzft1k"
                     , pure = True
                     }
                   )

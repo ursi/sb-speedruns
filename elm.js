@@ -5335,6 +5335,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 		assocs);
 };
 var $author$project$Data$Duskwing = {$: 'Duskwing'};
+var $author$project$Data$Ironclad = {$: 'Ironclad'};
 var $author$project$Data$Wildfire = {$: 'Wildfire'};
 var $author$project$Data$rawData = _List_fromArray(
 	[
@@ -5414,6 +5415,25 @@ var $author$project$Data$rawData = _List_fromArray(
 			}
 		}),
 		_Utils_Tuple2(
+		'Givsaro',
+		{
+			runs: {
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://youtu.be/9H4WZ136iRs?t=185', pure: true, shell: $author$project$Data$Ironclad, time: 137334})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFC',
+						{link: 'https://www.youtube.com/watch?v=9H4WZ136iRs', pure: true, shell: $author$project$Data$Ironclad, time: 318467})
+					]),
+				stock: _List_Nil
+			}
+		}),
+		_Utils_Tuple2(
 		'grand_sushi',
 		{
 			runs: {
@@ -5428,7 +5448,7 @@ var $author$project$Data$rawData = _List_fromArray(
 			}
 		}),
 		_Utils_Tuple2(
-		'Gritan',
+		'Gritian',
 		{
 			runs: {
 				bossOnly: _List_fromArray(
@@ -5523,13 +5543,19 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'eFC',
-						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', pure: true, shell: $author$project$Data$Wildfire, time: 132900})
+						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', pure: true, shell: $author$project$Data$Wildfire, time: 132900}),
+						_Utils_Tuple2(
+						'eUB',
+						{link: 'https://youtu.be/IAbEwPzft1k?t=324', pure: true, shell: $author$project$Data$Wildfire, time: 331607})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'eFC',
-						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', pure: true, shell: $author$project$Data$Wildfire, time: 258400})
+						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', pure: true, shell: $author$project$Data$Wildfire, time: 258400}),
+						_Utils_Tuple2(
+						'eUB',
+						{link: 'https://www.youtube.com/watch?v=IAbEwPzft1k', pure: true, shell: $author$project$Data$Wildfire, time: 652824})
 					]),
 				stock: _List_Nil
 			}
