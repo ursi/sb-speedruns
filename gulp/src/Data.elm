@@ -170,19 +170,89 @@ rawData =
     , ( "Givsaro"
       , { runs =
             { bossOnly =
-                [ ( "eFC"
+                [ ( "VQ"
+                  , { shell = Wildfire
+                    , time = 213000
+                    , link = "https://youtu.be/hP5wcq8uH2E?t=163"
+                    , pure = True
+                    }
+                  )
+                , ( "ST"
+                  , { shell = Wildfire
+                    , time = 220167
+                    , link = "https://youtu.be/wDzyp_GOwjQ?t=113"
+                    , pure = True
+                    }
+                  )
+                , ( "TL"
+                  , { shell = Wildfire
+                    , time = 246400
+                    , link = "https://www.youtube.com/watch?v=2EjFLAYUKwI"
+                    , pure = True
+                    }
+                  )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 143033
+                    , link = "https://youtu.be/jR_3z8vluDY?t=125"
+                    , pure = True
+                    }
+                  )
+                , ( "eFC"
                   , { shell = Ironclad
                     , time = 137334
                     , link = "https://youtu.be/9H4WZ136iRs?t=185"
                     , pure = True
                     }
                   )
+                , ( "eVQ"
+                  , { shell = Wildfire
+                    , time = 250967
+                    , link = "https://youtu.be/9GicHYnod-4?t=224"
+                    , pure = True
+                    }
+                  )
                 ]
             , fullRun =
-                [ ( "eFC"
+                [ ( "VQ"
+                  , { shell = Wildfire
+                    , time = 373200
+                    , link = "https://www.youtube.com/watch?v=hP5wcq8uH2E"
+                    , pure = True
+                    }
+                  )
+                , ( "ST"
+                  , { shell = Wildfire
+                    , time = 331867
+                    , link = "https://www.youtube.com/watch?v=wDzyp_GOwjQ"
+                    , pure = True
+                    }
+                  )
+                , ( "TL"
+                  , { shell = Wildfire
+                    , time = 544934
+                    , link = "https://www.youtube.com/watch?v=JQCpkdWYB3U"
+                    , pure = True
+                    }
+                  )
+                , ( "eFF"
+                  , { shell = Wildfire
+                    , time = 265000
+                    , link = "https://www.youtube.com/watch?v=jR_3z8vluDY"
+                    , pure = True
+                    }
+                  )
+                , ( "eFC"
                   , { shell = Ironclad
                     , time = 318467
                     , link = "https://www.youtube.com/watch?v=9H4WZ136iRs"
+                    , pure = True
+                    }
+                  )
+                , ( "eVQ"
+                  , { shell = Wildfire
+                    , time = 473433
+                    , link = "https://www.youtube.com/watch?v=9GicHYnod-4"
                     , pure = True
                     }
                   )
@@ -218,12 +288,26 @@ rawData =
                     , pure = True
                     }
                   )
+                , ( "FB"
+                  , { shell = Duskwing
+                    , time = 104367
+                    , link = "https://youtu.be/2MREFUbcxy4?t=117"
+                    , pure = True
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "FF"
                   , { shell = Duskwing
                     , time = 168700
                     , link = "https://www.youtube.com/watch?v=_r_nvV22tek"
+                    , pure = True
+                    }
+                  )
+                , ( "FB"
+                  , { shell = Duskwing
+                    , time = 216367
+                    , link = "https://www.youtube.com/watch?v=2MREFUbcxy4"
                     , pure = True
                     }
                   )
