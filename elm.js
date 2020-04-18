@@ -5421,6 +5421,9 @@ var $author$project$Data$rawData = _List_fromArray(
 				bossOnly: _List_fromArray(
 					[
 						_Utils_Tuple2(
+						'FF',
+						{link: 'https://youtu.be/UyDW8C8FSGo?t=123', pure: true, shell: $author$project$Data$Wildfire, time: 91567}),
+						_Utils_Tuple2(
 						'VQ',
 						{link: 'https://youtu.be/hP5wcq8uH2E?t=163', pure: true, shell: $author$project$Data$Wildfire, time: 213000}),
 						_Utils_Tuple2(
@@ -5441,6 +5444,9 @@ var $author$project$Data$rawData = _List_fromArray(
 					]),
 				fullRun: _List_fromArray(
 					[
+						_Utils_Tuple2(
+						'FF',
+						{link: 'https://www.youtube.com/watch?v=ixNi9a00Xso', pure: true, shell: $author$project$Data$Wildfire, time: 189533}),
 						_Utils_Tuple2(
 						'VQ',
 						{link: 'https://www.youtube.com/watch?v=hP5wcq8uH2E', pure: true, shell: $author$project$Data$Wildfire, time: 373200}),
@@ -5488,7 +5494,13 @@ var $author$project$Data$rawData = _List_fromArray(
 						{link: 'https://youtu.be/_r_nvV22tek?t=82', pure: true, shell: $author$project$Data$Duskwing, time: 91500}),
 						_Utils_Tuple2(
 						'FB',
-						{link: 'https://youtu.be/2MREFUbcxy4?t=117', pure: true, shell: $author$project$Data$Duskwing, time: 104367})
+						{link: 'https://youtu.be/2MREFUbcxy4?t=117', pure: true, shell: $author$project$Data$Duskwing, time: 104367}),
+						_Utils_Tuple2(
+						'FC',
+						{link: 'https://youtu.be/1eCVfwvvU0s?t=82', pure: true, shell: $author$project$Data$Duskwing, time: 93067}),
+						_Utils_Tuple2(
+						'VQ',
+						{link: 'https://youtu.be/0ueTAiUZ9Yo?t=120', pure: true, shell: $author$project$Data$Duskwing, time: 193400})
 					]),
 				fullRun: _List_fromArray(
 					[
@@ -5497,7 +5509,13 @@ var $author$project$Data$rawData = _List_fromArray(
 						{link: 'https://www.youtube.com/watch?v=_r_nvV22tek', pure: true, shell: $author$project$Data$Duskwing, time: 168700}),
 						_Utils_Tuple2(
 						'FB',
-						{link: 'https://www.youtube.com/watch?v=2MREFUbcxy4', pure: true, shell: $author$project$Data$Duskwing, time: 216367})
+						{link: 'https://www.youtube.com/watch?v=2MREFUbcxy4', pure: true, shell: $author$project$Data$Duskwing, time: 216367}),
+						_Utils_Tuple2(
+						'FC',
+						{link: 'https://www.youtube.com/watch?v=1eCVfwvvU0s', pure: true, shell: $author$project$Data$Duskwing, time: 170866}),
+						_Utils_Tuple2(
+						'VQ',
+						{link: 'https://www.youtube.com/watch?v=0ueTAiUZ9Yo', pure: true, shell: $author$project$Data$Duskwing, time: 309800})
 					]),
 				stock: _List_Nil
 			}

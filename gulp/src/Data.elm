@@ -170,7 +170,14 @@ rawData =
     , ( "Givsaro"
       , { runs =
             { bossOnly =
-                [ ( "VQ"
+                [ ( "FF"
+                  , { shell = Wildfire
+                    , time = 91567
+                    , link = "https://youtu.be/UyDW8C8FSGo?t=123"
+                    , pure = True
+                    }
+                  )
+                , ( "VQ"
                   , { shell = Wildfire
                     , time = 213000
                     , link = "https://youtu.be/hP5wcq8uH2E?t=163"
@@ -214,7 +221,14 @@ rawData =
                   )
                 ]
             , fullRun =
-                [ ( "VQ"
+                [ ( "FF"
+                  , { shell = Wildfire
+                    , time = 189533
+                    , link = "https://www.youtube.com/watch?v=ixNi9a00Xso"
+                    , pure = True
+                    }
+                  )
+                , ( "VQ"
                   , { shell = Wildfire
                     , time = 373200
                     , link = "https://www.youtube.com/watch?v=hP5wcq8uH2E"
@@ -295,6 +309,20 @@ rawData =
                     , pure = True
                     }
                   )
+                , ( "FC"
+                  , { shell = Duskwing
+                    , time = 93067
+                    , link = "https://youtu.be/1eCVfwvvU0s?t=82"
+                    , pure = True
+                    }
+                  )
+                , ( "VQ"
+                  , { shell = Duskwing
+                    , time = 193400
+                    , link = "https://youtu.be/0ueTAiUZ9Yo?t=120"
+                    , pure = True
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "FF"
@@ -308,6 +336,20 @@ rawData =
                   , { shell = Duskwing
                     , time = 216367
                     , link = "https://www.youtube.com/watch?v=2MREFUbcxy4"
+                    , pure = True
+                    }
+                  )
+                , ( "FC"
+                  , { shell = Duskwing
+                    , time = 170866
+                    , link = "https://www.youtube.com/watch?v=1eCVfwvvU0s"
+                    , pure = True
+                    }
+                  )
+                , ( "VQ"
+                  , { shell = Duskwing
+                    , time = 309800
+                    , link = "https://www.youtube.com/watch?v=0ueTAiUZ9Yo"
                     , pure = True
                     }
                   )
