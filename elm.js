@@ -4409,6 +4409,105 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
+
+
+
+
+// VIRTUAL-DOM WIDGETS
+
+
+var _Markdown_toHtml = F3(function(options, factList, rawMarkdown)
+{
+	return _VirtualDom_custom(
+		factList,
+		{
+			a: options,
+			b: rawMarkdown
+		},
+		_Markdown_render,
+		_Markdown_diff
+	);
+});
+
+
+
+// WIDGET IMPLEMENTATION
+
+
+function _Markdown_render(model)
+{
+	return A2(_Markdown_replace, model, _VirtualDom_doc.createElement('div'));
+}
+
+
+function _Markdown_diff(x, y)
+{
+	return x.b === y.b && x.a === y.a
+		? false
+		: _Markdown_replace(y);
+}
+
+
+var _Markdown_replace = F2(function(model, div)
+{
+	div.innerHTML = _Markdown_marked(model.b, _Markdown_formatOptions(model.a));
+	return div;
+});
+
+
+
+// ACTUAL MARKDOWN PARSER
+
+
+var _Markdown_marked = function() {
+	// catch the `marked` object regardless of the outer environment.
+	// (ex. a CommonJS module compatible environment.)
+	// note that this depends on marked's implementation of environment detection.
+	var module = {};
+	var exports = module.exports = {};
+
+	/**
+	 * marked - a markdown parser
+	 * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
+	 * https://github.com/chjj/marked
+	 * commit cd2f6f5b7091154c5526e79b5f3bfb4d15995a51
+	 */
+	(function(){var block={newline:/^\n+/,code:/^( {4}[^\n]+\n*)+/,fences:noop,hr:/^( *[-*_]){3,} *(?:\n+|$)/,heading:/^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,nptable:noop,lheading:/^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,blockquote:/^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,list:/^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,html:/^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,table:noop,paragraph:/^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,text:/^[^\n]+/};block.bullet=/(?:[*+-]|\d+\.)/;block.item=/^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;block.item=replace(block.item,"gm")(/bull/g,block.bullet)();block.list=replace(block.list)(/bull/g,block.bullet)("hr","\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))")("def","\\n+(?="+block.def.source+")")();block.blockquote=replace(block.blockquote)("def",block.def)();block._tag="(?!(?:"+"a|em|strong|small|s|cite|q|dfn|abbr|data|time|code"+"|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo"+"|span|br|wbr|ins|del|img)\\b)\\w+(?!:/|[^\\w\\s@]*@)\\b";block.html=replace(block.html)("comment",/<!--[\s\S]*?-->/)("closed",/<(tag)[\s\S]+?<\/\1>/)("closing",/<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)(/tag/g,block._tag)();block.paragraph=replace(block.paragraph)("hr",block.hr)("heading",block.heading)("lheading",block.lheading)("blockquote",block.blockquote)("tag","<"+block._tag)("def",block.def)();block.normal=merge({},block);block.gfm=merge({},block.normal,{fences:/^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,paragraph:/^/,heading:/^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/});block.gfm.paragraph=replace(block.paragraph)("(?!","(?!"+block.gfm.fences.source.replace("\\1","\\2")+"|"+block.list.source.replace("\\1","\\3")+"|")();block.tables=merge({},block.gfm,{nptable:/^ *(\S.*\|.*)\n *([-:]+ *\|[-| :]*)\n((?:.*\|.*(?:\n|$))*)\n*/,table:/^ *\|(.+)\n *\|( *[-:]+[-| :]*)\n((?: *\|.*(?:\n|$))*)\n*/});function Lexer(options){this.tokens=[];this.tokens.links={};this.options=options||marked.defaults;this.rules=block.normal;if(this.options.gfm){if(this.options.tables){this.rules=block.tables}else{this.rules=block.gfm}}}Lexer.rules=block;Lexer.lex=function(src,options){var lexer=new Lexer(options);return lexer.lex(src)};Lexer.prototype.lex=function(src){src=src.replace(/\r\n|\r/g,"\n").replace(/\t/g,"    ").replace(/\u00a0/g," ").replace(/\u2424/g,"\n");return this.token(src,true)};Lexer.prototype.token=function(src,top,bq){var src=src.replace(/^ +$/gm,""),next,loose,cap,bull,b,item,space,i,l;while(src){if(cap=this.rules.newline.exec(src)){src=src.substring(cap[0].length);if(cap[0].length>1){this.tokens.push({type:"space"})}}if(cap=this.rules.code.exec(src)){src=src.substring(cap[0].length);cap=cap[0].replace(/^ {4}/gm,"");this.tokens.push({type:"code",text:!this.options.pedantic?cap.replace(/\n+$/,""):cap});continue}if(cap=this.rules.fences.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"code",lang:cap[2],text:cap[3]||""});continue}if(cap=this.rules.heading.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"heading",depth:cap[1].length,text:cap[2]});continue}if(top&&(cap=this.rules.nptable.exec(src))){src=src.substring(cap[0].length);item={type:"table",header:cap[1].replace(/^ *| *\| *$/g,"").split(/ *\| */),align:cap[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:cap[3].replace(/\n$/,"").split("\n")};for(i=0;i<item.align.length;i++){if(/^ *-+: *$/.test(item.align[i])){item.align[i]="right"}else if(/^ *:-+: *$/.test(item.align[i])){item.align[i]="center"}else if(/^ *:-+ *$/.test(item.align[i])){item.align[i]="left"}else{item.align[i]=null}}for(i=0;i<item.cells.length;i++){item.cells[i]=item.cells[i].split(/ *\| */)}this.tokens.push(item);continue}if(cap=this.rules.lheading.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"heading",depth:cap[2]==="="?1:2,text:cap[1]});continue}if(cap=this.rules.hr.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"hr"});continue}if(cap=this.rules.blockquote.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"blockquote_start"});cap=cap[0].replace(/^ *> ?/gm,"");this.token(cap,top,true);this.tokens.push({type:"blockquote_end"});continue}if(cap=this.rules.list.exec(src)){src=src.substring(cap[0].length);bull=cap[2];this.tokens.push({type:"list_start",ordered:bull.length>1});cap=cap[0].match(this.rules.item);next=false;l=cap.length;i=0;for(;i<l;i++){item=cap[i];space=item.length;item=item.replace(/^ *([*+-]|\d+\.) +/,"");if(~item.indexOf("\n ")){space-=item.length;item=!this.options.pedantic?item.replace(new RegExp("^ {1,"+space+"}","gm"),""):item.replace(/^ {1,4}/gm,"")}if(this.options.smartLists&&i!==l-1){b=block.bullet.exec(cap[i+1])[0];if(bull!==b&&!(bull.length>1&&b.length>1)){src=cap.slice(i+1).join("\n")+src;i=l-1}}loose=next||/\n\n(?!\s*$)/.test(item);if(i!==l-1){next=item.charAt(item.length-1)==="\n";if(!loose)loose=next}this.tokens.push({type:loose?"loose_item_start":"list_item_start"});this.token(item,false,bq);this.tokens.push({type:"list_item_end"})}this.tokens.push({type:"list_end"});continue}if(cap=this.rules.html.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:this.options.sanitize?"paragraph":"html",pre:!this.options.sanitizer&&(cap[1]==="pre"||cap[1]==="script"||cap[1]==="style"),text:cap[0]});continue}if(!bq&&top&&(cap=this.rules.def.exec(src))){src=src.substring(cap[0].length);this.tokens.links[cap[1].toLowerCase()]={href:cap[2],title:cap[3]};continue}if(top&&(cap=this.rules.table.exec(src))){src=src.substring(cap[0].length);item={type:"table",header:cap[1].replace(/^ *| *\| *$/g,"").split(/ *\| */),align:cap[2].replace(/^ *|\| *$/g,"").split(/ *\| */),cells:cap[3].replace(/(?: *\| *)?\n$/,"").split("\n")};for(i=0;i<item.align.length;i++){if(/^ *-+: *$/.test(item.align[i])){item.align[i]="right"}else if(/^ *:-+: *$/.test(item.align[i])){item.align[i]="center"}else if(/^ *:-+ *$/.test(item.align[i])){item.align[i]="left"}else{item.align[i]=null}}for(i=0;i<item.cells.length;i++){item.cells[i]=item.cells[i].replace(/^ *\| *| *\| *$/g,"").split(/ *\| */)}this.tokens.push(item);continue}if(top&&(cap=this.rules.paragraph.exec(src))){src=src.substring(cap[0].length);this.tokens.push({type:"paragraph",text:cap[1].charAt(cap[1].length-1)==="\n"?cap[1].slice(0,-1):cap[1]});continue}if(cap=this.rules.text.exec(src)){src=src.substring(cap[0].length);this.tokens.push({type:"text",text:cap[0]});continue}if(src){throw new Error("Infinite loop on byte: "+src.charCodeAt(0))}}return this.tokens};var inline={escape:/^\\([\\`*{}\[\]()#+\-.!_>])/,autolink:/^<([^ >]+(@|:\/)[^ >]+)>/,url:noop,tag:/^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,link:/^!?\[(inside)\]\(href\)/,reflink:/^!?\[(inside)\]\s*\[([^\]]*)\]/,nolink:/^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,strong:/^_\_([\s\S]+?)_\_(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,em:/^\b_((?:[^_]|_\_)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,code:/^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,br:/^ {2,}\n(?!\s*$)/,del:noop,text:/^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/};inline._inside=/(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;inline._href=/\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/;inline.link=replace(inline.link)("inside",inline._inside)("href",inline._href)();inline.reflink=replace(inline.reflink)("inside",inline._inside)();inline.normal=merge({},inline);inline.pedantic=merge({},inline.normal,{strong:/^_\_(?=\S)([\s\S]*?\S)_\_(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,em:/^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/});inline.gfm=merge({},inline.normal,{escape:replace(inline.escape)("])","~|])")(),url:/^(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/,del:/^~~(?=\S)([\s\S]*?\S)~~/,text:replace(inline.text)("]|","~]|")("|","|https?://|")()});inline.breaks=merge({},inline.gfm,{br:replace(inline.br)("{2,}","*")(),text:replace(inline.gfm.text)("{2,}","*")()});function InlineLexer(links,options){this.options=options||marked.defaults;this.links=links;this.rules=inline.normal;this.renderer=this.options.renderer||new Renderer;this.renderer.options=this.options;if(!this.links){throw new Error("Tokens array requires a `links` property.")}if(this.options.gfm){if(this.options.breaks){this.rules=inline.breaks}else{this.rules=inline.gfm}}else if(this.options.pedantic){this.rules=inline.pedantic}}InlineLexer.rules=inline;InlineLexer.output=function(src,links,options){var inline=new InlineLexer(links,options);return inline.output(src)};InlineLexer.prototype.output=function(src){var out="",link,text,href,cap;while(src){if(cap=this.rules.escape.exec(src)){src=src.substring(cap[0].length);out+=cap[1];continue}if(cap=this.rules.autolink.exec(src)){src=src.substring(cap[0].length);if(cap[2]==="@"){text=cap[1].charAt(6)===":"?this.mangle(cap[1].substring(7)):this.mangle(cap[1]);href=this.mangle("mailto:")+text}else{text=escape(cap[1]);href=text}out+=this.renderer.link(href,null,text);continue}if(!this.inLink&&(cap=this.rules.url.exec(src))){src=src.substring(cap[0].length);text=escape(cap[1]);href=text;out+=this.renderer.link(href,null,text);continue}if(cap=this.rules.tag.exec(src)){if(!this.inLink&&/^<a /i.test(cap[0])){this.inLink=true}else if(this.inLink&&/^<\/a>/i.test(cap[0])){this.inLink=false}src=src.substring(cap[0].length);out+=this.options.sanitize?this.options.sanitizer?this.options.sanitizer(cap[0]):escape(cap[0]):cap[0];continue}if(cap=this.rules.link.exec(src)){src=src.substring(cap[0].length);this.inLink=true;out+=this.outputLink(cap,{href:cap[2],title:cap[3]});this.inLink=false;continue}if((cap=this.rules.reflink.exec(src))||(cap=this.rules.nolink.exec(src))){src=src.substring(cap[0].length);link=(cap[2]||cap[1]).replace(/\s+/g," ");link=this.links[link.toLowerCase()];if(!link||!link.href){out+=cap[0].charAt(0);src=cap[0].substring(1)+src;continue}this.inLink=true;out+=this.outputLink(cap,link);this.inLink=false;continue}if(cap=this.rules.strong.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.strong(this.output(cap[2]||cap[1]));continue}if(cap=this.rules.em.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.em(this.output(cap[2]||cap[1]));continue}if(cap=this.rules.code.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.codespan(escape(cap[2],true));continue}if(cap=this.rules.br.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.br();continue}if(cap=this.rules.del.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.del(this.output(cap[1]));continue}if(cap=this.rules.text.exec(src)){src=src.substring(cap[0].length);out+=this.renderer.text(escape(this.smartypants(cap[0])));continue}if(src){throw new Error("Infinite loop on byte: "+src.charCodeAt(0))}}return out};InlineLexer.prototype.outputLink=function(cap,link){var href=escape(link.href),title=link.title?escape(link.title):null;return cap[0].charAt(0)!=="!"?this.renderer.link(href,title,this.output(cap[1])):this.renderer.image(href,title,escape(cap[1]))};InlineLexer.prototype.smartypants=function(text){if(!this.options.smartypants)return text;return text.replace(/---/g,"—").replace(/--/g,"–").replace(/(^|[-\u2014\/(\[{"\s])'/g,"$1‘").replace(/'/g,"’").replace(/(^|[-\u2014\/(\[{\u2018\s])"/g,"$1“").replace(/"/g,"”").replace(/\.{3}/g,"…")};InlineLexer.prototype.mangle=function(text){if(!this.options.mangle)return text;var out="",l=text.length,i=0,ch;for(;i<l;i++){ch=text.charCodeAt(i);if(Math.random()>.5){ch="x"+ch.toString(16)}out+="&#"+ch+";"}return out};function Renderer(options){this.options=options||{}}Renderer.prototype.code=function(code,lang,escaped){if(this.options.highlight){var out=this.options.highlight(code,lang);if(out!=null&&out!==code){escaped=true;code=out}}if(!lang){return"<pre><code>"+(escaped?code:escape(code,true))+"\n</code></pre>"}return'<pre><code class="'+this.options.langPrefix+escape(lang,true)+'">'+(escaped?code:escape(code,true))+"\n</code></pre>\n"};Renderer.prototype.blockquote=function(quote){return"<blockquote>\n"+quote+"</blockquote>\n"};Renderer.prototype.html=function(html){return html};Renderer.prototype.heading=function(text,level,raw){return"<h"+level+' id="'+this.options.headerPrefix+raw.toLowerCase().replace(/[^\w]+/g,"-")+'">'+text+"</h"+level+">\n"};Renderer.prototype.hr=function(){return this.options.xhtml?"<hr/>\n":"<hr>\n"};Renderer.prototype.list=function(body,ordered){var type=ordered?"ol":"ul";return"<"+type+">\n"+body+"</"+type+">\n"};Renderer.prototype.listitem=function(text){return"<li>"+text+"</li>\n"};Renderer.prototype.paragraph=function(text){return"<p>"+text+"</p>\n"};Renderer.prototype.table=function(header,body){return"<table>\n"+"<thead>\n"+header+"</thead>\n"+"<tbody>\n"+body+"</tbody>\n"+"</table>\n"};Renderer.prototype.tablerow=function(content){return"<tr>\n"+content+"</tr>\n"};Renderer.prototype.tablecell=function(content,flags){var type=flags.header?"th":"td";var tag=flags.align?"<"+type+' style="text-align:'+flags.align+'">':"<"+type+">";return tag+content+"</"+type+">\n"};Renderer.prototype.strong=function(text){return"<strong>"+text+"</strong>"};Renderer.prototype.em=function(text){return"<em>"+text+"</em>"};Renderer.prototype.codespan=function(text){return"<code>"+text+"</code>"};Renderer.prototype.br=function(){return this.options.xhtml?"<br/>":"<br>"};Renderer.prototype.del=function(text){return"<del>"+text+"</del>"};Renderer.prototype.link=function(href,title,text){if(this.options.sanitize){try{var prot=decodeURIComponent(unescape(href)).replace(/[^\w:]/g,"").toLowerCase()}catch(e){return""}if(prot.indexOf("javascript:")===0||prot.indexOf("vbscript:")===0||prot.indexOf("data:")===0){return""}}var out='<a href="'+href+'"';if(title){out+=' title="'+title+'"'}out+=">"+text+"</a>";return out};Renderer.prototype.image=function(href,title,text){var out='<img src="'+href+'" alt="'+text+'"';if(title){out+=' title="'+title+'"'}out+=this.options.xhtml?"/>":">";return out};Renderer.prototype.text=function(text){return text};function Parser(options){this.tokens=[];this.token=null;this.options=options||marked.defaults;this.options.renderer=this.options.renderer||new Renderer;this.renderer=this.options.renderer;this.renderer.options=this.options}Parser.parse=function(src,options,renderer){var parser=new Parser(options,renderer);return parser.parse(src)};Parser.prototype.parse=function(src){this.inline=new InlineLexer(src.links,this.options,this.renderer);this.tokens=src.reverse();var out="";while(this.next()){out+=this.tok()}return out};Parser.prototype.next=function(){return this.token=this.tokens.pop()};Parser.prototype.peek=function(){return this.tokens[this.tokens.length-1]||0};Parser.prototype.parseText=function(){var body=this.token.text;while(this.peek().type==="text"){body+="\n"+this.next().text}return this.inline.output(body)};Parser.prototype.tok=function(){switch(this.token.type){case"space":{return""}case"hr":{return this.renderer.hr()}case"heading":{return this.renderer.heading(this.inline.output(this.token.text),this.token.depth,this.token.text)}case"code":{return this.renderer.code(this.token.text,this.token.lang,this.token.escaped)}case"table":{var header="",body="",i,row,cell,flags,j;cell="";for(i=0;i<this.token.header.length;i++){flags={header:true,align:this.token.align[i]};cell+=this.renderer.tablecell(this.inline.output(this.token.header[i]),{header:true,align:this.token.align[i]})}header+=this.renderer.tablerow(cell);for(i=0;i<this.token.cells.length;i++){row=this.token.cells[i];cell="";for(j=0;j<row.length;j++){cell+=this.renderer.tablecell(this.inline.output(row[j]),{header:false,align:this.token.align[j]})}body+=this.renderer.tablerow(cell)}return this.renderer.table(header,body)}case"blockquote_start":{var body="";while(this.next().type!=="blockquote_end"){body+=this.tok()}return this.renderer.blockquote(body)}case"list_start":{var body="",ordered=this.token.ordered;while(this.next().type!=="list_end"){body+=this.tok()}return this.renderer.list(body,ordered)}case"list_item_start":{var body="";while(this.next().type!=="list_item_end"){body+=this.token.type==="text"?this.parseText():this.tok()}return this.renderer.listitem(body)}case"loose_item_start":{var body="";while(this.next().type!=="list_item_end"){body+=this.tok()}return this.renderer.listitem(body)}case"html":{var html=!this.token.pre&&!this.options.pedantic?this.inline.output(this.token.text):this.token.text;return this.renderer.html(html)}case"paragraph":{return this.renderer.paragraph(this.inline.output(this.token.text))}case"text":{return this.renderer.paragraph(this.parseText())}}};function escape(html,encode){return html.replace(!encode?/&(?!#?\w+;)/g:/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}function unescape(html){return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g,function(_,n){n=n.toLowerCase();if(n==="colon")return":";if(n.charAt(0)==="#"){return n.charAt(1)==="x"?String.fromCharCode(parseInt(n.substring(2),16)):String.fromCharCode(+n.substring(1))}return""})}function replace(regex,opt){regex=regex.source;opt=opt||"";return function self(name,val){if(!name)return new RegExp(regex,opt);val=val.source||val;val=val.replace(/(^|[^\[])\^/g,"$1");regex=regex.replace(name,val);return self}}function noop(){}noop.exec=noop;function merge(obj){var i=1,target,key;for(;i<arguments.length;i++){target=arguments[i];for(key in target){if(Object.prototype.hasOwnProperty.call(target,key)){obj[key]=target[key]}}}return obj}function marked(src,opt,callback){if(callback||typeof opt==="function"){if(!callback){callback=opt;opt=null}opt=merge({},marked.defaults,opt||{});var highlight=opt.highlight,tokens,pending,i=0;try{tokens=Lexer.lex(src,opt)}catch(e){return callback(e)}pending=tokens.length;var done=function(err){if(err){opt.highlight=highlight;return callback(err)}var out;try{out=Parser.parse(tokens,opt)}catch(e){err=e}opt.highlight=highlight;return err?callback(err):callback(null,out)};if(!highlight||highlight.length<3){return done()}delete opt.highlight;if(!pending)return done();for(;i<tokens.length;i++){(function(token){if(token.type!=="code"){return--pending||done()}return highlight(token.text,token.lang,function(err,code){if(err)return done(err);if(code==null||code===token.text){return--pending||done()}token.text=code;token.escaped=true;--pending||done()})})(tokens[i])}return}try{if(opt)opt=merge({},marked.defaults,opt);return Parser.parse(Lexer.lex(src,opt),opt)}catch(e){e.message+="\nPlease report this to https://github.com/chjj/marked.";if((opt||marked.defaults).silent){return"<p>An error occured:</p><pre>"+escape(e.message+"",true)+"</pre>"}throw e}}marked.options=marked.setOptions=function(opt){merge(marked.defaults,opt);return marked};marked.defaults={gfm:true,tables:true,breaks:false,pedantic:false,sanitize:false,sanitizer:null,mangle:true,smartLists:false,silent:false,highlight:null,langPrefix:"lang-",smartypants:false,headerPrefix:"",renderer:new Renderer,xhtml:false};marked.Parser=Parser;marked.parser=Parser.parse;marked.Renderer=Renderer;marked.Lexer=Lexer;marked.lexer=Lexer.lex;marked.InlineLexer=InlineLexer;marked.inlineLexer=InlineLexer.output;marked.parse=marked;if(typeof module!=="undefined"&&typeof exports==="object"){module.exports=marked}else if(typeof define==="function"&&define.amd){define(function(){return marked})}else{this.marked=marked}}).call(function(){return this||(typeof window!=="undefined"?window:global)}());
+
+	return module.exports;
+}();
+
+
+// FORMAT OPTIONS FOR MARKED IMPLEMENTATION
+
+function _Markdown_formatOptions(options)
+{
+	function toHighlight(code, lang)
+	{
+		if (!lang && $elm$core$Maybe$isJust(options.defaultHighlighting))
+		{
+			lang = options.defaultHighlighting.a;
+		}
+
+		if (typeof hljs !== 'undefined' && lang && hljs.listLanguages().indexOf(lang) >= 0)
+		{
+			return hljs.highlight(lang, code, true).value;
+		}
+
+		return code;
+	}
+
+	var gfm = options.githubFlavored.a;
+
+	return {
+		highlight: toHighlight,
+		gfm: gfm,
+		tables: gfm && gfm.tables,
+		breaks: gfm && gfm.breaks,
+		sanitize: options.sanitize,
+		smartypants: options.smartypants
+	};
+}
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $author$project$Main$UrlRequested = function (a) {
 	return {$: 'UrlRequested', a: a};
@@ -6775,23 +6874,13 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$ChangeCategory = function (a) {
-	return {$: 'ChangeCategory', a: a};
-};
 var $author$project$Main$ChangeShowingRules = function (a) {
 	return {$: 'ChangeShowingRules', a: a};
 };
-var $author$project$Html$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 'Node', a: a, b: b, c: c};
-	});
-var $author$project$Html$Styled$a = $author$project$Html$Styled$Node('a');
 var $author$project$Css$Internal$Single = F3(
 	function (a, b, c) {
 		return {$: 'Single', a: a, b: b, c: c};
 	});
-var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
-var $author$project$Html$Styled$b = $author$project$Html$Styled$Node('b');
 var $author$project$Css$background = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'background');
 var $author$project$Css$Global$Rule = function (a) {
 	return {$: 'Rule', a: a};
@@ -6809,16 +6898,29 @@ var $author$project$Css$Global$body = A2(
 	$elm$core$Basics$composeL,
 	$author$project$Css$Global$Rule,
 	$author$project$Css$Global$Rule_('body'));
-var $author$project$FoldIdentity$bool = function (b) {
-	return b ? $elm$core$Maybe$Just(b) : $elm$core$Maybe$Nothing;
-};
+var $author$project$Css$borderRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-radius');
+var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
+var $author$project$Html$Styled$StyledNode = F4(
+	function (a, b, c, d) {
+		return {$: 'StyledNode', a: a, b: b, c: c, d: d};
+	});
+var $author$project$Html$Styled$divS = $author$project$Html$Styled$StyledNode('div');
+var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
+var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
+var $author$project$Design$gray1 = '#ddd';
+var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
+var $author$project$Css$justifyItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'justify-items');
+var $author$project$Html$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 'Node', a: a, b: b, c: c};
+	});
+var $author$project$Html$Styled$a = $author$project$Html$Styled$Node('a');
 var $author$project$Css$borderBottomLeftRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-left-radius');
 var $author$project$Css$borderBottomRightRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-bottom-right-radius');
 var $author$project$Css$borderJ = A2(
 	$elm$core$Basics$composeL,
 	A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border'),
 	$elm$core$String$join(' '));
-var $author$project$Css$borderRadius = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-radius');
 var $author$project$Css$borderSpacing = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'border-spacing');
 var $author$project$Css$append = A2(
 	$elm$core$Basics$composeL,
@@ -6848,24 +6950,10 @@ var $author$project$Css$mapSelector = function (classToSelector) {
 			}),
 		$author$project$Css$Internal$Batch);
 };
-var $author$project$Css$child = function (tag) {
-	return $author$project$Css$mapSelector(
-		$author$project$Css$append(' > ' + tag));
-};
 var $author$project$Css$children = $author$project$Css$mapSelector(
 	$author$project$Css$append(' > *'));
-var $author$project$Css$descendants = $author$project$Css$mapSelector(
-	$author$project$Css$append(' *'));
-var $author$project$Css$display = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'display');
-var $author$project$Html$Styled$StyledNode = F4(
-	function (a, b, c, d) {
-		return {$: 'StyledNode', a: a, b: b, c: c, d: d};
-	});
-var $author$project$Html$Styled$divS = $author$project$Html$Styled$StyledNode('div');
 var $author$project$Css$firstChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':first-child'));
-var $author$project$Css$font = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font');
-var $author$project$Css$fontSize = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'font-size');
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $elm$core$String$cons = _String_cons;
@@ -6991,17 +7079,6 @@ var $author$project$Data$getRun = F3(
 				$author$project$Data$getRuns(category),
 				A2($elm$core$Dict$get, player, $author$project$Data$data)));
 	});
-var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
-var $author$project$Css$batch = $author$project$Css$Internal$Batch;
-var $author$project$Css$gap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'gap');
-var $author$project$Main$gridStyles = $author$project$Css$batch(
-	_List_fromArray(
-		[
-			$author$project$Css$display('grid'),
-			$author$project$Css$gap('10px 10px')
-		]));
-var $author$project$Css$gridTemplateColumns = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-template-columns');
-var $author$project$Html$Styled$h1 = $author$project$Html$Styled$Node('h1');
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -7023,11 +7100,8 @@ var $author$project$Html$Styled$Text = function (a) {
 var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
 var $author$project$Main$idH = $author$project$Html$Styled$text('');
 var $author$project$Html$Styled$imgS = $author$project$Html$Styled$StyledNode('img');
-var $author$project$Css$justifyItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'justify-items');
 var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':last-child'));
-var $author$project$Html$Styled$li = $author$project$Html$Styled$Node('li');
-var $author$project$Design$lightGray = '#ddd';
 var $author$project$FoldIdentity$map = A2(
 	$elm$core$Basics$composeL,
 	A2(
@@ -7035,43 +7109,6 @@ var $author$project$FoldIdentity$map = A2(
 		$elm$core$Basics$composeR($elm$core$Maybe$map),
 		$elm$core$Basics$composeL),
 	$elm$core$Maybe$withDefault);
-var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
-var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
-var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
-var $author$project$Css$maxHeight = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-height');
-var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
-var $author$project$Css$cursor = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'cursor');
-var $author$project$Css$hover = $author$project$Css$mapSelector(
-	$author$project$Css$append(':hover'));
-var $author$project$Css$padding = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'padding');
-var $author$project$Css$textAlign = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'text-align');
-var $author$project$Css$userSelect = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'user-select');
-var $author$project$Main$menuDivStyles = function (selected) {
-	return $author$project$Css$batch(
-		_List_fromArray(
-			[
-				$author$project$Css$batch(
-				selected ? _List_fromArray(
-					[
-						$author$project$Css$color('white'),
-						$author$project$Css$background('#5b9ad0')
-					]) : _List_fromArray(
-					[
-						$author$project$Css$color('inherit'),
-						$author$project$Css$background($author$project$Design$lightGray),
-						$author$project$Css$hover(
-						_List_fromArray(
-							[
-								$author$project$Css$background('#ffc1c1')
-							]))
-					])),
-				$author$project$Css$padding('5px'),
-				$author$project$Css$textAlign('center'),
-				$author$project$Css$borderRadius('.2em'),
-				$author$project$Css$cursor('pointer'),
-				$author$project$Css$userSelect('none')
-			]));
-};
 var $author$project$Css$anpb = F2(
 	function (a, b) {
 		return $elm$core$String$fromInt(a) + ('n+' + $elm$core$String$fromInt(b));
@@ -7089,27 +7126,8 @@ var $author$project$Css$nthChild = F2(
 					':nth-child',
 					A2($author$project$Css$anpb, a, b))));
 	});
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
-var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
 var $author$project$Design$radius1 = '.7em';
-var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
+var $author$project$Css$batch = $author$project$Css$Internal$Batch;
 var $author$project$Css$marginLeft = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-left');
 var $author$project$Css$transform = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'transform');
 var $author$project$Main$rightOfText = $author$project$Css$batch(
@@ -7119,7 +7137,6 @@ var $author$project$Main$rightOfText = $author$project$Css$batch(
 			$author$project$Css$transform('translateY(.14em)'),
 			$author$project$Css$marginLeft('.3em')
 		]));
-var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
 var $author$project$Data$shellToPicture = function (shell) {
 	return 'images/' + function () {
 		switch (shell.$) {
@@ -7142,18 +7159,482 @@ var $elm$html$Html$Attributes$src = function (url) {
 };
 var $author$project$Html$Styled$tableS = $author$project$Html$Styled$StyledNode('table');
 var $author$project$Html$Styled$tbody = $author$project$Html$Styled$Node('tbody');
+var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
+var $author$project$Css$textAlign = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'text-align');
+var $author$project$Html$Styled$th = $author$project$Html$Styled$Node('th');
+var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
+var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
+var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
+var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
+var $author$project$Main$leaderboardHtml = function (_v0) {
+	var category = _v0.category;
+	var zone = _v0.zone;
+	return A3(
+		$author$project$Html$Styled$tableS,
+		_List_fromArray(
+			[
+				$author$project$Css$width('100%'),
+				$author$project$Css$textAlign('center'),
+				$author$project$Css$borderJ(
+				_List_fromArray(
+					['1px', 'solid', $author$project$Design$gray1])),
+				$author$project$Css$borderSpacing('0 0'),
+				$author$project$Css$borderRadius($author$project$Design$radius1),
+				A2(
+				$author$project$Css$mapSelector,
+				function (c) {
+					return c + ' tr';
+				},
+				_List_fromArray(
+					[
+						$author$project$Css$height('2em')
+					]))
+			]),
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$author$project$Html$Styled$thead,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Html$Styled$tr,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$author$project$Html$Styled$th,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$author$project$Html$Styled$text('Rank')
+									])),
+								A2(
+								$author$project$Html$Styled$th,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$author$project$Html$Styled$text('Name')
+									])),
+								A2(
+								$author$project$Html$Styled$th,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$author$project$Html$Styled$text('Time')
+									]))
+							]))
+					])),
+				A2(
+				$author$project$Html$Styled$tbody,
+				_List_Nil,
+				A2(
+					$elm$core$List$indexedMap,
+					F2(
+						function (i, player) {
+							return A3(
+								$author$project$FoldIdentity$map,
+								$author$project$Main$idH,
+								function (run) {
+									return A3(
+										$author$project$Html$Styled$trS,
+										_List_fromArray(
+											[
+												A3(
+												$author$project$Css$nthChild,
+												2,
+												1,
+												_List_fromArray(
+													[
+														$author$project$Css$children(
+														_List_fromArray(
+															[
+																$author$project$Css$background($author$project$Design$gray1)
+															]))
+													])),
+												$author$project$Css$lastChild(
+												_List_fromArray(
+													[
+														$author$project$Css$children(
+														_List_fromArray(
+															[
+																$author$project$Css$firstChild(
+																_List_fromArray(
+																	[
+																		$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
+																	])),
+																$author$project$Css$lastChild(
+																_List_fromArray(
+																	[
+																		$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
+																	]))
+															]))
+													]))
+											]),
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$author$project$Html$Styled$td,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$author$project$Html$Styled$text(
+														$elm$core$String$fromInt(i + 1))
+													])),
+												A2(
+												$author$project$Html$Styled$td,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$author$project$Html$Styled$text(player),
+														A3(
+														$author$project$Html$Styled$imgS,
+														_List_fromArray(
+															[$author$project$Main$rightOfText]),
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$src(
+																$author$project$Data$shellToPicture(run.shell))
+															]),
+														_List_Nil)
+													])),
+												A2(
+												$author$project$Html$Styled$td,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$author$project$Html$Styled$text(
+														$author$project$Data$formatTime(run.time)),
+														A2(
+														$author$project$Html$Styled$a,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$href(run.link)
+															]),
+														_List_fromArray(
+															[
+																A3(
+																$author$project$Html$Styled$imgS,
+																_List_fromArray(
+																	[$author$project$Main$rightOfText]),
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$src('images/film.svg')
+																	]),
+																_List_Nil)
+															]))
+													]))
+											]));
+								},
+								A3($author$project$Data$getRun, category, zone, player));
+						}),
+					A2($author$project$Data$getPlayersWithRun, category, zone)))
+			]));
+};
+var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
+var $author$project$Main$ChangeCategory = function (a) {
+	return {$: 'ChangeCategory', a: a};
+};
+var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
+var $author$project$Css$gap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'gap');
+var $author$project$Main$gridStyles = $author$project$Css$batch(
+	_List_fromArray(
+		[
+			$author$project$Css$display('grid'),
+			$author$project$Css$gap('10px 10px')
+		]));
+var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
+var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
+var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
+var $author$project$Css$cursor = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'cursor');
+var $author$project$Css$hover = $author$project$Css$mapSelector(
+	$author$project$Css$append(':hover'));
+var $author$project$Css$padding = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'padding');
+var $author$project$Css$userSelect = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'user-select');
+var $author$project$Main$menuDivStyles = function (selected) {
+	return $author$project$Css$batch(
+		_List_fromArray(
+			[
+				$author$project$Css$batch(
+				selected ? _List_fromArray(
+					[
+						$author$project$Css$color('white'),
+						$author$project$Css$background('#5b9ad0')
+					]) : _List_fromArray(
+					[
+						$author$project$Css$color('inherit'),
+						$author$project$Css$background($author$project$Design$gray1),
+						$author$project$Css$hover(
+						_List_fromArray(
+							[
+								$author$project$Css$background('#ffc1c1')
+							]))
+					])),
+				$author$project$Css$padding('5px'),
+				$author$project$Css$textAlign('center'),
+				$author$project$Css$borderRadius('.2em'),
+				$author$project$Css$cursor('pointer'),
+				$author$project$Css$userSelect('none')
+			]));
+};
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
+var $author$project$Main$ChangeZone = function (a) {
+	return {$: 'ChangeZone', a: a};
+};
+var $author$project$Css$gridRow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-row');
+var $author$project$Main$zoneHtml = F3(
+	function (row, selectedZone, zones) {
+		return A3(
+			$author$project$Html$Styled$divS,
+			_List_fromArray(
+				[
+					$author$project$Css$display('contents')
+				]),
+			_List_Nil,
+			A2(
+				$elm$core$List$map,
+				function (zone) {
+					return A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Main$menuDivStyles(
+								_Utils_eq(zone, selectedZone)),
+								$author$project$Css$gridRow(
+								$elm$core$String$fromInt(row))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$ChangeZone(zone))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$text(zone)
+							]));
+				},
+				zones));
+	});
+var $author$project$Main$menuHtml = function (_v0) {
+	var category = _v0.category;
+	var zone = _v0.zone;
+	return A3(
+		$author$project$Html$Styled$divS,
+		_List_fromArray(
+			[
+				$author$project$Css$display('grid'),
+				$author$project$Css$rowGap('20px'),
+				$author$project$Css$marginTop('1em')
+			]),
+		_List_Nil,
+		_List_fromArray(
+			[
+				A3(
+				$author$project$Html$Styled$divS,
+				_List_fromArray(
+					[
+						$author$project$Main$gridStyles,
+						$author$project$Css$grid('max-content / auto-flow max-content')
+					]),
+				_List_Nil,
+				_List_fromArray(
+					[
+						A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Main$menuDivStyles(
+								_Utils_eq(category, $author$project$Data$FullRun))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$ChangeCategory($author$project$Data$FullRun))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$text('Full Run')
+							])),
+						A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Main$menuDivStyles(
+								_Utils_eq(category, $author$project$Data$BossOnly))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$text('Boss Only')
+							])),
+						A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Main$menuDivStyles(
+								_Utils_eq(category, $author$project$Data$Stock))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$ChangeCategory($author$project$Data$Stock))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$text('Stock')
+							]))
+					])),
+				A3(
+				$author$project$Html$Styled$divS,
+				_List_fromArray(
+					[
+						$author$project$Main$gridStyles,
+						$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
+						$author$project$Css$marginBottom('2em')
+					]),
+				_List_Nil,
+				_List_fromArray(
+					[
+						A3($author$project$Main$zoneHtml, 1, zone, $author$project$Main$normalZones),
+						A3($author$project$Main$zoneHtml, 2, zone, $author$project$Main$eliteZones)
+					]))
+			]));
+};
+var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
+var $author$project$Css$right = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'right');
+var $author$project$Css$alignItems = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'align-items');
+var $author$project$FoldIdentity$bool = function (b) {
+	return b ? $elm$core$Maybe$Just(b) : $elm$core$Maybe$Nothing;
+};
+var $author$project$Css$child = function (tag) {
+	return $author$project$Css$mapSelector(
+		$author$project$Css$append(' > ' + tag));
+};
+var $author$project$Css$descendants = $author$project$Css$mapSelector(
+	$author$project$Css$append(' *'));
+var $author$project$Html$Styled$VNode = function (a) {
+	return {$: 'VNode', a: a};
+};
+var $author$project$Html$Styled$fromHtml = $author$project$Html$Styled$VNode;
+var $author$project$Css$maxHeight = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-height');
+var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
+var $elm_explorations$markdown$Markdown$defaultOptions = {
+	defaultHighlighting: $elm$core$Maybe$Nothing,
+	githubFlavored: $elm$core$Maybe$Just(
+		{breaks: false, tables: false}),
+	sanitize: true,
+	smartypants: false
+};
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (maybe.$ === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
+var $elm_explorations$markdown$Markdown$toHtml = $elm_explorations$markdown$Markdown$toHtmlWith($elm_explorations$markdown$Markdown$defaultOptions);
+var $author$project$Css$zIndex = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'z-index');
+var $author$project$Main$rulesHtml = A2(
+	$elm$core$Basics$composeR,
+	$author$project$FoldIdentity$bool,
+	A2(
+		$author$project$FoldIdentity$map,
+		$author$project$Main$idH,
+		function (_v0) {
+			return A3(
+				$author$project$Html$Styled$divS,
+				_List_fromArray(
+					[
+						$author$project$Css$width('100%'),
+						$author$project$Css$height('100%'),
+						$author$project$Css$position('fixed'),
+						$author$project$Css$display('grid'),
+						$author$project$Css$justifyItems('center'),
+						$author$project$Css$alignItems('center'),
+						$author$project$Css$background('#0008'),
+						$author$project$Css$zIndex('1')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$ChangeShowingRules(false))
+					]),
+				_List_fromArray(
+					[
+						A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Css$background('white'),
+								$author$project$Css$width('430px'),
+								$author$project$Css$fontSize('1rem'),
+								$author$project$Css$borderRadius('1em'),
+								$author$project$Css$padding('1em'),
+								$author$project$Css$maxHeight('100%'),
+								$author$project$Css$overflow('auto'),
+								A2(
+								$author$project$Css$child,
+								'div',
+								_List_fromArray(
+									[
+										A2(
+										$author$project$Css$child,
+										'h1',
+										_List_fromArray(
+											[
+												$author$project$Css$textAlign('center'),
+												$author$project$Css$fontSize('1.5rem')
+											])),
+										A2(
+										$author$project$Css$child,
+										'ul',
+										_List_fromArray(
+											[
+												$author$project$Css$descendants(
+												_List_fromArray(
+													[
+														$author$project$Css$marginTop('.6rem')
+													]))
+											]))
+									]))
+							]),
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$fromHtml(
+								A2($elm_explorations$markdown$Markdown$toHtml, _List_Nil, '\r\n# Qualifying\r\n\r\n- The run must be a solo. You cannot receive help from any other players.\r\n- The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. **All other mods are not allowed.** A static zoom mod is allowed so that players with bigger monitors don\'t have an advantage.\r\n- Macros and other scripts are not allowed.\r\n- All of the game mechanics involved in the run must be the same as the current version of the game.\r\n- Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.\r\n- **Do not** edit any part of the video that will be part of the run. Before and after is okay.\r\n- Only one entry is allowed per player per category.\r\n\r\n# Timing\r\n\r\n- Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.\r\n- Time stops the moment the green text appears telling you the zone has been completed.\r\n\r\n# Stock Category\r\n\r\n- You must start the run with no gear in your inventory or equipped other than the stock gear.\r\n- You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created.\r\n- You are allowed to pick up any boosts during the run.\r\n- You are **not** allowed to equip any gear you get in the run.\r\n- Stock runs are the full level, not just the boss.\r\n'))
+							]))
+					]));
+		}));
 var $author$project$Css$Global$td = A2(
 	$elm$core$Basics$composeL,
 	$author$project$Css$Global$Rule,
 	$author$project$Css$Global$Rule_('td'));
-var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
-var $author$project$Html$Styled$th = $author$project$Html$Styled$Node('th');
-var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
 var $author$project$Css$top = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'top');
-var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
-var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
-var $author$project$Html$Styled$ul = $author$project$Html$Styled$Node('ul');
-var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $author$project$Html$Styled$addClass = A2(
 	$elm$core$Basics$composeL,
@@ -7426,7 +7907,7 @@ var $author$project$Html$Styled$folderHelper = F2(
 				return _Utils_Tuple2(
 					A3($elm$virtual_dom$VirtualDom$node, tag, newAttributes, children_),
 					newStyleDict);
-			default:
+			case 'StyledKeyedNode':
 				var tag = node_.a;
 				var declarations = node_.b;
 				var attributes = node_.c;
@@ -7456,6 +7937,9 @@ var $author$project$Html$Styled$folderHelper = F2(
 							children,
 							children_)),
 					newStyleDict);
+			default:
+				var vNode = node_.a;
+				return _Utils_Tuple2(vNode, styleDict);
 		}
 	});
 var $author$project$Html$Styled$folderHelperHelper = F4(
@@ -7686,44 +8170,6 @@ var $author$project$Html$Styled$withStyles = F2(
 				$author$project$Html$Styled$toStyleNodes(styleDict)),
 			nodes_);
 	});
-var $author$project$Css$zIndex = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'z-index');
-var $author$project$Main$ChangeZone = function (a) {
-	return {$: 'ChangeZone', a: a};
-};
-var $author$project$Css$gridRow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-row');
-var $author$project$Main$zoneHtml = F3(
-	function (row, selectedZone, zones) {
-		return A3(
-			$author$project$Html$Styled$divS,
-			_List_fromArray(
-				[
-					$author$project$Css$display('contents')
-				]),
-			_List_Nil,
-			A2(
-				$elm$core$List$map,
-				function (zone) {
-					return A3(
-						$author$project$Html$Styled$divS,
-						_List_fromArray(
-							[
-								$author$project$Main$menuDivStyles(
-								_Utils_eq(zone, selectedZone)),
-								$author$project$Css$gridRow(
-								$elm$core$String$fromInt(row))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick(
-								$author$project$Main$ChangeZone(zone))
-							]),
-						_List_fromArray(
-							[
-								$author$project$Html$Styled$text(zone)
-							]));
-				},
-				zones));
-	});
 var $author$project$Main$view = function (model) {
 	return {
 		body: A2(
@@ -7754,7 +8200,7 @@ var $author$project$Main$view = function (model) {
 							$author$project$Css$margin('.5em'),
 							$author$project$Css$padding('.5em'),
 							$author$project$Css$fontSize('1.2rem'),
-							$author$project$Css$background($author$project$Design$lightGray),
+							$author$project$Css$background($author$project$Design$gray1),
 							$author$project$Css$borderRadius($author$project$Design$radius1)
 						]),
 					_List_fromArray(
@@ -7766,228 +8212,7 @@ var $author$project$Main$view = function (model) {
 						[
 							$author$project$Html$Styled$text('Rules')
 						])),
-					A3(
-					$author$project$FoldIdentity$map,
-					$author$project$Main$idH,
-					function (_v0) {
-						return A3(
-							$author$project$Html$Styled$divS,
-							_List_fromArray(
-								[
-									$author$project$Css$width('100%'),
-									$author$project$Css$height('100%'),
-									$author$project$Css$position('fixed'),
-									$author$project$Css$display('grid'),
-									$author$project$Css$justifyItems('center'),
-									$author$project$Css$alignItems('center'),
-									$author$project$Css$background('#0008'),
-									$author$project$Css$zIndex('1')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$ChangeShowingRules(false))
-								]),
-							_List_fromArray(
-								[
-									A3(
-									$author$project$Html$Styled$divS,
-									_List_fromArray(
-										[
-											$author$project$Css$background('white'),
-											$author$project$Css$width('430px'),
-											$author$project$Css$fontSize('1rem'),
-											$author$project$Css$borderRadius('1em'),
-											$author$project$Css$padding('1em'),
-											$author$project$Css$maxHeight('100%'),
-											$author$project$Css$overflow('auto'),
-											A2(
-											$author$project$Css$child,
-											'h1',
-											_List_fromArray(
-												[
-													$author$project$Css$textAlign('center'),
-													$author$project$Css$fontSize('1.5rem')
-												])),
-											A2(
-											$author$project$Css$child,
-											'ul',
-											_List_fromArray(
-												[
-													$author$project$Css$descendants(
-													_List_fromArray(
-														[
-															$author$project$Css$marginTop('.6rem')
-														]))
-												]))
-										]),
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$author$project$Html$Styled$h1,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Qualifying')
-												])),
-											A2(
-											$author$project$Html$Styled$ul,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('The run must be a solo. You cannot receive help from any other players.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. '),
-															A2(
-															$author$project$Html$Styled$b,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('All other mods are not allowed.')
-																])),
-															$author$project$Html$Styled$text(' A static zoom mod is allowed so that players with bigger monitors don\'t have an advantage.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Macros and other scripts are not allowed.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('All of the game mechanics involved in the run must be the same as the current version of the game.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															A2(
-															$author$project$Html$Styled$b,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('Do not')
-																])),
-															$author$project$Html$Styled$text(' edit any part of the video that will be part of the run. Before and after is okay.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Only one entry is allowed per player per category.')
-														]))
-												])),
-											A2(
-											$author$project$Html$Styled$h1,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Timing')
-												])),
-											A2(
-											$author$project$Html$Styled$ul,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Time stops the moment the green text appears telling you the zone has been completed.')
-														]))
-												])),
-											A2(
-											$author$project$Html$Styled$h1,
-											_List_Nil,
-											_List_fromArray(
-												[
-													$author$project$Html$Styled$text('Stock Category')
-												])),
-											A2(
-											$author$project$Html$Styled$ul,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('You must start the run with no gear in your inventory or equipped other than the stock gear.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('You are allowed to pick up any boosts during the run.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('You are '),
-															A2(
-															$author$project$Html$Styled$b,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('not')
-																])),
-															$author$project$Html$Styled$text(' allowed to equip any gear you get in the run.')
-														])),
-													A2(
-													$author$project$Html$Styled$li,
-													_List_Nil,
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Stock runs are the full level, not just the boss.')
-														]))
-												]))
-										]))
-								]));
-					},
-					$author$project$FoldIdentity$bool(model.showingRules)),
+					$author$project$Main$rulesHtml(model.showingRules),
 					A3(
 					$author$project$Html$Styled$divS,
 					_List_fromArray(
@@ -8009,254 +8234,8 @@ var $author$project$Main$view = function (model) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									A3(
-									$author$project$Html$Styled$divS,
-									_List_fromArray(
-										[
-											$author$project$Css$display('grid'),
-											$author$project$Css$rowGap('20px'),
-											$author$project$Css$marginTop('1em')
-										]),
-									_List_Nil,
-									_List_fromArray(
-										[
-											A3(
-											$author$project$Html$Styled$divS,
-											_List_fromArray(
-												[
-													$author$project$Main$gridStyles,
-													$author$project$Css$grid('max-content / auto-flow max-content')
-												]),
-											_List_Nil,
-											_List_fromArray(
-												[
-													A3(
-													$author$project$Html$Styled$divS,
-													_List_fromArray(
-														[
-															$author$project$Main$menuDivStyles(
-															_Utils_eq(model.category, $author$project$Data$FullRun))
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Main$ChangeCategory($author$project$Data$FullRun))
-														]),
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Full Run')
-														])),
-													A3(
-													$author$project$Html$Styled$divS,
-													_List_fromArray(
-														[
-															$author$project$Main$menuDivStyles(
-															_Utils_eq(model.category, $author$project$Data$BossOnly))
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
-														]),
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Boss Only')
-														])),
-													A3(
-													$author$project$Html$Styled$divS,
-													_List_fromArray(
-														[
-															$author$project$Main$menuDivStyles(
-															_Utils_eq(model.category, $author$project$Data$Stock))
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$Events$onClick(
-															$author$project$Main$ChangeCategory($author$project$Data$Stock))
-														]),
-													_List_fromArray(
-														[
-															$author$project$Html$Styled$text('Stock')
-														]))
-												])),
-											A3(
-											$author$project$Html$Styled$divS,
-											_List_fromArray(
-												[
-													$author$project$Main$gridStyles,
-													$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
-													$author$project$Css$marginBottom('2em')
-												]),
-											_List_Nil,
-											_List_fromArray(
-												[
-													A3($author$project$Main$zoneHtml, 1, model.zone, $author$project$Main$normalZones),
-													A3($author$project$Main$zoneHtml, 2, model.zone, $author$project$Main$eliteZones)
-												]))
-										])),
-									A3(
-									$author$project$Html$Styled$tableS,
-									_List_fromArray(
-										[
-											$author$project$Css$width('100%'),
-											$author$project$Css$textAlign('center'),
-											$author$project$Css$borderJ(
-											_List_fromArray(
-												['1px', 'solid', $author$project$Design$lightGray])),
-											$author$project$Css$borderSpacing('0 0'),
-											$author$project$Css$borderRadius($author$project$Design$radius1),
-											A2(
-											$author$project$Css$mapSelector,
-											function (c) {
-												return c + ' tr';
-											},
-											_List_fromArray(
-												[
-													$author$project$Css$height('2em')
-												]))
-										]),
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$author$project$Html$Styled$thead,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$author$project$Html$Styled$tr,
-													_List_Nil,
-													_List_fromArray(
-														[
-															A2(
-															$author$project$Html$Styled$th,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('Rank')
-																])),
-															A2(
-															$author$project$Html$Styled$th,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('Name')
-																])),
-															A2(
-															$author$project$Html$Styled$th,
-															_List_Nil,
-															_List_fromArray(
-																[
-																	$author$project$Html$Styled$text('Time')
-																]))
-														]))
-												])),
-											A2(
-											$author$project$Html$Styled$tbody,
-											_List_Nil,
-											A2(
-												$elm$core$List$indexedMap,
-												F2(
-													function (i, player) {
-														return A3(
-															$author$project$FoldIdentity$map,
-															$author$project$Main$idH,
-															function (run) {
-																return A3(
-																	$author$project$Html$Styled$trS,
-																	_List_fromArray(
-																		[
-																			A3(
-																			$author$project$Css$nthChild,
-																			2,
-																			1,
-																			_List_fromArray(
-																				[
-																					$author$project$Css$children(
-																					_List_fromArray(
-																						[
-																							$author$project$Css$background($author$project$Design$lightGray)
-																						]))
-																				])),
-																			$author$project$Css$lastChild(
-																			_List_fromArray(
-																				[
-																					$author$project$Css$children(
-																					_List_fromArray(
-																						[
-																							$author$project$Css$firstChild(
-																							_List_fromArray(
-																								[
-																									$author$project$Css$borderBottomLeftRadius($author$project$Design$radius1)
-																								])),
-																							$author$project$Css$lastChild(
-																							_List_fromArray(
-																								[
-																									$author$project$Css$borderBottomRightRadius($author$project$Design$radius1)
-																								]))
-																						]))
-																				]))
-																		]),
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			A2(
-																			$author$project$Html$Styled$td,
-																			_List_Nil,
-																			_List_fromArray(
-																				[
-																					$author$project$Html$Styled$text(
-																					$elm$core$String$fromInt(i + 1))
-																				])),
-																			A2(
-																			$author$project$Html$Styled$td,
-																			_List_Nil,
-																			_List_fromArray(
-																				[
-																					$author$project$Html$Styled$text(player),
-																					A3(
-																					$author$project$Html$Styled$imgS,
-																					_List_fromArray(
-																						[$author$project$Main$rightOfText]),
-																					_List_fromArray(
-																						[
-																							$elm$html$Html$Attributes$src(
-																							$author$project$Data$shellToPicture(run.shell))
-																						]),
-																					_List_Nil)
-																				])),
-																			A2(
-																			$author$project$Html$Styled$td,
-																			_List_Nil,
-																			_List_fromArray(
-																				[
-																					$author$project$Html$Styled$text(
-																					$author$project$Data$formatTime(run.time)),
-																					A2(
-																					$author$project$Html$Styled$a,
-																					_List_fromArray(
-																						[
-																							$elm$html$Html$Attributes$href(run.link)
-																						]),
-																					_List_fromArray(
-																						[
-																							A3(
-																							$author$project$Html$Styled$imgS,
-																							_List_fromArray(
-																								[$author$project$Main$rightOfText]),
-																							_List_fromArray(
-																								[
-																									$elm$html$Html$Attributes$src('images/film.svg')
-																								]),
-																							_List_Nil)
-																						]))
-																				]))
-																		]));
-															},
-															A3($author$project$Data$getRun, model.category, model.zone, player));
-													}),
-												A2($author$project$Data$getPlayersWithRun, model.category, model.zone)))
-										]))
+									$author$project$Main$menuHtml(model),
+									$author$project$Main$leaderboardHtml(model)
 								]))
 						]))
 				])),

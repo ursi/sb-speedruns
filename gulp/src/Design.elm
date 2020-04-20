@@ -1,8 +1,8 @@
 module Design exposing (..)
 
 
-lightGray : String
-lightGray =
+gray1 : String
+gray1 =
     "#ddd"
 
 

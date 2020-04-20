@@ -11,6 +11,7 @@ import FoldIdentity as F
 import Html.Attributes as A
 import Html.Events as E
 import Html.Styled as H exposing (Html)
+import Markdown
 import Maybe.Extra as Maybe
 import Url exposing (Url)
 import Url.Builder as UB
@@ -169,78 +170,12 @@ view model =
             , C.margin ".5em"
             , C.padding ".5em"
             , C.fontSize "1.2rem"
-            , C.background Ds.lightGray
+            , C.background Ds.gray1
             , C.borderRadius Ds.radius1
             ]
             [ E.onClick <| ChangeShowingRules True ]
             [ H.text "Rules" ]
-        , F.bool model.showingRules
-            |> F.map idH
-                (\_ ->
-                    H.divS
-                        [ C.width "100%"
-                        , C.height "100%"
-                        , C.position "fixed"
-                        , C.display "grid"
-                        , C.justifyItems "center"
-                        , C.alignItems "center"
-                        , C.background "#0008"
-                        , C.zIndex "1"
-                        ]
-                        [ E.onClick <| ChangeShowingRules False ]
-                        [ H.divS
-                            [ C.background "white"
-                            , C.width "430px"
-                            , C.fontSize "1rem"
-                            , C.borderRadius "1em"
-                            , C.padding "1em"
-                            , C.maxHeight "100%"
-                            , C.overflow "auto"
-                            , C.child "h1"
-                                [ C.textAlign "center"
-                                , C.fontSize "1.5rem"
-                                ]
-                            , C.child "ul" [ C.descendants [ C.marginTop ".6rem" ] ]
-                            ]
-                            []
-                            [ H.h1 [] [ H.text "Qualifying" ]
-                            , H.ul []
-                                [ H.li [] [ H.text "The run must be a solo. You cannot receive help from any other players." ]
-                                , H.li []
-                                    [ H.text "The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. "
-                                    , H.b [] [ H.text "All other mods are not allowed." ]
-                                    , H.text " A static zoom mod is allowed so that players with bigger monitors don't have an advantage."
-                                    ]
-                                , H.li [] [ H.text "Macros and other scripts are not allowed." ]
-                                , H.li [] [ H.text "All of the game mechanics involved in the run must be the same as the current version of the game." ]
-                                , H.li [] [ H.text "Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat." ]
-                                , H.li []
-                                    [ H.b [] [ H.text "Do not" ]
-                                    , H.text " edit any part of the video that will be part of the run. Before and after is okay."
-                                    ]
-                                , H.li [] [ H.text "Only one entry is allowed per player per category." ]
-                                ]
-                            , H.h1 [] [ H.text "Timing" ]
-                            , H.ul []
-                                [ H.li [] [ H.text "Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running." ]
-                                , H.li []
-                                    [ H.text "Time stops the moment the green text appears telling you the zone has been completed." ]
-                                ]
-                            , H.h1 [] [ H.text "Stock Category" ]
-                            , H.ul []
-                                [ H.li [] [ H.text "You must start the run with no gear in your inventory or equipped other than the stock gear." ]
-                                , H.li [] [ H.text "You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created." ]
-                                , H.li [] [ H.text "You are allowed to pick up any boosts during the run." ]
-                                , H.li []
-                                    [ H.text "You are "
-                                    , H.b [] [ H.text "not" ]
-                                    , H.text " allowed to equip any gear you get in the run."
-                                    ]
-                                , H.li [] [ H.text "Stock runs are the full level, not just the boss." ]
-                                ]
-                            ]
-                        ]
-                )
+        , rulesHtml model.showingRules
         , H.divS
             [ C.display "grid"
             , C.justifyItems "center"
@@ -252,92 +187,8 @@ view model =
                 , C.gridTemplateColumns "max-content"
                 ]
                 []
-                [ H.divS
-                    [ C.display "grid"
-                    , C.rowGap "20px"
-                    , C.marginTop "1em"
-                    ]
-                    []
-                    [ H.divS
-                        [ gridStyles
-                        , C.grid "max-content / auto-flow max-content"
-                        ]
-                        []
-                        [ H.divS [ menuDivStyles (model.category == FullRun) ]
-                            [ E.onClick <| ChangeCategory FullRun ]
-                            [ H.text "Full Run" ]
-                        , H.divS [ menuDivStyles (model.category == BossOnly) ]
-                            [ E.onClick <| ChangeCategory BossOnly ]
-                            [ H.text "Boss Only" ]
-                        , H.divS [ menuDivStyles (model.category == Stock) ]
-                            [ E.onClick <| ChangeCategory Stock ]
-                            [ H.text "Stock" ]
-                        ]
-                    , H.divS
-                        [ gridStyles
-                        , C.grid "repeat(2, max-content) / repeat(9, max-content)"
-                        , C.marginBottom "2em"
-                        ]
-                        []
-                        [ zoneHtml 1 model.zone normalZones
-                        , zoneHtml 2 model.zone eliteZones
-                        ]
-                    ]
-                , H.tableS
-                    [ C.width "100%"
-                    , C.textAlign "center"
-                    , C.borderJ [ "1px", "solid", Ds.lightGray ]
-                    , C.borderSpacing "0 0"
-                    , C.borderRadius Ds.radius1
-                    , C.mapSelector (\c -> c ++ " tr") [ C.height "2em" ]
-                    ]
-                    []
-                    [ H.thead []
-                        [ H.tr []
-                            [ H.th [] [ H.text "Rank" ]
-                            , H.th [] [ H.text "Name" ]
-                            , H.th [] [ H.text "Time" ]
-                            ]
-                        ]
-                    , H.tbody []
-                        (Data.getPlayersWithRun model.category model.zone
-                            |> List.indexedMap
-                                (\i player ->
-                                    Data.getRun model.category model.zone player
-                                        |> F.map idH
-                                            (\run ->
-                                                H.trS
-                                                    [ C.nthChild 2 1 [ C.children [ C.background Ds.lightGray ] ]
-                                                    , C.lastChild
-                                                        [ C.children
-                                                            [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
-                                                            , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                    []
-                                                    [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
-                                                    , H.td []
-                                                        [ H.text player
-                                                        , H.imgS
-                                                            [ rightOfText ]
-                                                            [ A.src <| Data.shellToPicture run.shell ]
-                                                            []
-                                                        ]
-                                                    , H.td []
-                                                        [ H.text <| Data.formatTime run.time
-                                                        , H.a [ A.href <| run.link ]
-                                                            [ H.imgS
-                                                                [ rightOfText ]
-                                                                [ A.src "images/film.svg" ]
-                                                                []
-                                                            ]
-                                                        ]
-                                                    ]
-                                            )
-                                )
-                        )
-                    ]
+                [ menuHtml model
+                , leaderboardHtml model
                 ]
             ]
         ]
@@ -349,6 +200,164 @@ view model =
                 , G.td [ C.padding "0" ]
                 ]
     }
+
+
+leaderboardHtml : { r | category : Category, zone : String } -> Html Msg
+leaderboardHtml { category, zone } =
+    H.tableS
+        [ C.width "100%"
+        , C.textAlign "center"
+        , C.borderJ [ "1px", "solid", Ds.gray1 ]
+        , C.borderSpacing "0 0"
+        , C.borderRadius Ds.radius1
+        , C.mapSelector (\c -> c ++ " tr") [ C.height "2em" ]
+        ]
+        []
+        [ H.thead []
+            [ H.tr []
+                [ H.th [] [ H.text "Rank" ]
+                , H.th [] [ H.text "Name" ]
+                , H.th [] [ H.text "Time" ]
+                ]
+            ]
+        , H.tbody []
+            (Data.getPlayersWithRun category zone
+                |> List.indexedMap
+                    (\i player ->
+                        Data.getRun category zone player
+                            |> F.map idH
+                                (\run ->
+                                    H.trS
+                                        [ C.nthChild 2 1 [ C.children [ C.background Ds.gray1 ] ]
+                                        , C.lastChild
+                                            [ C.children
+                                                [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
+                                                , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
+                                                ]
+                                            ]
+                                        ]
+                                        []
+                                        [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
+                                        , H.td []
+                                            [ H.text player
+                                            , H.imgS
+                                                [ rightOfText ]
+                                                [ A.src <| Data.shellToPicture run.shell ]
+                                                []
+                                            ]
+                                        , H.td []
+                                            [ H.text <| Data.formatTime run.time
+                                            , H.a [ A.href <| run.link ]
+                                                [ H.imgS
+                                                    [ rightOfText ]
+                                                    [ A.src "images/film.svg" ]
+                                                    []
+                                                ]
+                                            ]
+                                        ]
+                                )
+                    )
+            )
+        ]
+
+
+menuHtml : { r | category : Category, zone : String } -> Html Msg
+menuHtml { category, zone } =
+    H.divS
+        [ C.display "grid"
+        , C.rowGap "20px"
+        , C.marginTop "1em"
+        ]
+        []
+        [ H.divS
+            [ gridStyles
+            , C.grid "max-content / auto-flow max-content"
+            ]
+            []
+            [ H.divS [ menuDivStyles (category == FullRun) ]
+                [ E.onClick <| ChangeCategory FullRun ]
+                [ H.text "Full Run" ]
+            , H.divS [ menuDivStyles (category == BossOnly) ]
+                [ E.onClick <| ChangeCategory BossOnly ]
+                [ H.text "Boss Only" ]
+            , H.divS [ menuDivStyles (category == Stock) ]
+                [ E.onClick <| ChangeCategory Stock ]
+                [ H.text "Stock" ]
+            ]
+        , H.divS
+            [ gridStyles
+            , C.grid "repeat(2, max-content) / repeat(9, max-content)"
+            , C.marginBottom "2em"
+            ]
+            []
+            [ zoneHtml 1 zone normalZones
+            , zoneHtml 2 zone eliteZones
+            ]
+        ]
+
+
+rulesHtml : Bool -> Html Msg
+rulesHtml =
+    F.bool
+        >> F.map idH
+            (\_ ->
+                H.divS
+                    [ C.width "100%"
+                    , C.height "100%"
+                    , C.position "fixed"
+                    , C.display "grid"
+                    , C.justifyItems "center"
+                    , C.alignItems "center"
+                    , C.background "#0008"
+                    , C.zIndex "1"
+                    ]
+                    [ E.onClick <| ChangeShowingRules False ]
+                    [ H.divS
+                        [ C.background "white"
+                        , C.width "430px"
+                        , C.fontSize "1rem"
+                        , C.borderRadius "1em"
+                        , C.padding "1em"
+                        , C.maxHeight "100%"
+                        , C.overflow "auto"
+                        , C.child "div"
+                            [ C.child "h1"
+                                [ C.textAlign "center"
+                                , C.fontSize "1.5rem"
+                                ]
+                            , C.child "ul" [ C.descendants [ C.marginTop ".6rem" ] ]
+                            ]
+                        ]
+                        []
+                        [ H.fromHtml <|
+                            Markdown.toHtml []
+                                """
+# Qualifying
+
+- The run must be a solo. You cannot receive help from any other players.
+- The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. **All other mods are not allowed.** A static zoom mod is allowed so that players with bigger monitors don't have an advantage.
+- Macros and other scripts are not allowed.
+- All of the game mechanics involved in the run must be the same as the current version of the game.
+- Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.
+- **Do not** edit any part of the video that will be part of the run. Before and after is okay.
+- Only one entry is allowed per player per category.
+
+# Timing
+
+- Time starts the moment your shell is visible after either entering the boss room or the beginning of the zone, depending on which category you are running.
+- Time stops the moment the green text appears telling you the zone has been completed.
+
+# Stock Category
+
+- You must start the run with no gear in your inventory or equipped other than the stock gear.
+- You must start the run with no boosts acquired. To ensure this, show your characters stats before the run, or show the shell being created.
+- You are allowed to pick up any boosts during the run.
+- You are **not** allowed to equip any gear you get in the run.
+- Stock runs are the full level, not just the boss.
+"""
+                        ]
+                    ]
+            )
 
 
 rightOfText : Declaration
@@ -393,7 +402,7 @@ menuDivStyles selected =
 
             else
                 [ C.color "inherit"
-                , C.background Ds.lightGray
+                , C.background Ds.gray1
                 , C.hover [ C.background "#ffc1c1" ]
                 ]
         , C.padding "5px"
