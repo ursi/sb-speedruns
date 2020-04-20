@@ -5596,6 +5596,9 @@ var $author$project$Data$rawData = _List_fromArray(
 				bossOnly: _List_fromArray(
 					[
 						_Utils_Tuple2(
+						'eFF',
+						{link: 'https://youtu.be/JXZczcEwBGk?t=87', pure: true, shell: $author$project$Data$Duskwing, time: 136558}),
+						_Utils_Tuple2(
 						'eFC',
 						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', pure: true, shell: $author$project$Data$Wildfire, time: 132900}),
 						_Utils_Tuple2(
@@ -5604,6 +5607,9 @@ var $author$project$Data$rawData = _List_fromArray(
 					]),
 				fullRun: _List_fromArray(
 					[
+						_Utils_Tuple2(
+						'eFF',
+						{link: 'https://www.youtube.com/watch?v=JXZczcEwBGk', pure: true, shell: $author$project$Data$Duskwing, time: 219877}),
 						_Utils_Tuple2(
 						'eFC',
 						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', pure: true, shell: $author$project$Data$Wildfire, time: 258400}),

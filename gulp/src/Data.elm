@@ -465,7 +465,14 @@ rawData =
     , ( "Zakum"
       , { runs =
             { bossOnly =
-                [ ( "eFC"
+                [ ( "eFF"
+                  , { shell = Duskwing
+                    , time = 136558
+                    , link = "https://youtu.be/JXZczcEwBGk?t=87"
+                    , pure = True
+                    }
+                  )
+                , ( "eFC"
                   , { shell = Wildfire
                     , time = 132900
                     , link = "https://youtu.be/Pim1bRK9AJg?t=129"
@@ -481,7 +488,14 @@ rawData =
                   )
                 ]
             , fullRun =
-                [ ( "eFC"
+                [ ( "eFF"
+                  , { shell = Duskwing
+                    , time = 219877
+                    , link = "https://www.youtube.com/watch?v=JXZczcEwBGk"
+                    , pure = True
+                    }
+                  )
+                , ( "eFC"
                   , { shell = Wildfire
                     , time = 258400
                     , link = "https://www.youtube.com/watch?v=Pim1bRK9AJg"
