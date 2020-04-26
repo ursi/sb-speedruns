@@ -1,7 +1,7 @@
 {
     "git-dependencies": {
         "direct": {
-            "https://github.com/ursi/elm-css.git": "9ecf8ca4e2e09179ac2ad40a4b889702b6e4acf4",
+            "https://github.com/ursi/elm-css.git": "db13eb47a47785f970ff396adf992ab4a04801ed",
             "https://github.com/ursi/elm-fold-identity.git": "b2a71bcec007a6486a8a5f30d711c54ebe1c7b37"
         },
         "indirect": {}
