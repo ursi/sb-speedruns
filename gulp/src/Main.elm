@@ -335,11 +335,9 @@ rulesHtml =
 # Qualifying
 
 - The run must be a solo. You cannot receive help from any other players.
-- The only allowed mod is a zoom mod, however, you are not allowed to change your zoom level using that mod during your run. **All other mods are not allowed.** A static zoom mod is allowed so that players with bigger monitors don't have an advantage.
-- Macros and other scripts are not allowed.
 - All of the game mechanics involved in the run must be the same as the current version of the game.
 - Video of the whole run is required. Someone else cannot record you, as it would be too easy to cheat.
-- **Do not** edit any part of the video that will be part of the run. Before and after is okay.
+- **Do not** edit the video in any way that effects the time, e.g., no changing the speed or cutting.
 - Only one entry is allowed per player per category.
 
 # Timing
