@@ -152,6 +152,13 @@ rawData =
                     , pure = True
                     }
                   )
+                , ( "eTL"
+                  , { shell = Wildfire
+                    , time = 252000
+                    , link = "https://www.youtube.com/watch?v=xKzqsdG699c"
+                    , pure = False
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "eFC"
@@ -371,6 +378,13 @@ rawData =
                     , pure = False
                     }
                   )
+                , ( "GY"
+                  , { shell = Wildfire
+                    , time = 135936
+                    , link = "https://www.youtube.com/watch?v=wnWWPvIkdO0&"
+                    , pure = False
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "TL"
@@ -380,7 +394,30 @@ rawData =
                     , pure = False
                     }
                   )
+                , ( "GY"
+                  , { shell = Wildfire
+                    , time = 375642
+                    , link = "https://youtu.be/wnWWPvIkdO0?t=250"
+                    , pure = False
+                    }
+                  )
                 ]
+            , stock = []
+            }
+        }
+      )
+    , ( "OySs"
+      , { runs =
+            { bossOnly =
+                [ ( "eTL"
+                  , { shell = Duskwing
+                    , time = 453767
+                    , link = "https://youtu.be/oftjkcNXD2A?t=292"
+                    , pure = False
+                    }
+                  )
+                ]
+            , fullRun = []
             , stock = []
             }
         }
