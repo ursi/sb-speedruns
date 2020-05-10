@@ -52,7 +52,31 @@ type Category
 
 
 rawData =
-    [ ( "BrazeTH"
+    [ ( "Bebop"
+      , { runs =
+            { bossOnly =
+                [ ( "eFC"
+                  , { shell = Duskwing
+                    , time = 99834
+                    , link = "https://youtu.be/c_AaqgujqLw?t=69"
+                    , pure = False
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "eFC"
+                  , { shell = Duskwing
+                    , time = 170700
+                    , link = "https://www.youtube.com/watch?v=c_AaqgujqLw&t="
+                    , pure = False
+                    }
+                  )
+                ]
+            , stock = []
+            }
+        }
+      )
+    , ( "BrazeTH"
       , { runs =
             { bossOnly =
                 [ ( "VQ"
@@ -372,8 +396,6 @@ rawData =
                 [ ( "TL"
                   , { shell = Wildfire
                     , time = 248582
-
-                    --, link = "https://youtu.be/yI8T-3F0ldA?t=249"
                     , link = "https://youtu.be/EtINKR79MEY?t=306"
                     , pure = False
                     }
@@ -382,6 +404,13 @@ rawData =
                   , { shell = Wildfire
                     , time = 135936
                     , link = "https://www.youtube.com/watch?v=wnWWPvIkdO0&"
+                    , pure = False
+                    }
+                  )
+                , ( "eFC"
+                  , { shell = Wildfire
+                    , time = 105138
+                    , link = "https://youtu.be/j1ykRjXAb8w?t=147"
                     , pure = False
                     }
                   )
@@ -398,6 +427,13 @@ rawData =
                   , { shell = Wildfire
                     , time = 375642
                     , link = "https://youtu.be/wnWWPvIkdO0?t=250"
+                    , pure = False
+                    }
+                  )
+                , ( "eFC"
+                  , { shell = Wildfire
+                    , time = 227527
+                    , link = "https://www.youtube.com/watch?v=j1ykRjXAb8w"
                     , pure = False
                     }
                   )
