@@ -515,8 +515,8 @@ rawData =
             { bossOnly =
                 [ ( "eFC"
                   , { shell = Wildfire
-                    , time = 106700
-                    , link = "https://youtu.be/hCfRJaaRF7E?t=141"
+                    , time = 97667
+                    , link = "https://youtu.be/A5SKr1iSxYs?t=120"
                     , pure = True
                     }
                   )
@@ -524,8 +524,8 @@ rawData =
             , fullRun =
                 [ ( "eFC"
                   , { shell = Wildfire
-                    , time = 244300
-                    , link = "https://www.youtube.com/watch?v=hCfRJaaRF7E"
+                    , time = 211233
+                    , link = "https://www.youtube.com/watch?v=A5SKr1iSxYs"
                     , pure = True
                     }
                   )
