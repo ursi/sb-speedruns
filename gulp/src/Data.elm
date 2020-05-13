@@ -192,6 +192,13 @@ rawData =
                     , pure = True
                     }
                   )
+                , ( "eTL"
+                  , { shell = Wildfire
+                    , time = 618233
+                    , link = "https://www.youtube.com/watch?v=ThJKHsnqG9Q"
+                    , pure = False
+                    }
+                  )
                 ]
             , stock =
                 []
