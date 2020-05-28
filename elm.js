@@ -6805,7 +6805,6 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm_community$list_extra$List$Extra$find = F2(
 	function (predicate, list) {
 		find:
@@ -6918,15 +6917,7 @@ var $author$project$Main$update = F2(
 						{category: category}),
 					A3($author$project$Main$newUrl, model.key, category, model.zone));
 			case 'UrlRequested':
-				var urlRequest = msg.a;
-				if (urlRequest.$ === 'Internal') {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				} else {
-					var url = urlRequest.a;
-					return _Utils_Tuple2(
-						model,
-						$elm$browser$Browser$Navigation$load(url));
-				}
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -7215,6 +7206,7 @@ var $elm$html$Html$Attributes$src = function (url) {
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
 var $author$project$Html$Styled$tableS = $author$project$Html$Styled$StyledNode('table');
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $author$project$Html$Styled$tbody = $author$project$Html$Styled$Node('tbody');
 var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
 var $author$project$Css$textAlign = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'text-align');
@@ -7368,7 +7360,8 @@ var $author$project$Main$leaderboardHtml = function (_v0) {
 														$author$project$Html$Styled$a,
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$href(run.link)
+																$elm$html$Html$Attributes$href(run.link),
+																$elm$html$Html$Attributes$target('_blank')
 															]),
 														_List_fromArray(
 															[

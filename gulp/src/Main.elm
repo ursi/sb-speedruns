@@ -125,13 +125,8 @@ update msg model =
             , newUrl model.key category model.zone
             )
 
-        UrlRequested urlRequest ->
-            case urlRequest of
-                Browser.Internal _ ->
-                    ( model, Cmd.none )
-
-                Browser.External url ->
-                    ( model, Nav.load url )
+        UrlRequested _ ->
+            ( model, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
@@ -247,7 +242,10 @@ leaderboardHtml { category, zone } =
                                             ]
                                         , H.td []
                                             [ H.text <| Data.formatTime run.time
-                                            , H.a [ A.href <| run.link ]
+                                            , H.a
+                                                [ A.href <| run.link
+                                                , A.target "_blank"
+                                                ]
                                                 [ H.imgS
                                                     [ rightOfText ]
                                                     [ A.src "images/film.svg" ]
