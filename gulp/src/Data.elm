@@ -421,6 +421,13 @@ rawData =
                     , pure = False
                     }
                   )
+                , ( "eTL"
+                  , { shell = Wildfire
+                    , time = 255489
+                    , link = "https://youtu.be/8VCWa2CIjDY?t=88"
+                    , pure = False
+                    }
+                  )
                 ]
             , fullRun =
                 [ ( "TL"
@@ -525,6 +532,13 @@ rawData =
                     , time = 97667
                     , link = "https://youtu.be/A5SKr1iSxYs?t=120"
                     , pure = True
+                    }
+                  )
+                , ( "eTL"
+                  , { shell = Wildfire
+                    , time = 249467
+                    , link = "https://www.youtube.com/watch?v=v0cJPBzI_7A"
+                    , pure = False
                     }
                   )
                 ]
