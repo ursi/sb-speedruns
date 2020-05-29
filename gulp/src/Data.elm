@@ -410,7 +410,7 @@ rawData =
                 , ( "GY"
                   , { shell = Wildfire
                     , time = 135936
-                    , link = "https://www.youtube.com/watch?v=wnWWPvIkdO0&"
+                    , link = "https://youtu.be/wnWWPvIkdO0?t=250"
                     , pure = False
                     }
                   )
@@ -440,7 +440,7 @@ rawData =
                 , ( "GY"
                   , { shell = Wildfire
                     , time = 375642
-                    , link = "https://youtu.be/wnWWPvIkdO0?t=250"
+                    , link = "https://www.youtube.com/watch?v=wnWWPvIkdO0&"
                     , pure = False
                     }
                   )
