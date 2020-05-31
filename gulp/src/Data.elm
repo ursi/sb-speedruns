@@ -205,6 +205,22 @@ rawData =
             }
         }
       )
+    , ( "Forcex26"
+      , { runs =
+            { bossOnly =
+                [ ( "FF"
+                  , { shell = Ironclad
+                    , time = 95567
+                    , link = "https://www.youtube.com/watch?v=lxHI3KEfw7Y"
+                    , pure = False
+                    }
+                  )
+                ]
+            , fullRun = []
+            , stock = []
+            }
+        }
+      )
     , ( "Givsaro"
       , { runs =
             { bossOnly =
@@ -423,8 +439,8 @@ rawData =
                   )
                 , ( "eTL"
                   , { shell = Wildfire
-                    , time = 255489
-                    , link = "https://youtu.be/8VCWa2CIjDY?t=88"
+                    , time = 249983
+                    , link = "https://youtu.be/23rd_XlTDtQ?t=326"
                     , pure = False
                     }
                   )
@@ -548,6 +564,13 @@ rawData =
                     , time = 211233
                     , link = "https://www.youtube.com/watch?v=A5SKr1iSxYs"
                     , pure = True
+                    }
+                  )
+                , ( "eTL"
+                  , { shell = Wildfire
+                    , time = 558267
+                    , link = "https://www.youtube.com/watch?v=uP_7ZX4wceg"
+                    , pure = False
                     }
                   )
                 ]
