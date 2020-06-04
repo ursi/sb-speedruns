@@ -5500,8 +5500,18 @@ var $author$project$Data$rawData = _List_fromArray(
 		'Deus',
 		{
 			runs: {
-				bossOnly: _List_Nil,
-				fullRun: _List_Nil,
+				bossOnly: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'FF',
+						{link: 'https://www.youtube.com/watch?v=yznCEvvOJig', pure: false, shell: $author$project$Data$Duskwing, time: 92883})
+					]),
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'FF',
+						{link: 'https://youtu.be/d-7P-QAXZHw', pure: false, shell: $author$project$Data$Duskwing, time: 169533})
+					]),
 				stock: _List_fromArray(
 					[
 						_Utils_Tuple2(

@@ -145,8 +145,24 @@ rawData =
       )
     , ( "Deus"
       , { runs =
-            { bossOnly = []
-            , fullRun = []
+            { bossOnly =
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 92883
+                    , link = "https://www.youtube.com/watch?v=yznCEvvOJig"
+                    , pure = False
+                    }
+                  )
+                ]
+            , fullRun =
+                [ ( "FF"
+                  , { shell = Duskwing
+                    , time = 169533
+                    , link = "https://youtu.be/d-7P-QAXZHw"
+                    , pure = False
+                    }
+                  )
+                ]
             , stock =
                 [ ( "FF"
                   , { shell = Duskwing
