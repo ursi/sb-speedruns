@@ -5675,7 +5675,7 @@ var $author$project$Data$rawData = _List_fromArray(
 						{link: 'https://youtu.be/j1ykRjXAb8w?t=147', pure: false, shell: $author$project$Data$Wildfire, time: 105138}),
 						_Utils_Tuple2(
 						'eTL',
-						{link: 'https://youtu.be/23rd_XlTDtQ?t=326', pure: false, shell: $author$project$Data$Wildfire, time: 249983})
+						{link: 'https://youtu.be/23rd_XlTDtQ?t=326', pure: false, shell: $author$project$Data$Wildfire, time: 248248})
 					]),
 				fullRun: _List_fromArray(
 					[
@@ -5688,6 +5688,23 @@ var $author$project$Data$rawData = _List_fromArray(
 						_Utils_Tuple2(
 						'eFC',
 						{link: 'https://www.youtube.com/watch?v=j1ykRjXAb8w', pure: false, shell: $author$project$Data$Wildfire, time: 227527})
+					]),
+				stock: _List_Nil
+			}
+		}),
+		_Utils_Tuple2(
+		'magma',
+		{
+			runs: {
+				bossOnly: _List_Nil,
+				fullRun: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'eFF',
+						{link: 'https://youtu.be/XNjF9E-M9dQ?t=792', pure: false, shell: $author$project$Data$Duskwing, time: 223880}),
+						_Utils_Tuple2(
+						'eUB',
+						{link: 'https://youtu.be/XNjF9E-M9dQ?t=74', pure: false, shell: $author$project$Data$Duskwing, time: 639730})
 					]),
 				stock: _List_Nil
 			}

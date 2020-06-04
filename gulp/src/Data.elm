@@ -439,7 +439,7 @@ rawData =
                   )
                 , ( "eTL"
                   , { shell = Wildfire
-                    , time = 249983
+                    , time = 248248
                     , link = "https://youtu.be/23rd_XlTDtQ?t=326"
                     , pure = False
                     }
@@ -464,6 +464,29 @@ rawData =
                   , { shell = Wildfire
                     , time = 227527
                     , link = "https://www.youtube.com/watch?v=j1ykRjXAb8w"
+                    , pure = False
+                    }
+                  )
+                ]
+            , stock = []
+            }
+        }
+      )
+    , ( "magma"
+      , { runs =
+            { bossOnly = []
+            , fullRun =
+                [ ( "eFF"
+                  , { shell = Duskwing
+                    , time = 223880
+                    , link = "https://youtu.be/XNjF9E-M9dQ?t=792"
+                    , pure = False
+                    }
+                  )
+                , ( "eUB"
+                  , { shell = Duskwing
+                    , time = 639730
+                    , link = "https://youtu.be/XNjF9E-M9dQ?t=74"
                     , pure = False
                     }
                   )
