@@ -5504,13 +5504,19 @@ var $author$project$Data$rawData = _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://www.youtube.com/watch?v=yznCEvvOJig', pure: false, shell: $author$project$Data$Duskwing, time: 92883})
+						{link: 'https://youtu.be/Tm1slZxFGPk?t=79', pure: false, shell: $author$project$Data$Duskwing, time: 91267}),
+						_Utils_Tuple2(
+						'eFF',
+						{link: 'https://youtu.be/J6H4C_1hKDU?t=80', pure: false, shell: $author$project$Data$Duskwing, time: 137300})
 					]),
 				fullRun: _List_fromArray(
 					[
 						_Utils_Tuple2(
 						'FF',
-						{link: 'https://youtu.be/d-7P-QAXZHw', pure: false, shell: $author$project$Data$Duskwing, time: 169533})
+						{link: 'https://youtu.be/Tm1slZxFGPk', pure: false, shell: $author$project$Data$Duskwing, time: 165967}),
+						_Utils_Tuple2(
+						'eFF',
+						{link: 'https://youtu.be/J6H4C_1hKDU', pure: false, shell: $author$project$Data$Duskwing, time: 214550})
 					]),
 				stock: _List_fromArray(
 					[
@@ -5559,7 +5565,12 @@ var $author$project$Data$rawData = _List_fromArray(
 						{link: 'https://www.youtube.com/watch?v=lxHI3KEfw7Y', pure: false, shell: $author$project$Data$Ironclad, time: 95567})
 					]),
 				fullRun: _List_Nil,
-				stock: _List_Nil
+				stock: _List_fromArray(
+					[
+						_Utils_Tuple2(
+						'FF',
+						{link: 'https://youtu.be/j1S3k-1G-Uk', pure: false, shell: $author$project$Data$Wildfire, time: 395700})
+					])
 			}
 		}),
 		_Utils_Tuple2(

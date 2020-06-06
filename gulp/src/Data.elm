@@ -148,8 +148,15 @@ rawData =
             { bossOnly =
                 [ ( "FF"
                   , { shell = Duskwing
-                    , time = 92883
-                    , link = "https://www.youtube.com/watch?v=yznCEvvOJig"
+                    , time = 91267
+                    , link = "https://youtu.be/Tm1slZxFGPk?t=79"
+                    , pure = False
+                    }
+                  )
+                , ( "eFF"
+                  , { shell = Duskwing
+                    , time = 137300
+                    , link = "https://youtu.be/J6H4C_1hKDU?t=80"
                     , pure = False
                     }
                   )
@@ -157,8 +164,15 @@ rawData =
             , fullRun =
                 [ ( "FF"
                   , { shell = Duskwing
-                    , time = 169533
-                    , link = "https://youtu.be/d-7P-QAXZHw"
+                    , time = 165967
+                    , link = "https://youtu.be/Tm1slZxFGPk"
+                    , pure = False
+                    }
+                  )
+                , ( "eFF"
+                  , { shell = Duskwing
+                    , time = 214550
+                    , link = "https://youtu.be/J6H4C_1hKDU"
                     , pure = False
                     }
                   )
@@ -233,7 +247,15 @@ rawData =
                   )
                 ]
             , fullRun = []
-            , stock = []
+            , stock =
+                [ ( "FF"
+                  , { shell = Wildfire
+                    , time = 395700
+                    , link = "https://youtu.be/j1S3k-1G-Uk"
+                    , pure = False
+                    }
+                  )
+                ]
             }
         }
       )
