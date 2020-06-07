@@ -249,9 +249,9 @@ rawData =
             , fullRun = []
             , stock =
                 [ ( "FF"
-                  , { shell = Wildfire
-                    , time = 395700
-                    , link = "https://youtu.be/j1S3k-1G-Uk"
+                  , { shell = Duskwing
+                    , time = 343234
+                    , link = "https://youtu.be/4ZWnzgtvXf4"
                     , pure = False
                     }
                   )
