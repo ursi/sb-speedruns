@@ -167,8 +167,8 @@ eliteZoneStrings =
     List.map zoneToString eliteZones
 
 
-shellStrings : Dict String Shell
-shellStrings =
+shellDict : Dict String Shell
+shellDict =
     Dict.fromList
         [ ( "Wildfire", Wildfire )
         , ( "Duskwing", Duskwing )
@@ -213,12 +213,12 @@ zoneFromString =
 
 shellToString : Shell -> String
 shellToString =
-    toString shellStrings
+    toString shellDict
 
 
 shellFromString : String -> Maybe Shell
 shellFromString =
-    fromString shellStrings
+    fromString shellDict
 
 
 getData : (Result H.Error (List Run) -> msg) -> Cmd msg
