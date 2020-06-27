@@ -293,7 +293,7 @@ menuHtml { category } =
     H.divS
         [ C.display "grid"
         , C.rowGap "20px"
-        , C.marginTop "1em"
+        , C.margin "1em 0 2em 0"
         ]
         []
         [ H.divS
@@ -314,7 +314,6 @@ menuHtml { category } =
         , H.divS
             [ gridStyles
             , C.grid "repeat(2, max-content) / repeat(9, max-content)"
-            , C.marginBottom "2em"
             ]
             []
             [ zoneHtml 1 category Data.normalZones
