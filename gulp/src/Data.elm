@@ -1,7 +1,7 @@
 module Data exposing
     ( Category
     , Run
-    , Shell
+    , Shell(..)
     , Type(..)
     , Zone
     , eliteZoneStrings
@@ -12,6 +12,7 @@ module Data exposing
     , getRuns
     , normalZoneStrings
     , normalZones
+    , shellFromString
     , shellToPicture
     , shellToString
     , typeFromString
