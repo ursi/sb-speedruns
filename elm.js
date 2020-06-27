@@ -7210,16 +7210,22 @@ var $elm$core$List$sortBy = _List_sortBy;
 var $author$project$Data$getRuns = function (_v0) {
 	var type_ = _v0.type_;
 	var zone = _v0.zone;
+	var shell = _v0.shell;
 	return A2(
 		$elm$core$Basics$composeR,
-		$elm$core$List$filter(
-			function (run) {
-				return _Utils_eq(run.type_, type_) && _Utils_eq(run.zone, zone);
-			}),
-		$elm$core$List$sortBy(
-			function ($) {
-				return $.time;
-			}));
+		_Utils_eq(shell, $elm$core$Maybe$Nothing) ? $author$project$Data$onlyFastestShell : $elm$core$Basics$identity,
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$List$filter(
+				function (run) {
+					return _Utils_eq(run.type_, type_) && (_Utils_eq(run.zone, zone) && (_Utils_eq(shell, $elm$core$Maybe$Nothing) ? true : _Utils_eq(
+						shell,
+						$elm$core$Maybe$Just(run.shell))));
+				}),
+			$elm$core$List$sortBy(
+				function ($) {
+					return $.time;
+				})));
 };
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $elm$json$Json$Encode$string = _Json_wrap;

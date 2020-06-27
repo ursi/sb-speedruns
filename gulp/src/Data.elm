@@ -315,11 +315,25 @@ onlyFastestShell =
 
 
 getRuns : Category -> List Run -> List Run
-getRuns { type_, zone } =
-    List.filter
-        (\run ->
-            run.type_ == type_ && run.zone == zone
-        )
+getRuns { type_, zone, shell } =
+    (if shell == Nothing then
+        onlyFastestShell
+
+     else
+        identity
+    )
+        >> List.filter
+            (\run ->
+                run.type_
+                    == type_
+                    && (run.zone == zone)
+                    && (if shell == Nothing then
+                            True
+
+                        else
+                            shell == Just run.shell
+                       )
+            )
         >> List.sortBy .time
 
 
