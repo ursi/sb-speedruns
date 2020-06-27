@@ -4,13 +4,14 @@ import Browser exposing (Document, UrlRequest)
 import Browser.Navigation as Nav exposing (Key)
 import Css as C exposing (Declaration)
 import Css.Global as G
-import Data exposing (Category(..))
+import Data exposing (Category, Run, Type(..), Zone)
 import Design as Ds
 import Dict exposing (Dict)
 import FoldIdentity as F
 import Html.Attributes as A
 import Html.Events as E
 import Html.Styled as H exposing (Html)
+import Http
 import Markdown
 import Maybe.Extra as Maybe
 import Url exposing (Url)
@@ -40,8 +41,8 @@ main =
 
 
 type alias Model =
-    { category : Category
-    , zone : String
+    { category : Maybe Category
+    , runs : List Run
     , showingRules : Bool
     , key : Key
     }
@@ -49,52 +50,32 @@ type alias Model =
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init _ url key =
-    let
-        ( category, zone ) =
-            case urlParser url of
-                Just ( c, z ) ->
-                    ( c, z )
-
-                Nothing ->
-                    Data.getMostPopular <| normalZones ++ eliteZones
-    in
-    ( Model category zone False key
-    , Cmd.none
+    ( Model
+        (urlParser url)
+        []
+        False
+        key
+    , Data.getData DataReceived
     )
 
 
-urlParser : Url -> Maybe ( Category, String )
+urlParser : Url -> Maybe Category
 urlParser url =
     (UP.parse <|
         UP.query <|
             Q.map2
                 (Maybe.andThen2 <|
-                    \categoryStr zone ->
-                        Data.categoryFromString categoryStr
-                            |> Maybe.andThen
-                                (\category ->
-                                    if List.member zone (normalZones ++ eliteZones) then
-                                        Just ( category, zone )
-
-                                    else
-                                        Nothing
-                                )
+                    \typeStr zoneStr ->
+                        Maybe.map2
+                            (\type_ zone -> Category type_ zone Nothing)
+                            (Data.typeFromString typeStr)
+                            (Data.zoneFromString zoneStr)
                 )
-                (Q.string "category")
+                (Q.string "type")
                 (Q.string "zone")
     )
         { url | path = "" }
         |> Maybe.andThen identity
-
-
-normalZones : List String
-normalZones =
-    [ "FF", "FB", "FC", "VQ", "UB", "ST", "TL", "GY", "SC" ]
-
-
-eliteZones : List String
-eliteZones =
-    [ "eFF", "eFB", "eFC", "eVQ", "eUB", "eST", "eTL", "eGY" ]
 
 
 
@@ -102,28 +83,65 @@ eliteZones =
 
 
 type Msg
-    = ChangeCategory Category
-    | ChangeZone String
+    = ChangeType Type
+    | ChangeZone Zone
     | ChangeShowingRules Bool
     | UrlRequested UrlRequest
+    | DataReceived (Result Http.Error (List Run))
     | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        DataReceived result ->
+            case result of
+                Ok runs ->
+                    ( { model
+                        | category =
+                            if model.category == Nothing then
+                                Just <| Data.getMostPopular runs
+
+                            else
+                                model.category
+                        , runs = runs
+                      }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
         ChangeShowingRules bool ->
             ( { model | showingRules = bool }, Cmd.none )
 
         ChangeZone zone ->
-            ( { model | zone = zone }
-            , newUrl model.key model.category zone
-            )
+            maybeUpdate
+                (\category ->
+                    let
+                        newCategory =
+                            { category | zone = zone }
+                    in
+                    ( { model | category = Just newCategory }
+                    , newUrl model.key newCategory
+                    )
+                )
+                .category
+                model
 
-        ChangeCategory category ->
-            ( { model | category = category }
-            , newUrl model.key category model.zone
-            )
+        ChangeType type_ ->
+            maybeUpdate
+                (\category ->
+                    let
+                        newCategory =
+                            { category | type_ = type_ }
+                    in
+                    ( { model | category = Just newCategory }
+                    , newUrl model.key newCategory
+                    )
+                )
+                .category
+                model
 
         UrlRequested _ ->
             ( model, Cmd.none )
@@ -132,12 +150,22 @@ update msg model =
             ( model, Cmd.none )
 
 
-newUrl : Key -> Category -> String -> Cmd Msg
-newUrl key category zone =
+maybeUpdate :
+    (a -> ( Model, Cmd Msg ))
+    -> (Model -> Maybe a)
+    -> Model
+    -> ( Model, Cmd Msg )
+maybeUpdate f getter model =
+    Maybe.map f (getter model)
+        |> Maybe.withDefault ( model, Cmd.none )
+
+
+newUrl : Key -> Category -> Cmd Msg
+newUrl key category =
     Nav.pushUrl key <|
         UB.relative []
-            [ UB.string "category" <| Data.categoryToString category
-            , UB.string "zone" zone
+            [ UB.string "type" <| Data.typeToString category.type_
+            , UB.string "zone" <| Data.zoneToString category.zone
             ]
 
 
@@ -197,8 +225,8 @@ view model =
     }
 
 
-leaderboardHtml : { r | category : Category, zone : String } -> Html Msg
-leaderboardHtml { category, zone } =
+leaderboardHtml : Model -> Html Msg
+leaderboardHtml model =
     H.tableS
         [ C.width "100%"
         , C.textAlign "center"
@@ -216,51 +244,52 @@ leaderboardHtml { category, zone } =
                 ]
             ]
         , H.tbody []
-            (Data.getPlayersWithRun category zone
-                |> List.indexedMap
-                    (\i player ->
-                        Data.getRun category zone player
-                            |> F.map idH
-                                (\run ->
-                                    H.trS
-                                        [ C.nthChild 2 1 [ C.children [ C.background Ds.gray1 ] ]
-                                        , C.lastChild
-                                            [ C.children
-                                                [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
-                                                , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
-                                                ]
+            (case model.category of
+                Just category ->
+                    Data.getRuns category model.runs
+                        |> List.indexedMap
+                            (\i run ->
+                                H.trS
+                                    [ C.nthChild 2 1 [ C.children [ C.background Ds.gray1 ] ]
+                                    , C.lastChild
+                                        [ C.children
+                                            [ C.firstChild [ C.borderBottomLeftRadius Ds.radius1 ]
+                                            , C.lastChild [ C.borderBottomRightRadius Ds.radius1 ]
                                             ]
                                         ]
-                                        []
-                                        [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
-                                        , H.td []
-                                            [ H.text player
-                                            , H.imgS
+                                    ]
+                                    []
+                                    [ H.td [] [ H.text <| String.fromInt <| i + 1 ]
+                                    , H.td []
+                                        [ H.text run.player
+                                        , H.imgS
+                                            [ rightOfText ]
+                                            [ A.src <| Data.shellToPicture run.shell ]
+                                            []
+                                        ]
+                                    , H.td []
+                                        [ H.text <| Data.formatTime run.time
+                                        , H.a
+                                            [ A.href <| run.link
+                                            , A.target "_blank"
+                                            ]
+                                            [ H.imgS
                                                 [ rightOfText ]
-                                                [ A.src <| Data.shellToPicture run.shell ]
+                                                [ A.src "images/film.svg" ]
                                                 []
                                             ]
-                                        , H.td []
-                                            [ H.text <| Data.formatTime run.time
-                                            , H.a
-                                                [ A.href <| run.link
-                                                , A.target "_blank"
-                                                ]
-                                                [ H.imgS
-                                                    [ rightOfText ]
-                                                    [ A.src "images/film.svg" ]
-                                                    []
-                                                ]
-                                            ]
                                         ]
-                                )
-                    )
+                                    ]
+                            )
+
+                Nothing ->
+                    []
             )
         ]
 
 
-menuHtml : { r | category : Category, zone : String } -> Html Msg
-menuHtml { category, zone } =
+menuHtml : { r | category : Maybe Category } -> Html Msg
+menuHtml { category } =
     H.divS
         [ C.display "grid"
         , C.rowGap "20px"
@@ -272,14 +301,14 @@ menuHtml { category, zone } =
             , C.grid "max-content / auto-flow max-content"
             ]
             []
-            [ H.divS [ menuDivStyles (category == FullRun) ]
-                [ E.onClick <| ChangeCategory FullRun ]
+            [ H.divS [ menuDivStyles (typeEquals FullRun category) ]
+                [ E.onClick <| ChangeType FullRun ]
                 [ H.text "Full Run" ]
-            , H.divS [ menuDivStyles (category == BossOnly) ]
-                [ E.onClick <| ChangeCategory BossOnly ]
+            , H.divS [ menuDivStyles (typeEquals BossOnly category) ]
+                [ E.onClick <| ChangeType BossOnly ]
                 [ H.text "Boss Only" ]
-            , H.divS [ menuDivStyles (category == Stock) ]
-                [ E.onClick <| ChangeCategory Stock ]
+            , H.divS [ menuDivStyles (typeEquals Stock category) ]
+                [ E.onClick <| ChangeType Stock ]
                 [ H.text "Stock" ]
             ]
         , H.divS
@@ -288,10 +317,16 @@ menuHtml { category, zone } =
             , C.marginBottom "2em"
             ]
             []
-            [ zoneHtml 1 zone normalZones
-            , zoneHtml 2 zone eliteZones
+            [ zoneHtml 1 category Data.normalZones
+            , zoneHtml 2 category Data.eliteZones
             ]
         ]
+
+
+typeEquals : Type -> Maybe Category -> Bool
+typeEquals type_ =
+    Maybe.map (.type_ >> (==) type_)
+        >> Maybe.withDefault False
 
 
 rulesHtml : Bool -> Html Msg
@@ -370,21 +405,27 @@ idH =
     H.text ""
 
 
-zoneHtml : Int -> String -> List String -> Html Msg
-zoneHtml row selectedZone zones =
+zoneHtml : Int -> Maybe Category -> List Zone -> Html Msg
+zoneHtml row mcategory zones =
     H.divS [ C.display "contents" ]
         []
         (zones
             |> List.map
                 (\zone ->
                     H.divS
-                        [ menuDivStyles (zone == selectedZone)
+                        [ menuDivStyles (zoneEquals zone mcategory)
                         , C.gridRow <| String.fromInt row
                         ]
                         [ E.onClick <| ChangeZone zone ]
-                        [ H.text zone ]
+                        [ H.text <| Data.zoneToString zone ]
                 )
         )
+
+
+zoneEquals : Zone -> Maybe Category -> Bool
+zoneEquals zone =
+    Maybe.map (.zone >> (==) zone)
+        >> Maybe.withDefault False
 
 
 menuDivStyles : Bool -> Declaration

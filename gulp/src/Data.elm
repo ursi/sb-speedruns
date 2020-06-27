@@ -2,10 +2,22 @@ module Data exposing
     ( Category
     , Run
     , Shell
+    , Type(..)
     , Zone
-    , categoryToString
+    , eliteZoneStrings
+    , eliteZones
+    , formatTime
+    , getData
     , getMostPopular
+    , getRuns
+    , normalZoneStrings
+    , normalZones
+    , shellToPicture
     , shellToString
+    , typeFromString
+    , typeToString
+    , zoneFromString
+    , zoneStrings
     , zoneToString
     )
 
@@ -18,7 +30,7 @@ import List.Extra as List
 
 type alias Run =
     { player : String
-    , category : Category
+    , type_ : Type
     , zone : Zone
     , shell : Shell
     , time : Int
@@ -26,7 +38,19 @@ type alias Run =
     }
 
 
-type Zone
+type alias Category =
+    { type_ : Type
+    , zone : Zone
+    , shell : Maybe Shell
+    }
+
+
+type Either a b
+    = Left a
+    | Right b
+
+
+type BaseZone
     = FF
     | FB
     | FC
@@ -35,15 +59,15 @@ type Zone
     | ST
     | TL
     | GY
-    | SC
-    | EFF
-    | EFB
-    | EFC
-    | EVQ
-    | EUB
-    | EST
-    | ETL
-    | EGY
+
+
+type SC
+    = SC
+
+
+type Zone
+    = Normal (Either BaseZone SC)
+    | Elite BaseZone
 
 
 type Shell
@@ -53,33 +77,93 @@ type Shell
     | Ironclad
 
 
-type Category
+type Type
     = BossOnly
     | FullRun
     | Stock
 
 
-zoneStrings : Dict String Zone
-zoneStrings =
+typeStrings : Dict String Type
+typeStrings =
     Dict.fromList
-        [ ( "FF", FF )
-        , ( "FB", FB )
-        , ( "FC", FC )
-        , ( "VQ", VQ )
-        , ( "UB", UB )
-        , ( "ST", ST )
-        , ( "TL", TL )
-        , ( "GY", GY )
-        , ( "SC", SC )
-        , ( "eFF", EFF )
-        , ( "eFB", EFB )
-        , ( "eFC", EFC )
-        , ( "eVQ", EVQ )
-        , ( "eUB", EUB )
-        , ( "eST", EST )
-        , ( "eTL", ETL )
-        , ( "eGY", EGY )
+        [ ( "boss-only", BossOnly )
+        , ( "full-run", FullRun )
+        , ( "stock", Stock )
         ]
+
+
+
+-- This exists to preserve order
+
+
+zoneDictList : List ( String, Zone )
+zoneDictList =
+    [ ( "FF", Normal (Left FF) )
+    , ( "FB", Normal (Left FB) )
+    , ( "FC", Normal (Left FC) )
+    , ( "VQ", Normal (Left VQ) )
+    , ( "UB", Normal (Left UB) )
+    , ( "ST", Normal (Left ST) )
+    , ( "TL", Normal (Left TL) )
+    , ( "GY", Normal (Left GY) )
+    , ( "SC", Normal (Right SC) )
+    , ( "eFF", Elite FF )
+    , ( "eFB", Elite FB )
+    , ( "eFC", Elite FC )
+    , ( "eVQ", Elite VQ )
+    , ( "eUB", Elite UB )
+    , ( "eST", Elite ST )
+    , ( "eTL", Elite TL )
+    , ( "eGY", Elite GY )
+    ]
+
+
+zoneDict : Dict String Zone
+zoneDict =
+    Dict.fromList zoneDictList
+
+
+zoneStrings : List String
+zoneStrings =
+    List.map Tuple.first zoneDictList
+
+
+normalZones : List Zone
+normalZones =
+    zoneDictList
+        |> List.filterMap
+            (\( _, zone ) ->
+                case zone of
+                    Normal _ ->
+                        Just zone
+
+                    _ ->
+                        Nothing
+            )
+
+
+normalZoneStrings : List String
+normalZoneStrings =
+    List.map zoneToString normalZones
+
+
+eliteZones : List Zone
+eliteZones =
+    zoneDictList
+        |> List.filterMap
+            (\( _, zone ) ->
+                case zone of
+                    Elite _ ->
+                        Just zone
+
+                    _ ->
+                        Nothing
+            )
+
+
+eliteZoneStrings : List String
+eliteZoneStrings =
+    List.map zoneToString eliteZones
 
 
 shellStrings : Dict String Shell
@@ -92,15 +176,6 @@ shellStrings =
         ]
 
 
-categoryStrings : Dict String Category
-categoryStrings =
-    Dict.fromList
-        [ ( "boss-only", BossOnly )
-        , ( "full-run", FullRun )
-        , ( "stock", Stock )
-        ]
-
-
 toString : Dict String a -> a -> String
 toString dict a =
     dict
@@ -110,30 +185,29 @@ toString dict a =
         |> Maybe.withDefault ""
 
 
-fromString : Dict String a -> a -> String -> a
-fromString dict default str =
+fromString : Dict String a -> String -> Maybe a
+fromString dict str =
     Dict.get str dict
-        |> Maybe.withDefault default
 
 
-categoryToString : Category -> String
-categoryToString =
-    toString categoryStrings
+typeToString : Type -> String
+typeToString =
+    toString typeStrings
 
 
-categoryFromString : String -> Category
-categoryFromString =
-    fromString categoryStrings BossOnly
+typeFromString : String -> Maybe Type
+typeFromString =
+    fromString typeStrings
 
 
 zoneToString : Zone -> String
 zoneToString =
-    toString zoneStrings
+    toString zoneDict
 
 
-zoneFromString : String -> Zone
+zoneFromString : String -> Maybe Zone
 zoneFromString =
-    fromString zoneStrings FF
+    fromString zoneDict
 
 
 shellToString : Shell -> String
@@ -141,32 +215,40 @@ shellToString =
     toString shellStrings
 
 
-shellFromString : String -> Shell
+shellFromString : String -> Maybe Shell
 shellFromString =
-    fromString shellStrings Wildfire
+    fromString shellStrings
 
 
 getData : (Result H.Error (List Run) -> msg) -> Cmd msg
 getData toMsg =
     H.get
-        { url = "http://localhost:5000"
+        { url = "https://sbsrdb.herokuapp.com/"
         , expect = H.expectJson toMsg runsDecoder
         }
 
 
 runsDecoder : Decoder (List Run)
 runsDecoder =
-    D.list <|
-        D.map6 Run
-            (D.field "player" D.string)
-            (D.field "category" <| D.map categoryFromString D.string)
-            (D.field "zone" <| D.map zoneFromString D.string)
-            (D.field "shell" <| D.map shellFromString D.string)
-            (D.field "time" D.int)
-            (D.field "link" D.string)
+    D.map (List.filterMap identity) <|
+        D.list <|
+            D.map6
+                (\player type_ zone shell time link ->
+                    Maybe.map3
+                        (\t z s -> Run player t z s time link)
+                        type_
+                        zone
+                        shell
+                )
+                (D.field "player" D.string)
+                (D.field "type" <| D.map typeFromString D.string)
+                (D.field "zone" <| D.map zoneFromString D.string)
+                (D.field "shell" <| D.map shellFromString D.string)
+                (D.field "time" D.int)
+                (D.field "link" D.string)
 
 
-getMostPopular : List Run -> ( Category, Zone )
+getMostPopular : List Run -> Category
 getMostPopular =
     onlyFastestShell
         >> List.foldl
@@ -191,20 +273,20 @@ getMostPopular =
                         acc
                 in
                 if count > currentCount then
-                    ( ( run.category, run.zone )
+                    ( Category run.type_ run.zone Nothing
                     , count
                     )
 
                 else
                     acc
             )
-            ( ( BossOnly, FF ), 0 )
+            ( Category BossOnly (Normal (Left FF)) Nothing, 0 )
         >> Tuple.first
 
 
 to2Id : Run -> ( String, String )
 to2Id run =
-    ( categoryToString run.category, zoneToString run.zone )
+    ( typeToString run.type_, zoneToString run.zone )
 
 
 to3Id : Run -> ( String, ( String, String ) )
@@ -232,137 +314,49 @@ onlyFastestShell =
         >> List.map Tuple.second
 
 
+getRuns : Category -> List Run -> List Run
+getRuns { type_, zone } =
+    List.filter
+        (\run ->
+            run.type_ == type_ && run.zone == zone
+        )
+        >> List.sortBy .time
 
--- getMostPopular : List String -> ( Category, String )
--- getMostPopular zones =
---     data
---         |> Dict.foldl
---             (\_ playerData accum ->
---                 let
---                     bossOnly =
---                         gmpGet BossOnly playerData
---                     fullRun =
---                         gmpGet FullRun playerData
---                     stock =
---                         gmpGet Stock playerData
---                 in
---                 gmpMerge stock accum
---                     |> gmpMerge fullRun
---                     |> gmpMerge bossOnly
---             )
---             A.empty
---         |> A.toList
---         |> List.sortBy Tuple.second
---         |> List.reverse
---         |> List.head
---         |> Maybe.map Tuple.first
---         |> Maybe.withDefault ( FullRun, "FF" )
--- gmpMerge : RunAccumulator -> RunAccumulator -> RunAccumulator
--- gmpMerge ra1 ra2 =
---     A.merge
---         (\k a result -> A.insert k a result)
---         (\k a b result -> A.insert k (a + b) result)
---         (\k b result -> A.insert k b result)
---         ra1
---         ra2
---         A.empty
--- gmpGet : Category -> PlayerData -> RunAccumulator
--- gmpGet category =
---     getRuns category
---         >> Dict.toList
---         >> List.map
---             (\( zone, _ ) ->
---                 ( ( category, zone ), 1 )
---             )
---         >> A.fromList
--- type alias RunAccumulator =
---     A.Dict ( Category, String ) Int
--- getPlayerData : String -> Maybe PlayerData
--- getPlayerData player =
---     Dict.get player data
--- getPlayersWithRun : Category -> String -> List String
--- getPlayersWithRun category zone =
---     data
---         |> Dict.foldl
---             (\player playerData runList ->
---                 playerData
---                     |> getRuns category
---                     |> Dict.member zone
---                     |> (\bool ->
---                             if bool then
---                                 player :: runList
---                             else
---                                 runList
---                        )
---             )
---             []
---         |> List.sortWith
---             (\p1 p2 ->
---                 Maybe.map2
---                     (\t1 t2 ->
---                         if t1 > t2 then
---                             GT
---                         else if t1 < t2 then
---                             LT
---                         else
---                             EQ
---                     )
---                     (getRawTime category zone p1)
---                     (getRawTime category zone p2)
---                     |> Maybe.withDefault EQ
---             )
--- getRawTime : Category -> String -> String -> Maybe Int
--- getRawTime category zone player =
---     data
---         |> Dict.get player
---         |> Maybe.map (getRuns category)
---         |> Maybe.andThen (Dict.get zone)
---         |> Maybe.map .time
--- formatTime : Int -> String
--- formatTime ms =
---     (if ms >= 60000 then
---         String.fromInt (ms // 60000) ++ ":"
---      else
---         ""
---     )
---         ++ (modBy 60000 ms
---                 // 1000
---                 |> String.fromInt
---                 |> String.padLeft 2 '0'
---            )
---         ++ "."
---         ++ (ms
---                 |> modBy 1000
---                 |> String.fromInt
---                 |> String.padLeft 3 '0'
---            )
--- getRun : Category -> String -> String -> Maybe Run
--- getRun category zone player =
---     data
---         |> Dict.get player
---         |> Maybe.map (getRuns category)
---         |> Maybe.andThen (Dict.get zone)
--- getRuns : Category -> PlayerData -> Dict String Run
--- getRuns category =
---     .runs
---         >> (case category of
---                 BossOnly ->
---                     .bossOnly
---                 FullRun ->
---                     .fullRun
---                 Stock ->
---                     .stock
---            )
--- shellToPicture : Shell -> String
--- shellToPicture shell =
---     "images/"
---         ++ (case shell of
---                 Wildfire ->
---                     "wildfire.png"
---                 Duskwing ->
---                     "duskwing.png"
---                 Ironclad ->
---                     "ironclad.png"
---                 Fabricator ->
---                     "fabricator.png"
---            )
+
+formatTime : Int -> String
+formatTime ms =
+    (if ms >= 60000 then
+        String.fromInt (ms // 60000) ++ ":"
+
+     else
+        ""
+    )
+        ++ (modBy 60000 ms
+                // 1000
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
+        ++ "."
+        ++ (ms
+                |> modBy 1000
+                |> String.fromInt
+                |> String.padLeft 3 '0'
+           )
+
+
+shellToPicture : Shell -> String
+shellToPicture shell =
+    "images/"
+        ++ (case shell of
+                Wildfire ->
+                    "wildfire.png"
+
+                Duskwing ->
+                    "duskwing.png"
+
+                Ironclad ->
+                    "ironclad.png"
+
+                Fabricator ->
+                    "fabricator.png"
+           )

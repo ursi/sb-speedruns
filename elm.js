@@ -4357,6 +4357,181 @@ function _Browser_load(url)
 }
 
 
+
+// SEND REQUEST
+
+var _Http_toTask = F3(function(router, toTask, request)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		function done(response) {
+			callback(toTask(request.expect.a(response)));
+		}
+
+		var xhr = new XMLHttpRequest();
+		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
+		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.expect.b, xhr)); });
+		$elm$core$Maybe$isJust(request.tracker) && _Http_track(router, xhr, request.tracker.a);
+
+		try {
+			xhr.open(request.method, request.url, true);
+		} catch (e) {
+			return done($elm$http$Http$BadUrl_(request.url));
+		}
+
+		_Http_configureRequest(xhr, request);
+
+		request.body.a && xhr.setRequestHeader('Content-Type', request.body.a);
+		xhr.send(request.body.b);
+
+		return function() { xhr.c = true; xhr.abort(); };
+	});
+});
+
+
+// CONFIGURE
+
+function _Http_configureRequest(xhr, request)
+{
+	for (var headers = request.headers; headers.b; headers = headers.b) // WHILE_CONS
+	{
+		xhr.setRequestHeader(headers.a.a, headers.a.b);
+	}
+	xhr.timeout = request.timeout.a || 0;
+	xhr.responseType = request.expect.d;
+	xhr.withCredentials = request.allowCookiesFromOtherDomains;
+}
+
+
+// RESPONSES
+
+function _Http_toResponse(toBody, xhr)
+{
+	return A2(
+		200 <= xhr.status && xhr.status < 300 ? $elm$http$Http$GoodStatus_ : $elm$http$Http$BadStatus_,
+		_Http_toMetadata(xhr),
+		toBody(xhr.response)
+	);
+}
+
+
+// METADATA
+
+function _Http_toMetadata(xhr)
+{
+	return {
+		url: xhr.responseURL,
+		statusCode: xhr.status,
+		statusText: xhr.statusText,
+		headers: _Http_parseHeaders(xhr.getAllResponseHeaders())
+	};
+}
+
+
+// HEADERS
+
+function _Http_parseHeaders(rawHeaders)
+{
+	if (!rawHeaders)
+	{
+		return $elm$core$Dict$empty;
+	}
+
+	var headers = $elm$core$Dict$empty;
+	var headerPairs = rawHeaders.split('\r\n');
+	for (var i = headerPairs.length; i--; )
+	{
+		var headerPair = headerPairs[i];
+		var index = headerPair.indexOf(': ');
+		if (index > 0)
+		{
+			var key = headerPair.substring(0, index);
+			var value = headerPair.substring(index + 2);
+
+			headers = A3($elm$core$Dict$update, key, function(oldValue) {
+				return $elm$core$Maybe$Just($elm$core$Maybe$isJust(oldValue)
+					? value + ', ' + oldValue.a
+					: value
+				);
+			}, headers);
+		}
+	}
+	return headers;
+}
+
+
+// EXPECT
+
+var _Http_expect = F3(function(type, toBody, toValue)
+{
+	return {
+		$: 0,
+		d: type,
+		b: toBody,
+		a: toValue
+	};
+});
+
+var _Http_mapExpect = F2(function(func, expect)
+{
+	return {
+		$: 0,
+		d: expect.d,
+		b: expect.b,
+		a: function(x) { return func(expect.a(x)); }
+	};
+});
+
+function _Http_toDataView(arrayBuffer)
+{
+	return new DataView(arrayBuffer);
+}
+
+
+// BODY and PARTS
+
+var _Http_emptyBody = { $: 0 };
+var _Http_pair = F2(function(a, b) { return { $: 0, a: a, b: b }; });
+
+function _Http_toFormData(parts)
+{
+	for (var formData = new FormData(); parts.b; parts = parts.b) // WHILE_CONS
+	{
+		var part = parts.a;
+		formData.append(part.a, part.b);
+	}
+	return formData;
+}
+
+var _Http_bytesToBlob = F2(function(mime, bytes)
+{
+	return new Blob([bytes], { type: mime });
+});
+
+
+// PROGRESS
+
+function _Http_track(router, xhr, tracker)
+{
+	// TODO check out lengthComputable on loadstart event
+
+	xhr.upload.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
+			sent: event.loaded,
+			size: event.total
+		}))));
+	});
+	xhr.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
+			received: event.loaded,
+			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+		}))));
+	});
+}
+
 function _Url_percentEncode(string)
 {
 	return encodeURIComponent(string);
@@ -5301,17 +5476,75 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$application = _Browser_application;
+var $author$project$Main$DataReceived = function (a) {
+	return {$: 'DataReceived', a: a};
+};
 var $author$project$Main$Model = F4(
-	function (category, zone, showingRules, key) {
-		return {category: category, key: key, showingRules: showingRules, zone: zone};
+	function (category, runs, showingRules, key) {
+		return {category: category, key: key, runs: runs, showingRules: showingRules};
 	});
-var $author$project$Main$eliteZones = _List_fromArray(
-	['eFF', 'eFB', 'eFC', 'eVQ', 'eUB', 'eST', 'eTL', 'eGY']);
-var $author$project$Data$BossOnly = {$: 'BossOnly'};
-var $author$project$Data$FullRun = {$: 'FullRun'};
-var $author$project$Data$Stock = {$: 'Stock'};
+var $elm$json$Json$Decode$decodeString = _Json_runOnString;
+var $elm$http$Http$BadStatus_ = F2(
+	function (a, b) {
+		return {$: 'BadStatus_', a: a, b: b};
+	});
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 'BadUrl_', a: a};
+};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 'GoodStatus_', a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 'Receiving', a: a};
+};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 'Sending', a: a};
+};
+var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (maybe.$ === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$core$Basics$compare = _Utils_compare;
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5372,7 +5605,6 @@ var $elm$core$Dict$balance = F5(
 			}
 		}
 	});
-var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -5421,917 +5653,6 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $author$project$Data$Duskwing = {$: 'Duskwing'};
-var $author$project$Data$Ironclad = {$: 'Ironclad'};
-var $author$project$Data$Wildfire = {$: 'Wildfire'};
-var $author$project$Data$rawData = _List_fromArray(
-	[
-		_Utils_Tuple2(
-		'Bebop',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/c_AaqgujqLw?t=69', pure: false, shell: $author$project$Data$Duskwing, time: 99834})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=c_AaqgujqLw&t=', pure: false, shell: $author$project$Data$Duskwing, time: 170700})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'BrazeTH',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://youtu.be/ipFSyujBl3Y?t=227', pure: true, shell: $author$project$Data$Wildfire, time: 237182}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/tUADE3i27S0?t=201', pure: true, shell: $author$project$Data$Wildfire, time: 137771}),
-						_Utils_Tuple2(
-						'eFB',
-						{link: 'https://youtu.be/BhhSumqQ-y0?t=255', pure: true, shell: $author$project$Data$Wildfire, time: 160031})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://youtu.be/ipFSyujBl3Y', pure: true, shell: $author$project$Data$Wildfire, time: 440973}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://www.youtube.com/watch?v=tUADE3i27S0', pure: true, shell: $author$project$Data$Wildfire, time: 334067}),
-						_Utils_Tuple2(
-						'eFB',
-						{link: 'https://www.youtube.com/watch?v=BhhSumqQ-y0', pure: true, shell: $author$project$Data$Wildfire, time: 389563})
-					]),
-				stock: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://www.youtube.com/watch?v=dl6pvB-90O8', pure: true, shell: $author$project$Data$Wildfire, time: 432099}),
-						_Utils_Tuple2(
-						'FB',
-						{link: 'https://youtu.be/yh_KZUJ04AQ', pure: true, shell: $author$project$Data$Duskwing, time: 427494})
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'Deus',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/Tm1slZxFGPk?t=79', pure: false, shell: $author$project$Data$Duskwing, time: 91267}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/J6H4C_1hKDU?t=80', pure: false, shell: $author$project$Data$Duskwing, time: 137300})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/Tm1slZxFGPk', pure: false, shell: $author$project$Data$Duskwing, time: 165967}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/J6H4C_1hKDU', pure: false, shell: $author$project$Data$Duskwing, time: 214550})
-					]),
-				stock: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/k16Oam2KLtg', pure: true, shell: $author$project$Data$Duskwing, time: 236966}),
-						_Utils_Tuple2(
-						'FB',
-						{link: 'https://www.youtube.com/watch?v=Nseq4diUMek', pure: true, shell: $author$project$Data$Duskwing, time: 376233})
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'Europe',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/di6WuDr_-G8?t=111', pure: true, shell: $author$project$Data$Wildfire, time: 119215}),
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://www.youtube.com/watch?v=xKzqsdG699c', pure: false, shell: $author$project$Data$Wildfire, time: 252000})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=di6WuDr_-G8', pure: true, shell: $author$project$Data$Wildfire, time: 229493}),
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://www.youtube.com/watch?v=ThJKHsnqG9Q', pure: false, shell: $author$project$Data$Wildfire, time: 618233})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'Forcex26',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://www.youtube.com/watch?v=lxHI3KEfw7Y', pure: false, shell: $author$project$Data$Ironclad, time: 95567})
-					]),
-				fullRun: _List_Nil,
-				stock: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/4ZWnzgtvXf4', pure: false, shell: $author$project$Data$Duskwing, time: 343234})
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'Givsaro',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/UyDW8C8FSGo?t=123', pure: true, shell: $author$project$Data$Wildfire, time: 91567}),
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://youtu.be/hP5wcq8uH2E?t=163', pure: true, shell: $author$project$Data$Wildfire, time: 213000}),
-						_Utils_Tuple2(
-						'ST',
-						{link: 'https://youtu.be/wDzyp_GOwjQ?t=113', pure: true, shell: $author$project$Data$Wildfire, time: 220167}),
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://www.youtube.com/watch?v=2EjFLAYUKwI', pure: true, shell: $author$project$Data$Wildfire, time: 246400}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/jR_3z8vluDY?t=125', pure: true, shell: $author$project$Data$Wildfire, time: 143033}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/9H4WZ136iRs?t=185', pure: true, shell: $author$project$Data$Ironclad, time: 137334}),
-						_Utils_Tuple2(
-						'eVQ',
-						{link: 'https://youtu.be/9GicHYnod-4?t=224', pure: true, shell: $author$project$Data$Wildfire, time: 250967})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://www.youtube.com/watch?v=ixNi9a00Xso', pure: true, shell: $author$project$Data$Wildfire, time: 189533}),
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://www.youtube.com/watch?v=hP5wcq8uH2E', pure: true, shell: $author$project$Data$Wildfire, time: 373200}),
-						_Utils_Tuple2(
-						'ST',
-						{link: 'https://www.youtube.com/watch?v=wDzyp_GOwjQ', pure: true, shell: $author$project$Data$Wildfire, time: 331867}),
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://www.youtube.com/watch?v=JQCpkdWYB3U', pure: true, shell: $author$project$Data$Wildfire, time: 544934}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://www.youtube.com/watch?v=jR_3z8vluDY', pure: true, shell: $author$project$Data$Wildfire, time: 265000}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=9H4WZ136iRs', pure: true, shell: $author$project$Data$Ironclad, time: 318467}),
-						_Utils_Tuple2(
-						'eVQ',
-						{link: 'https://www.youtube.com/watch?v=9GicHYnod-4', pure: true, shell: $author$project$Data$Wildfire, time: 473433})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'grand_sushi',
-		{
-			runs: {
-				bossOnly: _List_Nil,
-				fullRun: _List_Nil,
-				stock: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://www.youtube.com/watch?v=uQj-YLX-kr8', pure: true, shell: $author$project$Data$Duskwing, time: 217467})
-					])
-			}
-		}),
-		_Utils_Tuple2(
-		'Gritian',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://youtu.be/_r_nvV22tek?t=82', pure: true, shell: $author$project$Data$Duskwing, time: 91500}),
-						_Utils_Tuple2(
-						'FB',
-						{link: 'https://youtu.be/2MREFUbcxy4?t=117', pure: true, shell: $author$project$Data$Duskwing, time: 104367}),
-						_Utils_Tuple2(
-						'FC',
-						{link: 'https://youtu.be/1eCVfwvvU0s?t=82', pure: true, shell: $author$project$Data$Duskwing, time: 93067}),
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://youtu.be/0ueTAiUZ9Yo?t=120', pure: true, shell: $author$project$Data$Duskwing, time: 193400})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'FF',
-						{link: 'https://www.youtube.com/watch?v=_r_nvV22tek', pure: true, shell: $author$project$Data$Duskwing, time: 168700}),
-						_Utils_Tuple2(
-						'FB',
-						{link: 'https://www.youtube.com/watch?v=2MREFUbcxy4', pure: true, shell: $author$project$Data$Duskwing, time: 216367}),
-						_Utils_Tuple2(
-						'FC',
-						{link: 'https://www.youtube.com/watch?v=1eCVfwvvU0s', pure: true, shell: $author$project$Data$Duskwing, time: 170866}),
-						_Utils_Tuple2(
-						'VQ',
-						{link: 'https://www.youtube.com/watch?v=0ueTAiUZ9Yo', pure: true, shell: $author$project$Data$Duskwing, time: 309800})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'JonDaTurtle',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://youtu.be/EtINKR79MEY?t=306', pure: false, shell: $author$project$Data$Wildfire, time: 248582}),
-						_Utils_Tuple2(
-						'GY',
-						{link: 'https://youtu.be/wnWWPvIkdO0?t=250', pure: false, shell: $author$project$Data$Wildfire, time: 135936}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/j1ykRjXAb8w?t=147', pure: false, shell: $author$project$Data$Wildfire, time: 105138}),
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://youtu.be/23rd_XlTDtQ?t=326', pure: false, shell: $author$project$Data$Wildfire, time: 248248})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://www.youtube.com/watch?v=yI8T-3F0ldA', pure: false, shell: $author$project$Data$Duskwing, time: 496630}),
-						_Utils_Tuple2(
-						'GY',
-						{link: 'https://www.youtube.com/watch?v=wnWWPvIkdO0&', pure: false, shell: $author$project$Data$Wildfire, time: 375642}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=j1ykRjXAb8w', pure: false, shell: $author$project$Data$Wildfire, time: 227527})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'magma',
-		{
-			runs: {
-				bossOnly: _List_Nil,
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/XNjF9E-M9dQ?t=792', pure: false, shell: $author$project$Data$Duskwing, time: 223880}),
-						_Utils_Tuple2(
-						'eUB',
-						{link: 'https://youtu.be/XNjF9E-M9dQ?t=74', pure: false, shell: $author$project$Data$Duskwing, time: 639730})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'OySs',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://youtu.be/oftjkcNXD2A?t=292', pure: false, shell: $author$project$Data$Duskwing, time: 453767})
-					]),
-				fullRun: _List_Nil,
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'Shade',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'UB',
-						{link: 'https://youtu.be/AcMofYmKzwU?t=199', pure: true, shell: $author$project$Data$Wildfire, time: 264800}),
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://youtu.be/Lj0fTpY5f9A?t=338', pure: false, shell: $author$project$Data$Wildfire, time: 253533}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/YbNVKPkExnA?t=114', pure: true, shell: $author$project$Data$Wildfire, time: 138900})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'UB',
-						{link: 'https://www.youtube.com/watch?v=AcMofYmKzwU', pure: true, shell: $author$project$Data$Wildfire, time: 448834}),
-						_Utils_Tuple2(
-						'TL',
-						{link: 'https://www.youtube.com/watch?v=Lj0fTpY5f9A', pure: false, shell: $author$project$Data$Wildfire, time: 590733}),
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://www.youtube.com/watch?v=YbNVKPkExnA', pure: true, shell: $author$project$Data$Wildfire, time: 249633})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'Stormzy101',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/A5SKr1iSxYs?t=120', pure: true, shell: $author$project$Data$Wildfire, time: 97667}),
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://www.youtube.com/watch?v=v0cJPBzI_7A', pure: false, shell: $author$project$Data$Wildfire, time: 249467})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=A5SKr1iSxYs', pure: true, shell: $author$project$Data$Wildfire, time: 211233}),
-						_Utils_Tuple2(
-						'eTL',
-						{link: 'https://www.youtube.com/watch?v=uP_7ZX4wceg', pure: false, shell: $author$project$Data$Wildfire, time: 558267})
-					]),
-				stock: _List_Nil
-			}
-		}),
-		_Utils_Tuple2(
-		'Zakum',
-		{
-			runs: {
-				bossOnly: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://youtu.be/JXZczcEwBGk?t=87', pure: true, shell: $author$project$Data$Duskwing, time: 136558}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://youtu.be/Pim1bRK9AJg?t=129', pure: true, shell: $author$project$Data$Wildfire, time: 132900}),
-						_Utils_Tuple2(
-						'eUB',
-						{link: 'https://youtu.be/IAbEwPzft1k?t=324', pure: true, shell: $author$project$Data$Wildfire, time: 331607})
-					]),
-				fullRun: _List_fromArray(
-					[
-						_Utils_Tuple2(
-						'eFF',
-						{link: 'https://www.youtube.com/watch?v=JXZczcEwBGk', pure: true, shell: $author$project$Data$Duskwing, time: 219877}),
-						_Utils_Tuple2(
-						'eFC',
-						{link: 'https://www.youtube.com/watch?v=Pim1bRK9AJg', pure: true, shell: $author$project$Data$Wildfire, time: 258400}),
-						_Utils_Tuple2(
-						'eUB',
-						{link: 'https://www.youtube.com/watch?v=IAbEwPzft1k', pure: true, shell: $author$project$Data$Wildfire, time: 652824})
-					]),
-				stock: _List_Nil
-			}
-		})
-	]);
-var $author$project$Data$data = $elm$core$Dict$fromList(
-	A2(
-		$elm$core$List$map,
-		function (_v0) {
-			var name = _v0.a;
-			var runs = _v0.b.runs;
-			return _Utils_Tuple2(
-				name,
-				{
-					runs: {
-						bossOnly: $elm$core$Dict$fromList(runs.bossOnly),
-						fullRun: $elm$core$Dict$fromList(runs.fullRun),
-						stock: $elm$core$Dict$fromList(runs.stock)
-					}
-				});
-		},
-		$author$project$Data$rawData));
-var $pzp1997$assoc_list$AssocList$D = function (a) {
-	return {$: 'D', a: a};
-};
-var $pzp1997$assoc_list$AssocList$empty = $pzp1997$assoc_list$AssocList$D(_List_Nil);
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $pzp1997$assoc_list$AssocList$remove = F2(
-	function (targetKey, _v0) {
-		var alist = _v0.a;
-		return $pzp1997$assoc_list$AssocList$D(
-			A2(
-				$elm$core$List$filter,
-				function (_v1) {
-					var key = _v1.a;
-					return !_Utils_eq(key, targetKey);
-				},
-				alist));
-	});
-var $pzp1997$assoc_list$AssocList$insert = F3(
-	function (key, value, dict) {
-		var _v0 = A2($pzp1997$assoc_list$AssocList$remove, key, dict);
-		var alteredAlist = _v0.a;
-		return $pzp1997$assoc_list$AssocList$D(
-			A2(
-				$elm$core$List$cons,
-				_Utils_Tuple2(key, value),
-				alteredAlist));
-	});
-var $pzp1997$assoc_list$AssocList$fromList = function (alist) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, result) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($pzp1997$assoc_list$AssocList$insert, key, value, result);
-			}),
-		$pzp1997$assoc_list$AssocList$D(_List_Nil),
-		alist);
-};
-var $author$project$Data$getRuns = function (category) {
-	return A2(
-		$elm$core$Basics$composeR,
-		function ($) {
-			return $.runs;
-		},
-		function () {
-			switch (category.$) {
-				case 'BossOnly':
-					return function ($) {
-						return $.bossOnly;
-					};
-				case 'FullRun':
-					return function ($) {
-						return $.fullRun;
-					};
-				default:
-					return function ($) {
-						return $.stock;
-					};
-			}
-		}());
-};
-var $author$project$Data$gmpGet = function (category) {
-	return A2(
-		$elm$core$Basics$composeR,
-		$author$project$Data$getRuns(category),
-		A2(
-			$elm$core$Basics$composeR,
-			$elm$core$Dict$toList,
-			A2(
-				$elm$core$Basics$composeR,
-				$elm$core$List$map(
-					function (_v0) {
-						var zone = _v0.a;
-						return _Utils_Tuple2(
-							_Utils_Tuple2(category, zone),
-							1);
-					}),
-				$pzp1997$assoc_list$AssocList$fromList)));
-};
-var $pzp1997$assoc_list$AssocList$get = F2(
-	function (targetKey, _v0) {
-		get:
-		while (true) {
-			var alist = _v0.a;
-			if (!alist.b) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var _v2 = alist.a;
-				var key = _v2.a;
-				var value = _v2.b;
-				var rest = alist.b;
-				if (_Utils_eq(key, targetKey)) {
-					return $elm$core$Maybe$Just(value);
-				} else {
-					var $temp$targetKey = targetKey,
-						$temp$_v0 = $pzp1997$assoc_list$AssocList$D(rest);
-					targetKey = $temp$targetKey;
-					_v0 = $temp$_v0;
-					continue get;
-				}
-			}
-		}
-	});
-var $pzp1997$assoc_list$AssocList$member = F2(
-	function (targetKey, dict) {
-		var _v0 = A2($pzp1997$assoc_list$AssocList$get, targetKey, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _v0) {
-				var trues = _v0.a;
-				var falses = _v0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2($elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2($elm$core$List$cons, x, falses));
-			});
-		return A3(
-			$elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
-	});
-var $pzp1997$assoc_list$AssocList$merge = F6(
-	function (leftStep, bothStep, rightStep, leftDict, _v0, initialResult) {
-		var leftAlist = leftDict.a;
-		var rightAlist = _v0.a;
-		var _v1 = A2(
-			$elm$core$List$partition,
-			function (_v2) {
-				var key = _v2.a;
-				return A2($pzp1997$assoc_list$AssocList$member, key, leftDict);
-			},
-			rightAlist);
-		var inBothAlist = _v1.a;
-		var inRightOnlyAlist = _v1.b;
-		var intermediateResult = A3(
-			$elm$core$List$foldr,
-			F2(
-				function (_v5, result) {
-					var rKey = _v5.a;
-					var rValue = _v5.b;
-					return A3(rightStep, rKey, rValue, result);
-				}),
-			initialResult,
-			inRightOnlyAlist);
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (_v3, result) {
-					var lKey = _v3.a;
-					var lValue = _v3.b;
-					var _v4 = A2(
-						$pzp1997$assoc_list$AssocList$get,
-						lKey,
-						$pzp1997$assoc_list$AssocList$D(inBothAlist));
-					if (_v4.$ === 'Just') {
-						var rValue = _v4.a;
-						return A4(bothStep, lKey, lValue, rValue, result);
-					} else {
-						return A3(leftStep, lKey, lValue, result);
-					}
-				}),
-			intermediateResult,
-			leftAlist);
-	});
-var $author$project$Data$gmpMerge = F2(
-	function (ra1, ra2) {
-		return A6(
-			$pzp1997$assoc_list$AssocList$merge,
-			F3(
-				function (k, a, result) {
-					return A3($pzp1997$assoc_list$AssocList$insert, k, a, result);
-				}),
-			F4(
-				function (k, a, b, result) {
-					return A3($pzp1997$assoc_list$AssocList$insert, k, a + b, result);
-				}),
-			F3(
-				function (k, b, result) {
-					return A3($pzp1997$assoc_list$AssocList$insert, k, b, result);
-				}),
-			ra1,
-			ra2,
-			$pzp1997$assoc_list$AssocList$empty);
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $elm$core$List$sortBy = _List_sortBy;
-var $pzp1997$assoc_list$AssocList$toList = function (_v0) {
-	var alist = _v0.a;
-	return alist;
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Data$getMostPopular = function (zones) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		_Utils_Tuple2($author$project$Data$FullRun, 'FF'),
-		A2(
-			$elm$core$Maybe$map,
-			$elm$core$Tuple$first,
-			$elm$core$List$head(
-				$elm$core$List$reverse(
-					A2(
-						$elm$core$List$sortBy,
-						$elm$core$Tuple$second,
-						$pzp1997$assoc_list$AssocList$toList(
-							A3(
-								$elm$core$Dict$foldl,
-								F3(
-									function (_v0, playerData, accum) {
-										var stock = A2($author$project$Data$gmpGet, $author$project$Data$Stock, playerData);
-										var fullRun = A2($author$project$Data$gmpGet, $author$project$Data$FullRun, playerData);
-										var bossOnly = A2($author$project$Data$gmpGet, $author$project$Data$BossOnly, playerData);
-										return A2(
-											$author$project$Data$gmpMerge,
-											bossOnly,
-											A2(
-												$author$project$Data$gmpMerge,
-												fullRun,
-												A2($author$project$Data$gmpMerge, stock, accum)));
-									}),
-								$pzp1997$assoc_list$AssocList$empty,
-								$author$project$Data$data)))))));
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$normalZones = _List_fromArray(
-	['FF', 'FB', 'FC', 'VQ', 'UB', 'ST', 'TL', 'GY', 'SC']);
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm_community$maybe_extra$Maybe$Extra$andThen2 = F3(
-	function (func, ma, mb) {
-		if (ma.$ === 'Just') {
-			var a = ma.a;
-			if (mb.$ === 'Just') {
-				var b = mb.a;
-				return A2(func, a, b);
-			} else {
-				return $elm$core$Maybe$Nothing;
-			}
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $author$project$Data$categoryStrings = $elm$core$Dict$fromList(
-	_List_fromArray(
-		[
-			_Utils_Tuple2('boss-only', $author$project$Data$BossOnly),
-			_Utils_Tuple2('full-run', $author$project$Data$FullRun),
-			_Utils_Tuple2('stock', $author$project$Data$Stock)
-		]));
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var $author$project$Data$categoryFromString = A2(
-	$elm$core$Basics$composeR,
-	$elm$core$Dict$get,
-	$elm$core$Basics$apR($author$project$Data$categoryStrings));
-var $elm$url$Url$Parser$Internal$Parser = function (a) {
-	return {$: 'Parser', a: a};
-};
-var $elm$url$Url$Parser$Query$map2 = F3(
-	function (func, _v0, _v1) {
-		var a = _v0.a;
-		var b = _v1.a;
-		return $elm$url$Url$Parser$Internal$Parser(
-			function (dict) {
-				return A2(
-					func,
-					a(dict),
-					b(dict));
-			});
-	});
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
-var $elm$url$Url$Parser$State = F5(
-	function (visited, unvisited, params, frag, value) {
-		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
-	});
-var $elm$url$Url$Parser$getFirstMatch = function (states) {
-	getFirstMatch:
-	while (true) {
-		if (!states.b) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var state = states.a;
-			var rest = states.b;
-			var _v1 = state.unvisited;
-			if (!_v1.b) {
-				return $elm$core$Maybe$Just(state.value);
-			} else {
-				if ((_v1.a === '') && (!_v1.b.b)) {
-					return $elm$core$Maybe$Just(state.value);
-				} else {
-					var $temp$states = rest;
-					states = $temp$states;
-					continue getFirstMatch;
-				}
-			}
-		}
-	}
-};
-var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
-	if (!segments.b) {
-		return _List_Nil;
-	} else {
-		if ((segments.a === '') && (!segments.b.b)) {
-			return _List_Nil;
-		} else {
-			var segment = segments.a;
-			var rest = segments.b;
-			return A2(
-				$elm$core$List$cons,
-				segment,
-				$elm$url$Url$Parser$removeFinalEmpty(rest));
-		}
-	}
-};
-var $elm$url$Url$Parser$preparePath = function (path) {
-	var _v0 = A2($elm$core$String$split, '/', path);
-	if (_v0.b && (_v0.a === '')) {
-		var segments = _v0.b;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	} else {
-		var segments = _v0;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	}
-};
-var $elm$url$Url$Parser$addToParametersHelp = F2(
-	function (value, maybeList) {
-		if (maybeList.$ === 'Nothing') {
-			return $elm$core$Maybe$Just(
-				_List_fromArray(
-					[value]));
-		} else {
-			var list = maybeList.a;
-			return $elm$core$Maybe$Just(
-				A2($elm$core$List$cons, value, list));
-		}
-	});
-var $elm$url$Url$percentDecode = _Url_percentDecode;
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
 	while (true) {
@@ -6705,6 +6026,568 @@ var $elm$core$Dict$update = F3(
 			return A2($elm$core$Dict$remove, targetKey, dictionary);
 		}
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $elm$http$Http$expectStringResponse = F2(
+	function (toMsg, toResult) {
+		return A3(
+			_Http_expect,
+			'',
+			$elm$core$Basics$identity,
+			A2($elm$core$Basics$composeR, toResult, toMsg));
+	});
+var $elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return $elm$core$Result$Ok(v);
+		} else {
+			var e = result.a;
+			return $elm$core$Result$Err(
+				f(e));
+		}
+	});
+var $elm$http$Http$BadBody = function (a) {
+	return {$: 'BadBody', a: a};
+};
+var $elm$http$Http$BadStatus = function (a) {
+	return {$: 'BadStatus', a: a};
+};
+var $elm$http$Http$BadUrl = function (a) {
+	return {$: 'BadUrl', a: a};
+};
+var $elm$http$Http$NetworkError = {$: 'NetworkError'};
+var $elm$http$Http$Timeout = {$: 'Timeout'};
+var $elm$http$Http$resolve = F2(
+	function (toResult, response) {
+		switch (response.$) {
+			case 'BadUrl_':
+				var url = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadUrl(url));
+			case 'Timeout_':
+				return $elm$core$Result$Err($elm$http$Http$Timeout);
+			case 'NetworkError_':
+				return $elm$core$Result$Err($elm$http$Http$NetworkError);
+			case 'BadStatus_':
+				var metadata = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadStatus(metadata.statusCode));
+			default:
+				var body = response.b;
+				return A2(
+					$elm$core$Result$mapError,
+					$elm$http$Http$BadBody,
+					toResult(body));
+		}
+	});
+var $elm$http$Http$expectJson = F2(
+	function (toMsg, decoder) {
+		return A2(
+			$elm$http$Http$expectStringResponse,
+			toMsg,
+			$elm$http$Http$resolve(
+				function (string) {
+					return A2(
+						$elm$core$Result$mapError,
+						$elm$json$Json$Decode$errorToString,
+						A2($elm$json$Json$Decode$decodeString, decoder, string));
+				}));
+	});
+var $elm$http$Http$emptyBody = _Http_emptyBody;
+var $elm$http$Http$Request = function (a) {
+	return {$: 'Request', a: a};
+};
+var $elm$http$Http$State = F2(
+	function (reqs, subs) {
+		return {reqs: reqs, subs: subs};
+	});
+var $elm$http$Http$init = $elm$core$Task$succeed(
+	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
+var $elm$core$Process$kill = _Scheduler_kill;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$http$Http$updateReqs = F3(
+	function (router, cmds, reqs) {
+		updateReqs:
+		while (true) {
+			if (!cmds.b) {
+				return $elm$core$Task$succeed(reqs);
+			} else {
+				var cmd = cmds.a;
+				var otherCmds = cmds.b;
+				if (cmd.$ === 'Cancel') {
+					var tracker = cmd.a;
+					var _v2 = A2($elm$core$Dict$get, tracker, reqs);
+					if (_v2.$ === 'Nothing') {
+						var $temp$router = router,
+							$temp$cmds = otherCmds,
+							$temp$reqs = reqs;
+						router = $temp$router;
+						cmds = $temp$cmds;
+						reqs = $temp$reqs;
+						continue updateReqs;
+					} else {
+						var pid = _v2.a;
+						return A2(
+							$elm$core$Task$andThen,
+							function (_v3) {
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A2($elm$core$Dict$remove, tracker, reqs));
+							},
+							$elm$core$Process$kill(pid));
+					}
+				} else {
+					var req = cmd.a;
+					return A2(
+						$elm$core$Task$andThen,
+						function (pid) {
+							var _v4 = req.tracker;
+							if (_v4.$ === 'Nothing') {
+								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
+							} else {
+								var tracker = _v4.a;
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A3($elm$core$Dict$insert, tracker, pid, reqs));
+							}
+						},
+						$elm$core$Process$spawn(
+							A3(
+								_Http_toTask,
+								router,
+								$elm$core$Platform$sendToApp(router),
+								req)));
+				}
+			}
+		}
+	});
+var $elm$http$Http$onEffects = F4(
+	function (router, cmds, subs, state) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (reqs) {
+				return $elm$core$Task$succeed(
+					A2($elm$http$Http$State, reqs, subs));
+			},
+			A3($elm$http$Http$updateReqs, router, cmds, state.reqs));
+	});
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$http$Http$maybeSend = F4(
+	function (router, desiredTracker, progress, _v0) {
+		var actualTracker = _v0.a;
+		var toMsg = _v0.b;
+		return _Utils_eq(desiredTracker, actualTracker) ? $elm$core$Maybe$Just(
+			A2(
+				$elm$core$Platform$sendToApp,
+				router,
+				toMsg(progress))) : $elm$core$Maybe$Nothing;
+	});
+var $elm$http$Http$onSelfMsg = F3(
+	function (router, _v0, state) {
+		var tracker = _v0.a;
+		var progress = _v0.b;
+		return A2(
+			$elm$core$Task$andThen,
+			function (_v1) {
+				return $elm$core$Task$succeed(state);
+			},
+			$elm$core$Task$sequence(
+				A2(
+					$elm$core$List$filterMap,
+					A3($elm$http$Http$maybeSend, router, tracker, progress),
+					state.subs)));
+	});
+var $elm$http$Http$Cancel = function (a) {
+	return {$: 'Cancel', a: a};
+};
+var $elm$http$Http$cmdMap = F2(
+	function (func, cmd) {
+		if (cmd.$ === 'Cancel') {
+			var tracker = cmd.a;
+			return $elm$http$Http$Cancel(tracker);
+		} else {
+			var r = cmd.a;
+			return $elm$http$Http$Request(
+				{
+					allowCookiesFromOtherDomains: r.allowCookiesFromOtherDomains,
+					body: r.body,
+					expect: A2(_Http_mapExpect, func, r.expect),
+					headers: r.headers,
+					method: r.method,
+					timeout: r.timeout,
+					tracker: r.tracker,
+					url: r.url
+				});
+		}
+	});
+var $elm$http$Http$MySub = F2(
+	function (a, b) {
+		return {$: 'MySub', a: a, b: b};
+	});
+var $elm$http$Http$subMap = F2(
+	function (func, _v0) {
+		var tracker = _v0.a;
+		var toMsg = _v0.b;
+		return A2(
+			$elm$http$Http$MySub,
+			tracker,
+			A2($elm$core$Basics$composeR, toMsg, func));
+	});
+_Platform_effectManagers['Http'] = _Platform_createManager($elm$http$Http$init, $elm$http$Http$onEffects, $elm$http$Http$onSelfMsg, $elm$http$Http$cmdMap, $elm$http$Http$subMap);
+var $elm$http$Http$command = _Platform_leaf('Http');
+var $elm$http$Http$subscription = _Platform_leaf('Http');
+var $elm$http$Http$request = function (r) {
+	return $elm$http$Http$command(
+		$elm$http$Http$Request(
+			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
+};
+var $elm$http$Http$get = function (r) {
+	return $elm$http$Http$request(
+		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
+};
+var $author$project$Data$Run = F6(
+	function (player, type_, zone, shell, time, link) {
+		return {link: link, player: player, shell: shell, time: time, type_: type_, zone: zone};
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $elm$core$Maybe$map3 = F4(
+	function (func, ma, mb, mc) {
+		if (ma.$ === 'Nothing') {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 'Nothing') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				if (mc.$ === 'Nothing') {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					var c = mc.a;
+					return $elm$core$Maybe$Just(
+						A3(func, a, b, c));
+				}
+			}
+		}
+	});
+var $elm$json$Json$Decode$map6 = _Json_map6;
+var $author$project$Data$fromString = F2(
+	function (dict, str) {
+		return A2($elm$core$Dict$get, str, dict);
+	});
+var $author$project$Data$Duskwing = {$: 'Duskwing'};
+var $author$project$Data$Fabricator = {$: 'Fabricator'};
+var $author$project$Data$Ironclad = {$: 'Ironclad'};
+var $author$project$Data$Wildfire = {$: 'Wildfire'};
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $author$project$Data$shellStrings = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('Wildfire', $author$project$Data$Wildfire),
+			_Utils_Tuple2('Duskwing', $author$project$Data$Duskwing),
+			_Utils_Tuple2('Fabricator', $author$project$Data$Fabricator),
+			_Utils_Tuple2('Ironclad', $author$project$Data$Ironclad)
+		]));
+var $author$project$Data$shellFromString = $author$project$Data$fromString($author$project$Data$shellStrings);
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Data$BossOnly = {$: 'BossOnly'};
+var $author$project$Data$FullRun = {$: 'FullRun'};
+var $author$project$Data$Stock = {$: 'Stock'};
+var $author$project$Data$typeStrings = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('boss-only', $author$project$Data$BossOnly),
+			_Utils_Tuple2('full-run', $author$project$Data$FullRun),
+			_Utils_Tuple2('stock', $author$project$Data$Stock)
+		]));
+var $author$project$Data$typeFromString = $author$project$Data$fromString($author$project$Data$typeStrings);
+var $author$project$Data$Elite = function (a) {
+	return {$: 'Elite', a: a};
+};
+var $author$project$Data$FB = {$: 'FB'};
+var $author$project$Data$FC = {$: 'FC'};
+var $author$project$Data$FF = {$: 'FF'};
+var $author$project$Data$GY = {$: 'GY'};
+var $author$project$Data$Left = function (a) {
+	return {$: 'Left', a: a};
+};
+var $author$project$Data$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $author$project$Data$Right = function (a) {
+	return {$: 'Right', a: a};
+};
+var $author$project$Data$SC = {$: 'SC'};
+var $author$project$Data$ST = {$: 'ST'};
+var $author$project$Data$TL = {$: 'TL'};
+var $author$project$Data$UB = {$: 'UB'};
+var $author$project$Data$VQ = {$: 'VQ'};
+var $author$project$Data$zoneDictList = _List_fromArray(
+	[
+		_Utils_Tuple2(
+		'FF',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$FF))),
+		_Utils_Tuple2(
+		'FB',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$FB))),
+		_Utils_Tuple2(
+		'FC',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$FC))),
+		_Utils_Tuple2(
+		'VQ',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$VQ))),
+		_Utils_Tuple2(
+		'UB',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$UB))),
+		_Utils_Tuple2(
+		'ST',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$ST))),
+		_Utils_Tuple2(
+		'TL',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$TL))),
+		_Utils_Tuple2(
+		'GY',
+		$author$project$Data$Normal(
+			$author$project$Data$Left($author$project$Data$GY))),
+		_Utils_Tuple2(
+		'SC',
+		$author$project$Data$Normal(
+			$author$project$Data$Right($author$project$Data$SC))),
+		_Utils_Tuple2(
+		'eFF',
+		$author$project$Data$Elite($author$project$Data$FF)),
+		_Utils_Tuple2(
+		'eFB',
+		$author$project$Data$Elite($author$project$Data$FB)),
+		_Utils_Tuple2(
+		'eFC',
+		$author$project$Data$Elite($author$project$Data$FC)),
+		_Utils_Tuple2(
+		'eVQ',
+		$author$project$Data$Elite($author$project$Data$VQ)),
+		_Utils_Tuple2(
+		'eUB',
+		$author$project$Data$Elite($author$project$Data$UB)),
+		_Utils_Tuple2(
+		'eST',
+		$author$project$Data$Elite($author$project$Data$ST)),
+		_Utils_Tuple2(
+		'eTL',
+		$author$project$Data$Elite($author$project$Data$TL)),
+		_Utils_Tuple2(
+		'eGY',
+		$author$project$Data$Elite($author$project$Data$GY))
+	]);
+var $author$project$Data$zoneDict = $elm$core$Dict$fromList($author$project$Data$zoneDictList);
+var $author$project$Data$zoneFromString = $author$project$Data$fromString($author$project$Data$zoneDict);
+var $author$project$Data$runsDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$elm$core$List$filterMap($elm$core$Basics$identity),
+	$elm$json$Json$Decode$list(
+		A7(
+			$elm$json$Json$Decode$map6,
+			F6(
+				function (player, type_, zone, shell, time, link) {
+					return A4(
+						$elm$core$Maybe$map3,
+						F3(
+							function (t, z, s) {
+								return A6($author$project$Data$Run, player, t, z, s, time, link);
+							}),
+						type_,
+						zone,
+						shell);
+				}),
+			A2($elm$json$Json$Decode$field, 'player', $elm$json$Json$Decode$string),
+			A2(
+				$elm$json$Json$Decode$field,
+				'type',
+				A2($elm$json$Json$Decode$map, $author$project$Data$typeFromString, $elm$json$Json$Decode$string)),
+			A2(
+				$elm$json$Json$Decode$field,
+				'zone',
+				A2($elm$json$Json$Decode$map, $author$project$Data$zoneFromString, $elm$json$Json$Decode$string)),
+			A2(
+				$elm$json$Json$Decode$field,
+				'shell',
+				A2($elm$json$Json$Decode$map, $author$project$Data$shellFromString, $elm$json$Json$Decode$string)),
+			A2($elm$json$Json$Decode$field, 'time', $elm$json$Json$Decode$int),
+			A2($elm$json$Json$Decode$field, 'link', $elm$json$Json$Decode$string))));
+var $author$project$Data$getData = function (toMsg) {
+	return $elm$http$Http$get(
+		{
+			expect: A2($elm$http$Http$expectJson, toMsg, $author$project$Data$runsDecoder),
+			url: 'https://sbsrdb.herokuapp.com/'
+		});
+};
+var $author$project$Data$Category = F3(
+	function (type_, zone, shell) {
+		return {shell: shell, type_: type_, zone: zone};
+	});
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm_community$maybe_extra$Maybe$Extra$andThen2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 'Just') {
+			var a = ma.a;
+			if (mb.$ === 'Just') {
+				var b = mb.a;
+				return A2(func, a, b);
+			} else {
+				return $elm$core$Maybe$Nothing;
+			}
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 'Nothing') {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 'Nothing') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return $elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var $elm$url$Url$Parser$Internal$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var $elm$url$Url$Parser$Query$map2 = F3(
+	function (func, _v0, _v1) {
+		var a = _v0.a;
+		var b = _v1.a;
+		return $elm$url$Url$Parser$Internal$Parser(
+			function (dict) {
+				return A2(
+					func,
+					a(dict),
+					b(dict));
+			});
+	});
+var $elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
+	});
+var $elm$url$Url$Parser$getFirstMatch = function (states) {
+	getFirstMatch:
+	while (true) {
+		if (!states.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var state = states.a;
+			var rest = states.b;
+			var _v1 = state.unvisited;
+			if (!_v1.b) {
+				return $elm$core$Maybe$Just(state.value);
+			} else {
+				if ((_v1.a === '') && (!_v1.b.b)) {
+					return $elm$core$Maybe$Just(state.value);
+				} else {
+					var $temp$states = rest;
+					states = $temp$states;
+					continue getFirstMatch;
+				}
+			}
+		}
+	}
+};
+var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
+	if (!segments.b) {
+		return _List_Nil;
+	} else {
+		if ((segments.a === '') && (!segments.b.b)) {
+			return _List_Nil;
+		} else {
+			var segment = segments.a;
+			var rest = segments.b;
+			return A2(
+				$elm$core$List$cons,
+				segment,
+				$elm$url$Url$Parser$removeFinalEmpty(rest));
+		}
+	}
+};
+var $elm$url$Url$Parser$preparePath = function (path) {
+	var _v0 = A2($elm$core$String$split, '/', path);
+	if (_v0.b && (_v0.a === '')) {
+		var segments = _v0.b;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	} else {
+		var segments = _v0;
+		return $elm$url$Url$Parser$removeFinalEmpty(segments);
+	}
+};
+var $elm$url$Url$Parser$addToParametersHelp = F2(
+	function (value, maybeList) {
+		if (maybeList.$ === 'Nothing') {
+			return $elm$core$Maybe$Just(
+				_List_fromArray(
+					[value]));
+		} else {
+			var list = maybeList.a;
+			return $elm$core$Maybe$Just(
+				A2($elm$core$List$cons, value, list));
+		}
+	});
+var $elm$url$Url$percentDecode = _Url_percentDecode;
 var $elm$url$Url$Parser$addParam = F2(
 	function (segment, dict) {
 		var _v0 = A2($elm$core$String$split, '=', segment);
@@ -6783,6 +6666,15 @@ var $elm$url$Url$Parser$query = function (_v0) {
 				]);
 		});
 };
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $elm$url$Url$Parser$Query$custom = F2(
 	function (key, func) {
 		return $elm$url$Url$Parser$Internal$Parser(
@@ -6817,19 +6709,17 @@ var $author$project$Main$urlParser = function (url) {
 					$elm$url$Url$Parser$Query$map2,
 					$elm_community$maybe_extra$Maybe$Extra$andThen2(
 						F2(
-							function (categoryStr, zone) {
-								return A2(
-									$elm$core$Maybe$andThen,
-									function (category) {
-										return A2(
-											$elm$core$List$member,
-											zone,
-											_Utils_ap($author$project$Main$normalZones, $author$project$Main$eliteZones)) ? $elm$core$Maybe$Just(
-											_Utils_Tuple2(category, zone)) : $elm$core$Maybe$Nothing;
-									},
-									$author$project$Data$categoryFromString(categoryStr));
+							function (typeStr, zoneStr) {
+								return A3(
+									$elm$core$Maybe$map2,
+									F2(
+										function (type_, zone) {
+											return A3($author$project$Data$Category, type_, zone, $elm$core$Maybe$Nothing);
+										}),
+									$author$project$Data$typeFromString(typeStr),
+									$author$project$Data$zoneFromString(zoneStr));
 							})),
-					$elm$url$Url$Parser$Query$string('category'),
+					$elm$url$Url$Parser$Query$string('type'),
 					$elm$url$Url$Parser$Query$string('zone'))))(
 			_Utils_update(
 				url,
@@ -6837,29 +6727,85 @@ var $author$project$Main$urlParser = function (url) {
 };
 var $author$project$Main$init = F3(
 	function (_v0, url, key) {
-		var _v1 = function () {
-			var _v2 = $author$project$Main$urlParser(url);
-			if (_v2.$ === 'Just') {
-				var _v3 = _v2.a;
-				var c = _v3.a;
-				var z = _v3.b;
-				return _Utils_Tuple2(c, z);
-			} else {
-				return $author$project$Data$getMostPopular(
-					_Utils_ap($author$project$Main$normalZones, $author$project$Main$eliteZones));
-			}
-		}();
-		var category = _v1.a;
-		var zone = _v1.b;
 		return _Utils_Tuple2(
-			A4($author$project$Main$Model, category, zone, false, key),
-			$elm$core$Platform$Cmd$none);
+			A4(
+				$author$project$Main$Model,
+				$author$project$Main$urlParser(url),
+				_List_Nil,
+				false,
+				key),
+			$author$project$Data$getData($author$project$Main$DataReceived));
 	});
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $turboMaCk$any_dict$Dict$Any$AnyDict = function (a) {
+	return {$: 'AnyDict', a: a};
+};
+var $turboMaCk$any_dict$Dict$Any$empty = function (toKey) {
+	return $turboMaCk$any_dict$Dict$Any$AnyDict(
+		{dict: $elm$core$Dict$empty, toKey: toKey});
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $turboMaCk$any_dict$Dict$Any$get = F2(
+	function (k, _v0) {
+		var dict = _v0.a.dict;
+		var toKey = _v0.a.toKey;
+		return A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$second,
+			A2(
+				$elm$core$Dict$get,
+				toKey(k),
+				dict));
+	});
+var $turboMaCk$any_dict$Dict$Any$insert = F3(
+	function (k, v, _v0) {
+		var inner = _v0.a;
+		return $turboMaCk$any_dict$Dict$Any$AnyDict(
+			_Utils_update(
+				inner,
+				{
+					dict: A3(
+						$elm$core$Dict$insert,
+						inner.toKey(k),
+						_Utils_Tuple2(k, v),
+						inner.dict)
+				}));
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (_v0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $turboMaCk$any_dict$Dict$Any$member = F2(
+	function (k, _v0) {
+		var dict = _v0.a.dict;
+		var toKey = _v0.a.toKey;
+		return A2(
+			$elm$core$Dict$member,
+			toKey(k),
+			dict);
+	});
 var $elm_community$list_extra$List$Extra$find = F2(
 	function (predicate, list) {
 		find:
@@ -6881,21 +6827,126 @@ var $elm_community$list_extra$List$Extra$find = F2(
 			}
 		}
 	});
-var $author$project$Data$categoryToString = function (category) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		'',
-		A2(
-			$elm$core$Maybe$map,
-			$elm$core$Tuple$first,
+var $author$project$Data$toString = F2(
+	function (dict, a) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			'',
 			A2(
-				$elm_community$list_extra$List$Extra$find,
+				$elm$core$Maybe$map,
+				$elm$core$Tuple$first,
 				A2(
-					$elm$core$Basics$composeR,
-					$elm$core$Tuple$second,
-					$elm$core$Basics$eq(category)),
-				$elm$core$Dict$toList($author$project$Data$categoryStrings))));
+					$elm_community$list_extra$List$Extra$find,
+					A2(
+						$elm$core$Basics$composeR,
+						$elm$core$Tuple$second,
+						$elm$core$Basics$eq(a)),
+					$elm$core$Dict$toList(dict))));
+	});
+var $author$project$Data$typeToString = $author$project$Data$toString($author$project$Data$typeStrings);
+var $author$project$Data$zoneToString = $author$project$Data$toString($author$project$Data$zoneDict);
+var $author$project$Data$to2Id = function (run) {
+	return _Utils_Tuple2(
+		$author$project$Data$typeToString(run.type_),
+		$author$project$Data$zoneToString(run.zone));
 };
+var $author$project$Data$to3Id = function (run) {
+	return _Utils_Tuple2(
+		run.player,
+		$author$project$Data$to2Id(run));
+};
+var $elm$core$Dict$values = function (dict) {
+	return A3(
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
+var $turboMaCk$any_dict$Dict$Any$toList = function (_v0) {
+	var dict = _v0.a.dict;
+	return $elm$core$Dict$values(dict);
+};
+var $author$project$Data$onlyFastestShell = A2(
+	$elm$core$Basics$composeR,
+	A2(
+		$elm$core$List$foldl,
+		F2(
+			function (run, acc) {
+				var _v0 = A2($turboMaCk$any_dict$Dict$Any$get, run, acc);
+				if (_v0.$ === 'Just') {
+					var time = _v0.a.time;
+					return (_Utils_cmp(run.time, time) < 0) ? A3($turboMaCk$any_dict$Dict$Any$insert, run, run, acc) : acc;
+				} else {
+					return A3($turboMaCk$any_dict$Dict$Any$insert, run, run, acc);
+				}
+			}),
+		$turboMaCk$any_dict$Dict$Any$empty($author$project$Data$to3Id)),
+	A2(
+		$elm$core$Basics$composeR,
+		$turboMaCk$any_dict$Dict$Any$toList,
+		$elm$core$List$map($elm$core$Tuple$second)));
+var $author$project$Data$getMostPopular = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Data$onlyFastestShell,
+	A2(
+		$elm$core$Basics$composeR,
+		A2(
+			$elm$core$List$foldl,
+			F2(
+				function (run, acc) {
+					return A2($turboMaCk$any_dict$Dict$Any$member, run, acc) ? A2(
+						$elm$core$Maybe$withDefault,
+						acc,
+						A2(
+							$elm$core$Maybe$map,
+							function (n) {
+								return A3($turboMaCk$any_dict$Dict$Any$insert, run, n + 1, acc);
+							},
+							A2($turboMaCk$any_dict$Dict$Any$get, run, acc))) : A3($turboMaCk$any_dict$Dict$Any$insert, run, 1, acc);
+				}),
+			$turboMaCk$any_dict$Dict$Any$empty($author$project$Data$to2Id)),
+		A2(
+			$elm$core$Basics$composeR,
+			$turboMaCk$any_dict$Dict$Any$toList,
+			A2(
+				$elm$core$Basics$composeR,
+				A2(
+					$elm$core$List$foldl,
+					F2(
+						function (_v0, acc) {
+							var run = _v0.a;
+							var count = _v0.b;
+							var _v1 = acc;
+							var current = _v1.a;
+							var currentCount = _v1.b;
+							return (_Utils_cmp(count, currentCount) > 0) ? _Utils_Tuple2(
+								A3($author$project$Data$Category, run.type_, run.zone, $elm$core$Maybe$Nothing),
+								count) : acc;
+						}),
+					_Utils_Tuple2(
+						A3(
+							$author$project$Data$Category,
+							$author$project$Data$BossOnly,
+							$author$project$Data$Normal(
+								$author$project$Data$Left($author$project$Data$FF)),
+							$elm$core$Maybe$Nothing),
+						0)),
+				$elm$core$Tuple$first))));
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$maybeUpdate = F3(
+	function (f, getter, model) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			_Utils_Tuple2(model, $elm$core$Platform$Cmd$none),
+			A2(
+				$elm$core$Maybe$map,
+				f,
+				getter(model)));
+	});
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $elm$url$Url$Builder$toQueryPair = function (_v0) {
 	var key = _v0.a;
@@ -6930,8 +6981,8 @@ var $elm$url$Url$Builder$string = F2(
 			$elm$url$Url$percentEncode(key),
 			$elm$url$Url$percentEncode(value));
 	});
-var $author$project$Main$newUrl = F3(
-	function (key, category, zone) {
+var $author$project$Main$newUrl = F2(
+	function (key, category) {
 		return A2(
 			$elm$browser$Browser$Navigation$pushUrl,
 			key,
@@ -6942,14 +6993,33 @@ var $author$project$Main$newUrl = F3(
 					[
 						A2(
 						$elm$url$Url$Builder$string,
-						'category',
-						$author$project$Data$categoryToString(category)),
-						A2($elm$url$Url$Builder$string, 'zone', zone)
+						'type',
+						$author$project$Data$typeToString(category.type_)),
+						A2(
+						$elm$url$Url$Builder$string,
+						'zone',
+						$author$project$Data$zoneToString(category.zone))
 					])));
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'DataReceived':
+				var result = msg.a;
+				if (result.$ === 'Ok') {
+					var runs = result.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								category: _Utils_eq(model.category, $elm$core$Maybe$Nothing) ? $elm$core$Maybe$Just(
+									$author$project$Data$getMostPopular(runs)) : model.category,
+								runs: runs
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			case 'ChangeShowingRules':
 				var bool = msg.a;
 				return _Utils_Tuple2(
@@ -6959,18 +7029,44 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ChangeZone':
 				var zone = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{zone: zone}),
-					A3($author$project$Main$newUrl, model.key, model.category, zone));
-			case 'ChangeCategory':
-				var category = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{category: category}),
-					A3($author$project$Main$newUrl, model.key, category, model.zone));
+				return A3(
+					$author$project$Main$maybeUpdate,
+					function (category) {
+						var newCategory = _Utils_update(
+							category,
+							{zone: zone});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									category: $elm$core$Maybe$Just(newCategory)
+								}),
+							A2($author$project$Main$newUrl, model.key, newCategory));
+					},
+					function ($) {
+						return $.category;
+					},
+					model);
+			case 'ChangeType':
+				var type_ = msg.a;
+				return A3(
+					$author$project$Main$maybeUpdate,
+					function (category) {
+						var newCategory = _Utils_update(
+							category,
+							{type_: type_});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									category: $elm$core$Maybe$Just(newCategory)
+								}),
+							A2($author$project$Main$newUrl, model.key, newCategory));
+					},
+					function ($) {
+						return $.category;
+					},
+					model);
 			case 'UrlRequested':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			default:
@@ -7099,89 +7195,32 @@ var $author$project$Data$formatTime = function (ms) {
 		$elm$core$String$fromInt(
 			A2($elm$core$Basics$modBy, 1000, ms)))));
 };
-var $author$project$Data$getRawTime = F3(
-	function (category, zone, player) {
-		return A2(
-			$elm$core$Maybe$map,
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$List$sortBy = _List_sortBy;
+var $author$project$Data$getRuns = function (_v0) {
+	var type_ = _v0.type_;
+	var zone = _v0.zone;
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$filter(
+			function (run) {
+				return _Utils_eq(run.type_, type_) && _Utils_eq(run.zone, zone);
+			}),
+		$elm$core$List$sortBy(
 			function ($) {
 				return $.time;
-			},
-			A2(
-				$elm$core$Maybe$andThen,
-				$elm$core$Dict$get(zone),
-				A2(
-					$elm$core$Maybe$map,
-					$author$project$Data$getRuns(category),
-					A2($elm$core$Dict$get, player, $author$project$Data$data))));
-	});
-var $elm$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		if (ma.$ === 'Nothing') {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var a = ma.a;
-			if (mb.$ === 'Nothing') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var b = mb.a;
-				return $elm$core$Maybe$Just(
-					A2(func, a, b));
-			}
-		}
-	});
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (_v0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$List$sortWith = _List_sortWith;
-var $author$project$Data$getPlayersWithRun = F2(
-	function (category, zone) {
-		return A2(
-			$elm$core$List$sortWith,
-			F2(
-				function (p1, p2) {
-					return A2(
-						$elm$core$Maybe$withDefault,
-						$elm$core$Basics$EQ,
-						A3(
-							$elm$core$Maybe$map2,
-							F2(
-								function (t1, t2) {
-									return (_Utils_cmp(t1, t2) > 0) ? $elm$core$Basics$GT : ((_Utils_cmp(t1, t2) < 0) ? $elm$core$Basics$LT : $elm$core$Basics$EQ);
-								}),
-							A3($author$project$Data$getRawTime, category, zone, p1),
-							A3($author$project$Data$getRawTime, category, zone, p2)));
-				}),
-			A3(
-				$elm$core$Dict$foldl,
-				F3(
-					function (player, playerData, runList) {
-						return function (bool) {
-							return bool ? A2($elm$core$List$cons, player, runList) : runList;
-						}(
-							A2(
-								$elm$core$Dict$member,
-								zone,
-								A2($author$project$Data$getRuns, category, playerData)));
-					}),
-				_List_Nil,
-				$author$project$Data$data));
-	});
-var $author$project$Data$getRun = F3(
-	function (category, zone, player) {
-		return A2(
-			$elm$core$Maybe$andThen,
-			$elm$core$Dict$get(zone),
-			A2(
-				$elm$core$Maybe$map,
-				$author$project$Data$getRuns(category),
-				A2($elm$core$Dict$get, player, $author$project$Data$data)));
-	});
+			}));
+};
 var $author$project$Css$height = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'height');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -7197,21 +7236,9 @@ var $elm$html$Html$Attributes$href = function (url) {
 		'href',
 		_VirtualDom_noJavaScriptUri(url));
 };
-var $author$project$Html$Styled$Text = function (a) {
-	return {$: 'Text', a: a};
-};
-var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
-var $author$project$Main$idH = $author$project$Html$Styled$text('');
 var $author$project$Html$Styled$imgS = $author$project$Html$Styled$StyledNode('img');
 var $author$project$Css$lastChild = $author$project$Css$mapSelector(
 	$author$project$Css$append(':last-child'));
-var $author$project$FoldIdentity$map = A2(
-	$elm$core$Basics$composeL,
-	A2(
-		$elm$core$Basics$composeL,
-		$elm$core$Basics$composeR($elm$core$Maybe$map),
-		$elm$core$Basics$composeL),
-	$elm$core$Maybe$withDefault);
 var $author$project$Css$anpb = F2(
 	function (a, b) {
 		return $elm$core$String$fromInt(a) + ('n+' + $elm$core$String$fromInt(b));
@@ -7264,15 +7291,17 @@ var $author$project$Html$Styled$tableS = $author$project$Html$Styled$StyledNode(
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $author$project$Html$Styled$tbody = $author$project$Html$Styled$Node('tbody');
 var $author$project$Html$Styled$td = $author$project$Html$Styled$Node('td');
+var $author$project$Html$Styled$Text = function (a) {
+	return {$: 'Text', a: a};
+};
+var $author$project$Html$Styled$text = $author$project$Html$Styled$Text;
 var $author$project$Css$textAlign = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'text-align');
 var $author$project$Html$Styled$th = $author$project$Html$Styled$Node('th');
 var $author$project$Html$Styled$thead = $author$project$Html$Styled$Node('thead');
 var $author$project$Html$Styled$tr = $author$project$Html$Styled$Node('tr');
 var $author$project$Html$Styled$trS = $author$project$Html$Styled$StyledNode('tr');
 var $author$project$Css$width = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'width');
-var $author$project$Main$leaderboardHtml = function (_v0) {
-	var category = _v0.category;
-	var zone = _v0.zone;
+var $author$project$Main$leaderboardHtml = function (model) {
 	return A3(
 		$author$project$Html$Styled$tableS,
 		_List_fromArray(
@@ -7333,14 +7362,14 @@ var $author$project$Main$leaderboardHtml = function (_v0) {
 				A2(
 				$author$project$Html$Styled$tbody,
 				_List_Nil,
-				A2(
-					$elm$core$List$indexedMap,
-					F2(
-						function (i, player) {
-							return A3(
-								$author$project$FoldIdentity$map,
-								$author$project$Main$idH,
-								function (run) {
+				function () {
+					var _v0 = model.category;
+					if (_v0.$ === 'Just') {
+						var category = _v0.a;
+						return A2(
+							$elm$core$List$indexedMap,
+							F2(
+								function (i, run) {
 									return A3(
 										$author$project$Html$Styled$trS,
 										_List_fromArray(
@@ -7392,7 +7421,7 @@ var $author$project$Main$leaderboardHtml = function (_v0) {
 												_List_Nil,
 												_List_fromArray(
 													[
-														$author$project$Html$Styled$text(player),
+														$author$project$Html$Styled$text(run.player),
 														A3(
 														$author$project$Html$Styled$imgS,
 														_List_fromArray(
@@ -7432,16 +7461,29 @@ var $author$project$Main$leaderboardHtml = function (_v0) {
 															]))
 													]))
 											]));
-								},
-								A3($author$project$Data$getRun, category, zone, player));
-						}),
-					A2($author$project$Data$getPlayersWithRun, category, zone)))
+								}),
+							A2($author$project$Data$getRuns, category, model.runs));
+					} else {
+						return _List_Nil;
+					}
+				}())
 			]));
 };
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
-var $author$project$Main$ChangeCategory = function (a) {
-	return {$: 'ChangeCategory', a: a};
+var $author$project$Main$ChangeType = function (a) {
+	return {$: 'ChangeType', a: a};
 };
+var $author$project$Data$eliteZones = A2(
+	$elm$core$List$filterMap,
+	function (_v0) {
+		var zone = _v0.b;
+		if (zone.$ === 'Elite') {
+			return $elm$core$Maybe$Just(zone);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	},
+	$author$project$Data$zoneDictList);
 var $author$project$Css$grid = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid');
 var $author$project$Css$gap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'gap');
 var $author$project$Main$gridStyles = $author$project$Css$batch(
@@ -7484,6 +7526,17 @@ var $author$project$Main$menuDivStyles = function (selected) {
 				$author$project$Css$userSelect('none')
 			]));
 };
+var $author$project$Data$normalZones = A2(
+	$elm$core$List$filterMap,
+	function (_v0) {
+		var zone = _v0.b;
+		if (zone.$ === 'Normal') {
+			return $elm$core$Maybe$Just(zone);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	},
+	$author$project$Data$zoneDictList);
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7502,12 +7555,36 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
+var $author$project$Main$typeEquals = function (type_) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Maybe$map(
+			A2(
+				$elm$core$Basics$composeR,
+				function ($) {
+					return $.type_;
+				},
+				$elm$core$Basics$eq(type_))),
+		$elm$core$Maybe$withDefault(false));
+};
 var $author$project$Main$ChangeZone = function (a) {
 	return {$: 'ChangeZone', a: a};
 };
 var $author$project$Css$gridRow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'grid-row');
+var $author$project$Main$zoneEquals = function (zone) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Maybe$map(
+			A2(
+				$elm$core$Basics$composeR,
+				function ($) {
+					return $.zone;
+				},
+				$elm$core$Basics$eq(zone))),
+		$elm$core$Maybe$withDefault(false));
+};
 var $author$project$Main$zoneHtml = F3(
-	function (row, selectedZone, zones) {
+	function (row, mcategory, zones) {
 		return A3(
 			$author$project$Html$Styled$divS,
 			_List_fromArray(
@@ -7523,7 +7600,7 @@ var $author$project$Main$zoneHtml = F3(
 						_List_fromArray(
 							[
 								$author$project$Main$menuDivStyles(
-								_Utils_eq(zone, selectedZone)),
+								A2($author$project$Main$zoneEquals, zone, mcategory)),
 								$author$project$Css$gridRow(
 								$elm$core$String$fromInt(row))
 							]),
@@ -7534,14 +7611,14 @@ var $author$project$Main$zoneHtml = F3(
 							]),
 						_List_fromArray(
 							[
-								$author$project$Html$Styled$text(zone)
+								$author$project$Html$Styled$text(
+								$author$project$Data$zoneToString(zone))
 							]));
 				},
 				zones));
 	});
 var $author$project$Main$menuHtml = function (_v0) {
 	var category = _v0.category;
-	var zone = _v0.zone;
 	return A3(
 		$author$project$Html$Styled$divS,
 		_List_fromArray(
@@ -7568,12 +7645,12 @@ var $author$project$Main$menuHtml = function (_v0) {
 						_List_fromArray(
 							[
 								$author$project$Main$menuDivStyles(
-								_Utils_eq(category, $author$project$Data$FullRun))
+								A2($author$project$Main$typeEquals, $author$project$Data$FullRun, category))
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$ChangeCategory($author$project$Data$FullRun))
+								$author$project$Main$ChangeType($author$project$Data$FullRun))
 							]),
 						_List_fromArray(
 							[
@@ -7584,12 +7661,12 @@ var $author$project$Main$menuHtml = function (_v0) {
 						_List_fromArray(
 							[
 								$author$project$Main$menuDivStyles(
-								_Utils_eq(category, $author$project$Data$BossOnly))
+								A2($author$project$Main$typeEquals, $author$project$Data$BossOnly, category))
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$ChangeCategory($author$project$Data$BossOnly))
+								$author$project$Main$ChangeType($author$project$Data$BossOnly))
 							]),
 						_List_fromArray(
 							[
@@ -7600,12 +7677,12 @@ var $author$project$Main$menuHtml = function (_v0) {
 						_List_fromArray(
 							[
 								$author$project$Main$menuDivStyles(
-								_Utils_eq(category, $author$project$Data$Stock))
+								A2($author$project$Main$typeEquals, $author$project$Data$Stock, category))
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$ChangeCategory($author$project$Data$Stock))
+								$author$project$Main$ChangeType($author$project$Data$Stock))
 							]),
 						_List_fromArray(
 							[
@@ -7623,8 +7700,8 @@ var $author$project$Main$menuHtml = function (_v0) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A3($author$project$Main$zoneHtml, 1, zone, $author$project$Main$normalZones),
-						A3($author$project$Main$zoneHtml, 2, zone, $author$project$Main$eliteZones)
+						A3($author$project$Main$zoneHtml, 1, category, $author$project$Data$normalZones),
+						A3($author$project$Main$zoneHtml, 2, category, $author$project$Data$eliteZones)
 					]))
 			]));
 };
@@ -7644,6 +7721,14 @@ var $author$project$Html$Styled$VNode = function (a) {
 	return {$: 'VNode', a: a};
 };
 var $author$project$Html$Styled$fromHtml = $author$project$Html$Styled$VNode;
+var $author$project$Main$idH = $author$project$Html$Styled$text('');
+var $author$project$FoldIdentity$map = A2(
+	$elm$core$Basics$composeL,
+	A2(
+		$elm$core$Basics$composeL,
+		$elm$core$Basics$composeR($elm$core$Maybe$map),
+		$elm$core$Basics$composeL),
+	$elm$core$Maybe$withDefault);
 var $author$project$Css$maxHeight = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-height');
 var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
 var $elm_explorations$markdown$Markdown$defaultOptions = {
@@ -7652,13 +7737,6 @@ var $elm_explorations$markdown$Markdown$defaultOptions = {
 		{breaks: false, tables: false}),
 	sanitize: true,
 	smartypants: false
-};
-var $elm$core$Maybe$isJust = function (maybe) {
-	if (maybe.$ === 'Just') {
-		return true;
-	} else {
-		return false;
-	}
 };
 var $elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
 var $elm_explorations$markdown$Markdown$toHtml = $elm_explorations$markdown$Markdown$toHtmlWith($elm_explorations$markdown$Markdown$defaultOptions);
@@ -7757,6 +7835,7 @@ var $Skinney$murmur3$Murmur3$multiplyBy = F2(
 	function (b, a) {
 		return ((a & 65535) * b) + ((((a >>> 16) * b) & 65535) << 16);
 	});
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Bitwise$or = _Bitwise_or;
 var $Skinney$murmur3$Murmur3$rotlBy = F2(
 	function (b, a) {
