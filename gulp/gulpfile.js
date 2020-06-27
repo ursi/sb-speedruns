@@ -13,7 +13,10 @@ const
 globs.elm = input + `src/Main.elm`;
 function elm() {
 	return src(globs.elm)
-		.pipe(gulpElm({cwd: input}))
+		.pipe(gulpElm({
+			cwd: input,
+			// debug: true,
+		}))
 		.pipe(gulpRename(`elm.js`))
 		.pipe(dest(output));
 }
