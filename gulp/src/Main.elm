@@ -4,7 +4,7 @@ import Browser exposing (Document, UrlRequest)
 import Browser.Navigation as Nav exposing (Key)
 import Css as C exposing (Declaration)
 import Css.Global as G
-import Data exposing (Category, Run, Type(..), Zone)
+import Data exposing (Category, Run, Shell(..), Type(..), Zone)
 import Design as Ds
 import Dict exposing (Dict)
 import FoldIdentity as F
@@ -63,16 +63,26 @@ urlParser : Url -> Maybe Category
 urlParser url =
     (UP.parse <|
         UP.query <|
-            Q.map2
-                (Maybe.andThen2 <|
-                    \typeStr zoneStr ->
-                        Maybe.map2
-                            (\type_ zone -> Category type_ zone Nothing)
-                            (Data.typeFromString typeStr)
-                            (Data.zoneFromString zoneStr)
+            Q.map3
+                (\mtypeStr mzoneStr mshellStr ->
+                    Maybe.andThen2
+                        (\typeStr zoneStr ->
+                            Maybe.map2
+                                (\type_ zone ->
+                                    Category
+                                        type_
+                                        zone
+                                        (Maybe.andThen Data.shellFromString mshellStr)
+                                )
+                                (Data.typeFromString typeStr)
+                                (Data.zoneFromString zoneStr)
+                        )
+                        mtypeStr
+                        mzoneStr
                 )
                 (Q.string "type")
                 (Q.string "zone")
+                (Q.string "shell")
     )
         { url | path = "" }
         |> Maybe.andThen identity
@@ -85,6 +95,7 @@ urlParser url =
 type Msg
     = ChangeType Type
     | ChangeZone Zone
+    | ChangeShell (Maybe Shell)
     | ChangeShowingRules Bool
     | UrlRequested UrlRequest
     | DataReceived (Result Http.Error (List Run))
@@ -114,6 +125,20 @@ update msg model =
 
         ChangeShowingRules bool ->
             ( { model | showingRules = bool }, Cmd.none )
+
+        ChangeShell shell ->
+            maybeUpdate
+                (\category ->
+                    let
+                        newCategory =
+                            { category | shell = shell }
+                    in
+                    ( { model | category = Just newCategory }
+                    , newUrl model.key newCategory
+                    )
+                )
+                .category
+                model
 
         ChangeZone zone ->
             maybeUpdate
@@ -164,9 +189,17 @@ newUrl : Key -> Category -> Cmd Msg
 newUrl key category =
     Nav.pushUrl key <|
         UB.relative []
-            [ UB.string "type" <| Data.typeToString category.type_
-            , UB.string "zone" <| Data.zoneToString category.zone
-            ]
+            ([ UB.string "type" <| Data.typeToString category.type_
+             , UB.string "zone" <| Data.zoneToString category.zone
+             ]
+                ++ (case category.shell of
+                        Just shell ->
+                            [ UB.string "shell" <| Data.shellToString shell ]
+
+                        Nothing ->
+                            []
+                   )
+            )
 
 
 
@@ -319,12 +352,35 @@ menuHtml { category } =
             [ zoneHtml 1 category Data.normalZones
             , zoneHtml 2 category Data.eliteZones
             ]
+        , H.divS
+            [ gridStyles
+            , C.grid "max-content / auto-flow max-content"
+            ]
+            []
+            (H.divS [ menuDivStyles (shellEquals Nothing category) ]
+                [ E.onClick <| ChangeShell Nothing ]
+                [ H.text "All" ]
+                :: ([ Wildfire, Duskwing, Ironclad, Fabricator ]
+                        |> List.map
+                            (\shell ->
+                                H.divS [ menuDivStyles (shellEquals (Just shell) category) ]
+                                    [ E.onClick <| ChangeShell <| Just shell ]
+                                    [ H.text <| Data.shellToString shell ]
+                            )
+                   )
+            )
         ]
 
 
 typeEquals : Type -> Maybe Category -> Bool
 typeEquals type_ =
     Maybe.map (.type_ >> (==) type_)
+        >> Maybe.withDefault False
+
+
+shellEquals : Maybe Shell -> Maybe Category -> Bool
+shellEquals mshell =
+    Maybe.map (.shell >> (==) mshell)
         >> Maybe.withDefault False
 
 

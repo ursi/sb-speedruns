@@ -6318,7 +6318,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
-var $author$project$Data$shellStrings = $elm$core$Dict$fromList(
+var $author$project$Data$shellDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2('Wildfire', $author$project$Data$Wildfire),
@@ -6326,7 +6326,7 @@ var $author$project$Data$shellStrings = $elm$core$Dict$fromList(
 			_Utils_Tuple2('Fabricator', $author$project$Data$Fabricator),
 			_Utils_Tuple2('Ironclad', $author$project$Data$Ironclad)
 		]));
-var $author$project$Data$shellFromString = $author$project$Data$fromString($author$project$Data$shellStrings);
+var $author$project$Data$shellFromString = $author$project$Data$fromString($author$project$Data$shellDict);
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Data$BossOnly = {$: 'BossOnly'};
 var $author$project$Data$FullRun = {$: 'FullRun'};
@@ -6510,16 +6510,18 @@ var $elm$core$Maybe$map2 = F3(
 var $elm$url$Url$Parser$Internal$Parser = function (a) {
 	return {$: 'Parser', a: a};
 };
-var $elm$url$Url$Parser$Query$map2 = F3(
-	function (func, _v0, _v1) {
+var $elm$url$Url$Parser$Query$map3 = F4(
+	function (func, _v0, _v1, _v2) {
 		var a = _v0.a;
 		var b = _v1.a;
+		var c = _v2.a;
 		return $elm$url$Url$Parser$Internal$Parser(
 			function (dict) {
-				return A2(
+				return A3(
 					func,
 					a(dict),
-					b(dict));
+					b(dict),
+					c(dict));
 			});
 	});
 var $elm$url$Url$Parser$State = F5(
@@ -6705,22 +6707,33 @@ var $author$project$Main$urlParser = function (url) {
 		$elm$core$Basics$identity,
 		$elm$url$Url$Parser$parse(
 			$elm$url$Url$Parser$query(
-				A3(
-					$elm$url$Url$Parser$Query$map2,
-					$elm_community$maybe_extra$Maybe$Extra$andThen2(
-						F2(
-							function (typeStr, zoneStr) {
-								return A3(
-									$elm$core$Maybe$map2,
-									F2(
-										function (type_, zone) {
-											return A3($author$project$Data$Category, type_, zone, $elm$core$Maybe$Nothing);
-										}),
-									$author$project$Data$typeFromString(typeStr),
-									$author$project$Data$zoneFromString(zoneStr));
-							})),
+				A4(
+					$elm$url$Url$Parser$Query$map3,
+					F3(
+						function (mtypeStr, mzoneStr, mshellStr) {
+							return A3(
+								$elm_community$maybe_extra$Maybe$Extra$andThen2,
+								F2(
+									function (typeStr, zoneStr) {
+										return A3(
+											$elm$core$Maybe$map2,
+											F2(
+												function (type_, zone) {
+													return A3(
+														$author$project$Data$Category,
+														type_,
+														zone,
+														A2($elm$core$Maybe$andThen, $author$project$Data$shellFromString, mshellStr));
+												}),
+											$author$project$Data$typeFromString(typeStr),
+											$author$project$Data$zoneFromString(zoneStr));
+									}),
+								mtypeStr,
+								mzoneStr);
+						}),
 					$elm$url$Url$Parser$Query$string('type'),
-					$elm$url$Url$Parser$Query$string('zone'))))(
+					$elm$url$Url$Parser$Query$string('zone'),
+					$elm$url$Url$Parser$Query$string('shell'))))(
 			_Utils_update(
 				url,
 				{path: ''})));
@@ -6969,6 +6982,7 @@ var $elm$url$Url$Builder$relative = F2(
 			A2($elm$core$String$join, '/', pathSegments),
 			$elm$url$Url$Builder$toQuery(parameters));
 	});
+var $author$project$Data$shellToString = $author$project$Data$toString($author$project$Data$shellDict);
 var $elm$url$Url$Builder$QueryParameter = F2(
 	function (a, b) {
 		return {$: 'QueryParameter', a: a, b: b};
@@ -6989,17 +7003,33 @@ var $author$project$Main$newUrl = F2(
 			A2(
 				$elm$url$Url$Builder$relative,
 				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$url$Url$Builder$string,
-						'type',
-						$author$project$Data$typeToString(category.type_)),
-						A2(
-						$elm$url$Url$Builder$string,
-						'zone',
-						$author$project$Data$zoneToString(category.zone))
-					])));
+				_Utils_ap(
+					_List_fromArray(
+						[
+							A2(
+							$elm$url$Url$Builder$string,
+							'type',
+							$author$project$Data$typeToString(category.type_)),
+							A2(
+							$elm$url$Url$Builder$string,
+							'zone',
+							$author$project$Data$zoneToString(category.zone))
+						]),
+					function () {
+						var _v0 = category.shell;
+						if (_v0.$ === 'Just') {
+							var shell = _v0.a;
+							return _List_fromArray(
+								[
+									A2(
+									$elm$url$Url$Builder$string,
+									'shell',
+									$author$project$Data$shellToString(shell))
+								]);
+						} else {
+							return _List_Nil;
+						}
+					}())));
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -7027,6 +7057,26 @@ var $author$project$Main$update = F2(
 						model,
 						{showingRules: bool}),
 					$elm$core$Platform$Cmd$none);
+			case 'ChangeShell':
+				var shell = msg.a;
+				return A3(
+					$author$project$Main$maybeUpdate,
+					function (category) {
+						var newCategory = _Utils_update(
+							category,
+							{shell: shell});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									category: $elm$core$Maybe$Just(newCategory)
+								}),
+							A2($author$project$Main$newUrl, model.key, newCategory));
+					},
+					function ($) {
+						return $.category;
+					},
+					model);
 			case 'ChangeZone':
 				var zone = msg.a;
 				return A3(
@@ -7476,6 +7526,9 @@ var $author$project$Main$leaderboardHtml = function (model) {
 			]));
 };
 var $author$project$Css$margin = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin');
+var $author$project$Main$ChangeShell = function (a) {
+	return {$: 'ChangeShell', a: a};
+};
 var $author$project$Main$ChangeType = function (a) {
 	return {$: 'ChangeType', a: a};
 };
@@ -7498,8 +7551,6 @@ var $author$project$Main$gridStyles = $author$project$Css$batch(
 			$author$project$Css$display('grid'),
 			$author$project$Css$gap('10px 10px')
 		]));
-var $author$project$Css$marginBottom = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-bottom');
-var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
 var $author$project$Css$color = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'color');
 var $author$project$Css$cursor = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'cursor');
 var $author$project$Css$hover = $author$project$Css$mapSelector(
@@ -7561,6 +7612,18 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $author$project$Css$rowGap = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'row-gap');
+var $author$project$Main$shellEquals = function (mshell) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Maybe$map(
+			A2(
+				$elm$core$Basics$composeR,
+				function ($) {
+					return $.shell;
+				},
+				$elm$core$Basics$eq(mshell))),
+		$elm$core$Maybe$withDefault(false));
+};
 var $author$project$Main$typeEquals = function (type_) {
 	return A2(
 		$elm$core$Basics$composeR,
@@ -7631,7 +7694,7 @@ var $author$project$Main$menuHtml = function (_v0) {
 			[
 				$author$project$Css$display('grid'),
 				$author$project$Css$rowGap('20px'),
-				$author$project$Css$marginTop('1em')
+				$author$project$Css$margin('1em 0 2em 0')
 			]),
 		_List_Nil,
 		_List_fromArray(
@@ -7700,15 +7763,67 @@ var $author$project$Main$menuHtml = function (_v0) {
 				_List_fromArray(
 					[
 						$author$project$Main$gridStyles,
-						$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)'),
-						$author$project$Css$marginBottom('2em')
+						$author$project$Css$grid('repeat(2, max-content) / repeat(9, max-content)')
 					]),
 				_List_Nil,
 				_List_fromArray(
 					[
 						A3($author$project$Main$zoneHtml, 1, category, $author$project$Data$normalZones),
 						A3($author$project$Main$zoneHtml, 2, category, $author$project$Data$eliteZones)
-					]))
+					])),
+				A3(
+				$author$project$Html$Styled$divS,
+				_List_fromArray(
+					[
+						$author$project$Main$gridStyles,
+						$author$project$Css$grid('max-content / auto-flow max-content')
+					]),
+				_List_Nil,
+				A2(
+					$elm$core$List$cons,
+					A3(
+						$author$project$Html$Styled$divS,
+						_List_fromArray(
+							[
+								$author$project$Main$menuDivStyles(
+								A2($author$project$Main$shellEquals, $elm$core$Maybe$Nothing, category))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$ChangeShell($elm$core$Maybe$Nothing))
+							]),
+						_List_fromArray(
+							[
+								$author$project$Html$Styled$text('All')
+							])),
+					A2(
+						$elm$core$List$map,
+						function (shell) {
+							return A3(
+								$author$project$Html$Styled$divS,
+								_List_fromArray(
+									[
+										$author$project$Main$menuDivStyles(
+										A2(
+											$author$project$Main$shellEquals,
+											$elm$core$Maybe$Just(shell),
+											category))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick(
+										$author$project$Main$ChangeShell(
+											$elm$core$Maybe$Just(shell)))
+									]),
+								_List_fromArray(
+									[
+										$author$project$Html$Styled$text(
+										$author$project$Data$shellToString(shell))
+									]));
+						},
+						_List_fromArray(
+							[$author$project$Data$Wildfire, $author$project$Data$Duskwing, $author$project$Data$Ironclad, $author$project$Data$Fabricator]))))
 			]));
 };
 var $author$project$Css$position = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'position');
@@ -7735,6 +7850,7 @@ var $author$project$FoldIdentity$map = A2(
 		$elm$core$Basics$composeR($elm$core$Maybe$map),
 		$elm$core$Basics$composeL),
 	$elm$core$Maybe$withDefault);
+var $author$project$Css$marginTop = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'margin-top');
 var $author$project$Css$maxHeight = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'max-height');
 var $author$project$Css$overflow = A2($author$project$Css$Internal$Single, $elm$core$Basics$identity, 'overflow');
 var $elm_explorations$markdown$Markdown$defaultOptions = {
